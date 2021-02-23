@@ -1,0 +1,17 @@
+core:
+  selector: default
+  default:
+metadata-storage:
+  selector: postgresql
+  postgresql:
+    url: r2dbc:postgresql://localhost:5432/giot
+    username: postgres
+    password: giot
+devicedata-storage:
+  selector: elasticsearch/mysql/postgresql/
+  elasticsearch:
+    url: 127.0.0.1:9200
+    username: elasticsearch
+    password: giot
+  mysql:
+    url: xxx

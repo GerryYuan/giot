@@ -1,5 +1,5 @@
-# giot
-##Êı¾İÉÏ±¨ÉÏÀ´£¬Ö§³ÖµÄĞ­Òé£¨http¡¢mqtt¡¢tcp£¬×Ô¶¨ÒåĞ­Òé£©£¬Íø¹Ø£¨¶ÀÁ¢ÏîÄ¿£¬ÀàËÆthingsboardµÄgateway£¬ÓÃÔÚĞ­Òé½âÎö£©£¬ÎïÄ£ĞÍ£¬²úÆ·¡¢Éè±¸¹ÜÀí£¬¹æÔòÒıÇæ
+### giot IoT Platform, Device management, data collection, processing and visualization, multi protocol, rule engine
+### æ•°æ®ä¸ŠæŠ¥ä¸Šæ¥ï¼Œæ”¯æŒçš„åè®®ï¼ˆhttpã€mqttã€tcpï¼Œè‡ªå®šä¹‰åè®®ï¼‰ï¼Œç½‘å…³ï¼ˆç‹¬ç«‹é¡¹ç›®ï¼Œç±»ä¼¼thingsboardçš„gatewayï¼Œç”¨åœ¨åè®®è§£æï¼‰ï¼Œç‰©æ¨¡å‹ï¼Œäº§å“ã€è®¾å¤‡ç®¡ç†ï¼Œè§„åˆ™å¼•æ“core:
 core:
   selector: default
   default:
@@ -11,8 +11,8 @@ storage:
     username: postgres
     password: giot
 
-##Éè±¸Êı¾İÉÏ±¨²å¼ş£¬Ö§³Ö
-device-data-sink:
+### è®¾å¤‡æ•°æ®ä¸ŠæŠ¥æ’ä»¶ï¼Œæ”¯æŒ
+device-message-sink:
   selector: elasticsearch/mysql/postgresql/
   elasticsearch:
     url: 127.0.0.1:9200
@@ -20,3 +20,8 @@ device-data-sink:
     password: giot
   mysql:
     url: xxx
+    
+###IOTè®¾å¤‡æ¶ˆæ¯åˆ†ä¸º3ä¸ª
+properties//è®¾å¤‡æ¶ˆæ¯ä¸ŠæŠ¥å±æ€§
+funtions//è®¾å¤‡æ¥å—çš„å¤„ç†å‡½æ•°
+events//è®¾å¤‡è§¦å‘çš„äº‹ä»¶

@@ -16,16 +16,12 @@
  *
  */
 
-package org.giot.core;
-
-import org.yaml.snakeyaml.Yaml;
+package org.giot.core.module;
 
 /**
- * @author yuanguohua on 2021/2/23 16:50
+ * @author yuanguohua on 2021/2/24 10:48
  */
-public class YmlResourceLoader implements ResourceLoader {
-
-    private final Yaml yaml = new Yaml();
-
+public enum Modules {
+    CORE,
 
 }

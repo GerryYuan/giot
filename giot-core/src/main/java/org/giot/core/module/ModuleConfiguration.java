@@ -19,6 +19,7 @@
 package org.giot.core.module;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -44,7 +45,7 @@ public class ModuleConfiguration {
         if (this.moduleDefinitions == null) {
             this.moduleDefinitions = ServiceLoader.load(ModuleDefinition.class);
         }
-        for (ModuleDefinition moduleDefinition : moduleDefinitions) {
+        for (ModuleDefinition moduleDefinition : this.moduleDefinitions) {
             if (moduleDefinition.module().equalsIgnoreCase(name)) {
                 return moduleDefinition;
             }
@@ -57,7 +58,7 @@ public class ModuleConfiguration {
         if (EmptyUtils.isNotEmpty(moduleDefinition)) {
             return;
         }
-        modules.put(moduleDefinition, new ArrayList<>(1));
+        addModule(moduleDefinition);
     }
 
     public void addModule(ModuleDefinition module) {
@@ -70,6 +71,16 @@ public class ModuleConfiguration {
             modules.put(module, Stream.of(component).collect(Collectors.toList()));
         } else {
             components.add(component);
+        }
+    }
+
+    public void addModule(ModuleDefinition module, ComponentConfiguration... components) {
+        List<ComponentConfiguration> oldC = modules.get(module);
+        List<ComponentConfiguration> ccs = Arrays.stream(components).collect(Collectors.toList());
+        if (EmptyUtils.isEmpty(oldC)) {
+            modules.put(module, ccs);
+        } else {
+            oldC.addAll(ccs);
         }
     }
 

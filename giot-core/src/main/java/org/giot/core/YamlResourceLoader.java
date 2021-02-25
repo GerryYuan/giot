@@ -21,7 +21,6 @@ package org.giot.core;
 import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.util.Map;
-import org.giot.core.module.Module;
 import org.giot.core.module.ModuleConfiguration;
 import org.yaml.snakeyaml.Yaml;
 
@@ -47,7 +46,8 @@ public class YamlResourceLoader implements ResourceLoader {
         loadYaml(fileName);
         ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
         moduleConfig.forEach((k, v) -> {
-            moduleConfiguration.addModule(Module.valueOf(k.toUpperCase()));
+            //ymal文件读取模块，根据配置文件读取的模块名称去加载模块
+            moduleConfiguration.addModule(k);
         });
         return moduleConfiguration;
     }

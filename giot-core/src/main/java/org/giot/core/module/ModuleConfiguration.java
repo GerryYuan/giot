@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,13 +36,35 @@ public class ModuleConfiguration {
 
     private static final String SELECTOR = "selector";
 
-    private Map<Module, List<ComponentConfiguration>> modules = new ConcurrentHashMap<>();
+    private Map<ModuleDefinition, List<ComponentConfiguration>> modules = new ConcurrentHashMap<>();
 
-    public void addModule(Module module) {
+    private ServiceLoader<ModuleDefinition> moduleDefinitions;
+
+    private ModuleDefinition supports(String name) {
+        if (this.moduleDefinitions == null) {
+            this.moduleDefinitions = ServiceLoader.load(ModuleDefinition.class);
+        }
+        for (ModuleDefinition moduleDefinition : moduleDefinitions) {
+            if (moduleDefinition.module().equalsIgnoreCase(name)) {
+                return moduleDefinition;
+            }
+        }
+        return null;
+    }
+
+    public void addModule(String name) {
+        ModuleDefinition moduleDefinition = supports(name);
+        if (EmptyUtils.isNotEmpty(moduleDefinition)) {
+            return;
+        }
+        modules.put(moduleDefinition, new ArrayList<>(1));
+    }
+
+    public void addModule(ModuleDefinition module) {
         modules.put(module, new ArrayList<>(1));
     }
 
-    public void addModule(Module module, ComponentConfiguration component) {
+    public void addModule(ModuleDefinition module, ComponentConfiguration component) {
         List<ComponentConfiguration> components = modules.get(module);
         if (EmptyUtils.isEmpty(components)) {
             modules.put(module, Stream.of(component).collect(Collectors.toList()));
@@ -53,7 +76,7 @@ public class ModuleConfiguration {
     @AllArgsConstructor
     public static class ComponentConfiguration {
         private String name;
-        
+
         private Properties properties;
     }
 

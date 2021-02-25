@@ -16,18 +16,22 @@
  *
  */
 
-package org.giot.core.module;
+package org.giot.core;
+
+import org.giot.core.module.AbastractModuleDefinition;
 
 /**
- * 模块的定义
+ * @author Created by gerry
+ * @version 1.0
+ * @date 2021-02-25-9:58 PM
  */
-public interface ModuleDefinition {
+public class CoreModule extends AbastractModuleDefinition {
 
-    /**
-     * 获取指定模块名称
-     *
-     * @return
-     */
-    String module();
+    private String name = "core";
+
+    @Override
+    public String module() {
+        return this.name;
+    }
 
 }

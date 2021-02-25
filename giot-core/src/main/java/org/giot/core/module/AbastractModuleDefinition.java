@@ -18,20 +18,10 @@
 
 package org.giot.core.module;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * @author yuanguohua on 2021/2/24 10:48
+ * @author Created by gerry
+ * @version 1.0
+ * @date 2021-02-25-10:08 PM
  */
-public enum Module {
-    CORE,;
-
-//    private List<Module> modules = new ArrayList<>(10);
-//
-//    public Module supports(String name){
-//        for (final Module module : modules) {
-//            indexName = modules.convert(name);
-//        }
-//    }
+public abstract class AbastractModuleDefinition implements ModuleDefinition {
 }

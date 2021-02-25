@@ -18,10 +18,20 @@
 
 package org.giot.core.module;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author yuanguohua on 2021/2/24 10:48
  */
-public enum Modules {
-    CORE,
+public enum Module {
+    CORE,;
 
+//    private List<Module> modules = new ArrayList<>(10);
+//
+//    public Module supports(String name){
+//        for (final Module module : modules) {
+//            indexName = modules.convert(name);
+//        }
+//    }
 }

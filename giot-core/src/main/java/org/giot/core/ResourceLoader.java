@@ -28,11 +28,14 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.giot.core.module.ModuleConfiguration;
 
 /**
  * 资源文件加载模块
  */
 public interface ResourceLoader {
+
+    ModuleConfiguration load(String fileName) throws FileNotFoundException;
 
     default Reader read(String fileName) throws FileNotFoundException {
         return new InputStreamReader(readToStream(fileName));

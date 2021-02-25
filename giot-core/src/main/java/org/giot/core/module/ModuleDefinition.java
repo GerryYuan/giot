@@ -29,13 +29,13 @@ public interface ModuleDefinition {
      * 获取指定模块名称
      * @return
      */
-    Modules name();
+    Module name();
 
     /**
      * 获取指定模块的接口列表
-     * @param modules
+     * @param module
      * @param <T>
      * @return
      */
-    <T> List<Class<T>> getInterfaces(Modules modules);
+    <T> List<Class<T>> getInterfaces(Module module);
 }

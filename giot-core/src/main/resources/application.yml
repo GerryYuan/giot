@@ -1,6 +1,7 @@
 core:
   selector: default
   default:
+    ## 物模型、传输协议（gateway）插件、消息协议插件
 metadata-storage:
   selector: postgresql
   postgresql:

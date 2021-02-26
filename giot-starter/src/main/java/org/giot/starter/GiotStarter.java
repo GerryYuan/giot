@@ -20,8 +20,8 @@ package org.giot.starter;
 
 import java.io.FileNotFoundException;
 import org.giot.core.module.ModuleConfiguration;
-import org.giot.starter.loader.ModuleResourceLoader;
-import org.giot.starter.loader.ResourceLoader;
+import org.giot.core.loader.ModuleResourceLoader;
+import org.giot.core.loader.ResourceLoader;
 
 /**
  * @author yuanguohua on 2021/2/26 16:11

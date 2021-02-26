@@ -57,17 +57,13 @@ public class ModuleConfiguration {
     }
 
     public void addModule(String name) {
-        ModuleDefinition moduleDefinition = supports(name);
-        if (EmptyUtils.isEmpty(moduleDefinition)) {
-            log.warn("Module [{}] is not support, don't load it.", name);
-            return;
-        }
-        addModule(moduleDefinition);
+        addModule(name, new ArrayList<>(1));
     }
 
     public void addModule(String name, List<ComponentConfiguration> components) {
         ModuleDefinition moduleDefinition = supports(name);
         if (EmptyUtils.isEmpty(moduleDefinition)) {
+            log.warn("Module [{}] is not support, don't load it.", name);
             return;
         }
         addModule(moduleDefinition, components);

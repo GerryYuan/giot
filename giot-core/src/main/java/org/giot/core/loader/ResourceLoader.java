@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.starter.loader;
+package org.giot.core.loader;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status=debug 可以查看log4j的装配过程 -->
+<configuration status="OFF" monitorInterval="1800">
+  <properties>
+    <property name="LOG_PATH">/app</property>
+    <property name="project_name">giot</property>
+    <property name="pattern">[%level] [%date{yyyy-MM-dd HH:mm:ss,SSS}] [%class:%line\] [%thread] [%X{requestId}] [%X{serverIp}] %m%n</property>
+  </properties>
+  <appenders>
+    <Console name="Console" target="SYSTEM_OUT" follow="true">
+      <PatternLayout pattern="${pattern}" />
+    </Console>
+
+    <RollingRandomAccessFile name="LogstashFile"
+      fileName="${LOG_PATH}/logs/${project_name}/logstash/logstash.log"
+      filePattern="${LOG_PATH}/logs/${project_name}/logstash/%d{yyyy-MM-dd}_logstash.log">
+      <PatternLayout pattern="${pattern}" />
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1"
+          modulate="true" />
+      </Policies>
+      <Filters>
+        <ThresholdFilter level="debug" onMatch="ACCEPT"
+          onMismatch="DENY" />
+      </Filters>
+    </RollingRandomAccessFile>
+
+    <RollingRandomAccessFile name="RollingInfoFile"
+      fileName="${LOG_PATH}/logs/${project_name}/info.log" filePattern="${LOG_PATH}/logs/${project_name}/info_%d{yyyy-MM-dd}.log">
+      <PatternLayout pattern="${pattern}" />
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1"
+          modulate="true" />
+      </Policies>
+      <Filters>
+        <ThresholdFilter level="error" onMatch="DENY"
+          onMismatch="NEUTRAL" />
+        <ThresholdFilter level="info" onMatch="ACCEPT"
+          onMismatch="DENY" />
+      </Filters>
+    </RollingRandomAccessFile>
+
+    <RollingRandomAccessFile name="RollingErrorFile"
+      fileName="${LOG_PATH}/logs/${project_name}/error.log" filePattern="${LOG_PATH}/logs/${project_name}/error_%d{yyyy-MM-dd}.log">
+      <PatternLayout pattern="${pattern}" />
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1"
+          modulate="true" />
+      </Policies>
+      <Filters>
+        <ThresholdFilter level="error" onMatch="ACCEPT"
+          onMismatch="DENY" />
+      </Filters>
+    </RollingRandomAccessFile>
+
+  </appenders>
+  <loggers>
+    <!-- 3rdparty Loggers -->
+    <Logger name="org.springframework" level="error" />
+    <Logger name="com.google" level="error" />
+    <Logger name="net.rubyeye" level="error" />
+    <Logger name="org.hibernate" level="error" />
+    <Logger name="com.alibaba.dubbo" level="error" />
+    <Logger name="org.mybatis" level="error" />
+    <Logger name="org.apache" level="error" />
+    <Logger name="io.undertow" level="error"/>
+    <Logger name="org.giot" level="debug" />
+    <Logger name="springfox.documentation" level="error" />
+    <Root level="info">
+      <appender-ref ref="Console" />
+      <appender-ref ref="LogstashFile" />
+      <appender-ref ref="RollingErrorFile" />
+      <appender-ref ref="RollingInfoFile" />
+    </Root>
+  </loggers>
+
+</configuration>

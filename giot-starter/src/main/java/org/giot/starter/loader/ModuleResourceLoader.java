@@ -16,22 +16,35 @@
  *
  */
 
-package org.giot.core;
+package org.giot.starter.loader;
 
 import java.io.FileNotFoundException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.module.ModuleConfiguration;
+import org.giot.core.utils.EmptyUtils;
 import org.yaml.snakeyaml.Yaml;
 
 /**
  * @author yuanguohua on 2021/2/23 16:50
  */
-public class YamlResourceLoader implements ResourceLoader {
+@Slf4j
+public class ModuleResourceLoader implements ResourceLoader {
+
+    private String fileName;
 
     private final Yaml yaml = new Yaml();
 
     private Map<String, Map<String, Object>> moduleConfig;
+
+    public ModuleResourceLoader(final String fileName) {
+        this.fileName = fileName;
+    }
 
     /**
      * 加载配置文件，初始化模块，每个模块有各自不通的configuration，
@@ -42,14 +55,40 @@ public class YamlResourceLoader implements ResourceLoader {
     }
 
     @Override
-    public ModuleConfiguration load(final String fileName) throws FileNotFoundException {
+    public List<ModuleConfiguration.ComponentConfiguration> loadComponents(final Map<String, Object> config) {
+        List<ModuleConfiguration.ComponentConfiguration> components = new ArrayList<>(1);
+        selector(config, components);
+        return components;
+    }
+
+    @Override
+    public ModuleConfiguration load() throws FileNotFoundException {
         loadYaml(fileName);
         ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
         moduleConfig.forEach((k, v) -> {
             //ymal文件读取模块，根据配置文件读取的模块名称去加载模块
-            moduleConfiguration.addModule(k);
+            moduleConfiguration.addModule(k, loadComponents(v));
         });
         return moduleConfiguration;
+    }
+
+    /**
+     * { "selector": "xxx", "xxx":{ "a":"aa", "b":"bb" } }
+     */
+    @Override
+    public void selector(final Map<String, Object> config,
+                         final List<ModuleConfiguration.ComponentConfiguration> components) {
+        //如果不存在selector，则过滤
+        String selector = (String) config.get(ModuleConfiguration.SELECTOR);
+        if (EmptyUtils.isEmpty(selector)) {
+            return;
+        }
+        Properties properties = new Properties();
+        LinkedHashMap map = (LinkedHashMap) config.get(selector);
+        if(EmptyUtils.isNotEmpty(map)){
+            properties.putAll(map);
+        }
+        components.add(new ModuleConfiguration.ComponentConfiguration(selector, properties));
     }
 
 }

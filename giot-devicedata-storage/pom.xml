@@ -9,7 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <artifactId>giot-devicedata-storage</artifactId>
+    <properties>
+        <giot.version>0.0.1</giot.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.giot</groupId>
+            <artifactId>giot-core</artifactId>
+            <version>${giot.version}</version>
+        </dependency>
+    </dependencies>
 
-    <artifactId>giot-core</artifactId>
 
 </project>

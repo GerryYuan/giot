@@ -19,7 +19,6 @@
 package org.giot.core.module;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -28,14 +27,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.utils.EmptyUtils;
 
 /**
  * @author yuanguohua on 2021/2/25 13:48
  */
+@ToString
+@Slf4j
 public class ModuleConfiguration {
 
-    private static final String SELECTOR = "selector";
+    public static final String SELECTOR = "selector";
 
     private Map<ModuleDefinition, List<ComponentConfiguration>> modules = new ConcurrentHashMap<>();
 
@@ -55,17 +58,26 @@ public class ModuleConfiguration {
 
     public void addModule(String name) {
         ModuleDefinition moduleDefinition = supports(name);
-        if (EmptyUtils.isNotEmpty(moduleDefinition)) {
+        if (EmptyUtils.isEmpty(moduleDefinition)) {
+            log.warn("Module [{}] is not support, don't load it.", name);
             return;
         }
         addModule(moduleDefinition);
     }
 
-    public void addModule(ModuleDefinition module) {
+    public void addModule(String name, List<ComponentConfiguration> components) {
+        ModuleDefinition moduleDefinition = supports(name);
+        if (EmptyUtils.isEmpty(moduleDefinition)) {
+            return;
+        }
+        addModule(moduleDefinition, components);
+    }
+
+    private void addModule(ModuleDefinition module) {
         modules.put(module, new ArrayList<>(1));
     }
 
-    public void addModule(ModuleDefinition module, ComponentConfiguration component) {
+    private void addModule(ModuleDefinition module, ComponentConfiguration component) {
         List<ComponentConfiguration> components = modules.get(module);
         if (EmptyUtils.isEmpty(components)) {
             modules.put(module, Stream.of(component).collect(Collectors.toList()));
@@ -74,13 +86,16 @@ public class ModuleConfiguration {
         }
     }
 
-    public void addModule(ModuleDefinition module, ComponentConfiguration... components) {
-        List<ComponentConfiguration> oldC = modules.get(module);
-        List<ComponentConfiguration> ccs = Arrays.stream(components).collect(Collectors.toList());
-        if (EmptyUtils.isEmpty(oldC)) {
-            modules.put(module, ccs);
+    private void addModule(ModuleDefinition module, List<ComponentConfiguration> components) {
+        if (EmptyUtils.isEmpty(components)) {
+            addModule(module);
         } else {
-            oldC.addAll(ccs);
+            List<ComponentConfiguration> oldC = modules.get(module);
+            if (EmptyUtils.isEmpty(oldC)) {
+                modules.put(module, components);
+            } else {
+                oldC.addAll(components);
+            }
         }
     }
 

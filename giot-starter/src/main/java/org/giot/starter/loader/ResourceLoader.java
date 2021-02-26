@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.core;
+package org.giot.starter.loader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,7 +37,11 @@ import org.giot.core.module.ModuleConfiguration;
  */
 public interface ResourceLoader {
 
-    ModuleConfiguration load(String fileName) throws FileNotFoundException;
+    List<ModuleConfiguration.ComponentConfiguration> loadComponents(Map<String, Object> config);
+
+    ModuleConfiguration load() throws FileNotFoundException;
+
+    void selector(Map<String, Object> config, List<ModuleConfiguration.ComponentConfiguration> components);
 
     default Reader read(String fileName) throws FileNotFoundException {
         return new InputStreamReader(readToStream(fileName));

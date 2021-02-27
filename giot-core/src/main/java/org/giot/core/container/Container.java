@@ -1,12 +1,11 @@
-package org.giot.core.module;
+package org.giot.core.container;
 
 /**
- * 模块提供者，提供生命周期的管理：准备、启动、后置等
- *
+ * 容器，提供生命周期的管理：准备、启动、后置等
  * @author Created by gerry
- * @date 2021-02-27-10:46 PM
+ * @date 2021-02-27-11:34 PM
  */
-public interface ModuleProvider {
+public interface Container {
 
     /**
      * 初始化容器之前进行准备操作
@@ -24,9 +23,10 @@ public interface ModuleProvider {
     void after();
 
     /**
-     * 必须加载的模块
+     * 依赖的模块
      *
      * @return
      */
     String[] requireModules();
+
 }

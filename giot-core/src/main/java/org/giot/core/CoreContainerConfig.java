@@ -16,28 +16,17 @@
  *
  */
 
-package org.giot.core.module;
+package org.giot.core;
 
-import java.util.Set;
+import org.giot.core.container.ContainerConfig;
 
 /**
- * 模块管理者
- *
  * @author Created by gerry
- * @date 2021-02-27-10:55 PM
+ * @date 2021-02-27-11:23 PM
  */
-public class ModuleManager implements ModuleHandler {
+public class CoreContainerConfig extends ContainerConfig {
 
-    private Set<String> modules;
-
-    @Override
-    public boolean has(final String moduleName) {
-        return modules.contains(moduleName);
-    }
-
-    public void init(ModuleConfiguration moduleConfiguration) {
-        //prepare, 先把每个模块的Config赋值
-        //start
-        //after
+    public CoreContainerConfig(final String name) {
+        super(name);
     }
 }

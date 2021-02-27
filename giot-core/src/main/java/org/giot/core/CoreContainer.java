@@ -18,20 +18,41 @@
 
 package org.giot.core;
 
-import org.giot.core.module.AbastractModuleDefinition;
+import org.giot.core.container.AbstractContainer;
+import org.giot.core.container.ContainerConfig;
 
 /**
  * @author Created by gerry
- * @version 1.0
- * @date 2021-02-25-9:58 PM
+ * @date 2021-02-27-11:21 PM
  */
-public class CoreModule extends AbastractModuleDefinition {
+public class CoreContainer extends AbstractContainer {
 
-    public final static String NAME = "core";
+    private CoreContainerConfig coreContainerConfig;
 
     @Override
-    public String module() {
-        return CoreModule.NAME;
+    public ContainerConfig createConfig() {
+        this.coreContainerConfig = new CoreContainerConfig(CoreModule.NAME);
+        return this.coreContainerConfig;
+    }
+
+    @Override
+    public void prepare() {
+
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void after() {
+
+    }
+
+    @Override
+    public String[] requireModules() {
+        return new String[0];
     }
 
 }

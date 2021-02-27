@@ -19,14 +19,13 @@
 package org.giot.core.module;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -43,24 +42,23 @@ public class ModuleConfiguration {
     public static final String WHICH = "which";
 
     @Getter
-    private Map<ModuleDefinition, List<ComponentConfiguration>> modules = new ConcurrentHashMap<>();
+    private Map<ModuleDefinition, List<ComponentConfiguration>> moduleConfigurations = new ConcurrentHashMap<>();
 
-    private ServiceLoader<ModuleDefinition> moduleDefinitions;
+    @Getter
+    private Set<String> modules = new HashSet<>();
+
+    private ServiceLoader<ModuleDefinition> defs;
 
     private ModuleDefinition supports(String name) {
-        if (this.moduleDefinitions == null) {
-            this.moduleDefinitions = ServiceLoader.load(ModuleDefinition.class);
+        if (this.defs == null) {
+            this.defs = ServiceLoader.load(ModuleDefinition.class);
         }
-        for (ModuleDefinition moduleDefinition : this.moduleDefinitions) {
+        for (ModuleDefinition moduleDefinition : this.defs) {
             if (moduleDefinition.module().equalsIgnoreCase(name)) {
                 return moduleDefinition;
             }
         }
         return null;
-    }
-
-    public Set<String> modules() {
-        return modules.keySet().stream().map(ModuleDefinition::module).collect(Collectors.toSet());
     }
 
     public void addModule(String name) {
@@ -76,30 +74,18 @@ public class ModuleConfiguration {
         addModule(moduleDefinition, components);
     }
 
-    private void addModule(ModuleDefinition module) {
-        modules.put(module, new ArrayList<>(1));
-    }
-
-    private void addModule(ModuleDefinition module, ComponentConfiguration component) {
-        List<ComponentConfiguration> components = modules.get(module);
-        if (EmptyUtils.isEmpty(components)) {
-            modules.put(module, Stream.of(component).collect(Collectors.toList()));
-        } else {
-            components.add(component);
-        }
-    }
-
     private void addModule(ModuleDefinition module, List<ComponentConfiguration> components) {
         if (EmptyUtils.isEmpty(components)) {
-            addModule(module);
+            moduleConfigurations.put(module, new ArrayList<>(1));
         } else {
-            List<ComponentConfiguration> oldC = modules.get(module);
+            List<ComponentConfiguration> oldC = moduleConfigurations.get(module);
             if (EmptyUtils.isEmpty(oldC)) {
-                modules.put(module, components);
+                moduleConfigurations.put(module, components);
             } else {
                 oldC.addAll(components);
             }
         }
+        modules.add(module.module());
     }
 
     @AllArgsConstructor

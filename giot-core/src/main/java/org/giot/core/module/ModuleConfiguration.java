@@ -23,10 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.utils.EmptyUtils;
@@ -38,8 +40,9 @@ import org.giot.core.utils.EmptyUtils;
 @Slf4j
 public class ModuleConfiguration {
 
-    public static final String SELECTOR = "selector";
+    public static final String WHICH = "which";
 
+    @Getter
     private Map<ModuleDefinition, List<ComponentConfiguration>> modules = new ConcurrentHashMap<>();
 
     private ServiceLoader<ModuleDefinition> moduleDefinitions;
@@ -54,6 +57,10 @@ public class ModuleConfiguration {
             }
         }
         return null;
+    }
+
+    public Set<String> modules() {
+        return modules.keySet().stream().map(ModuleDefinition::module).collect(Collectors.toSet());
     }
 
     public void addModule(String name) {

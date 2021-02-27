@@ -13,6 +13,7 @@
         <module>giot-metadata-storage</module>
         <module>giot-devicedata-storage</module>
         <module>giot-starter</module>
+        <module>giot-device-manager</module>
     </modules>
 
     <properties>

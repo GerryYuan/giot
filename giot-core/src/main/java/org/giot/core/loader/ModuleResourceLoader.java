@@ -57,7 +57,7 @@ public class ModuleResourceLoader implements ResourceLoader {
     @Override
     public List<ModuleConfiguration.ComponentConfiguration> loadComponents(final Map<String, Object> config) {
         List<ModuleConfiguration.ComponentConfiguration> components = new ArrayList<>(1);
-        selector(config, components);
+        which(config, components);
         return components;
     }
 
@@ -73,22 +73,22 @@ public class ModuleResourceLoader implements ResourceLoader {
     }
 
     /**
-     * { "selector": "xxx", "xxx":{ "a":"aa", "b":"bb" } }
+     * { "which": "xxx", "xxx":{ "a":"aa", "b":"bb" } }
      */
     @Override
-    public void selector(final Map<String, Object> config,
-                         final List<ModuleConfiguration.ComponentConfiguration> components) {
-        //如果不存在selector，则过滤
-        String selector = (String) config.get(ModuleConfiguration.SELECTOR);
-        if (EmptyUtils.isEmpty(selector)) {
+    public void which(final Map<String, Object> config,
+                      final List<ModuleConfiguration.ComponentConfiguration> components) {
+        //如果不存在which，则过滤
+        String which = (String) config.get(ModuleConfiguration.WHICH);
+        if (EmptyUtils.isEmpty(which)) {
             return;
         }
         Properties properties = new Properties();
-        LinkedHashMap map = (LinkedHashMap) config.get(selector);
+        LinkedHashMap map = (LinkedHashMap) config.get(which);
         if(EmptyUtils.isNotEmpty(map)){
             properties.putAll(map);
         }
-        components.add(new ModuleConfiguration.ComponentConfiguration(selector, properties));
+        components.add(new ModuleConfiguration.ComponentConfiguration(which, properties));
     }
 
 }

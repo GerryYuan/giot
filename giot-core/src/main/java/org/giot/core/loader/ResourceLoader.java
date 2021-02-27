@@ -41,7 +41,7 @@ public interface ResourceLoader {
 
     ModuleConfiguration load() throws FileNotFoundException;
 
-    void selector(Map<String, Object> config, List<ModuleConfiguration.ComponentConfiguration> components);
+    void which(Map<String, Object> config, List<ModuleConfiguration.ComponentConfiguration> components);
 
     default Reader read(String fileName) throws FileNotFoundException {
         return new InputStreamReader(readToStream(fileName));

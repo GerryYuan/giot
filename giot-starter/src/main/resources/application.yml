@@ -1,17 +1,22 @@
 ##架构设计：
 ###第一步：加载配置文件
+###第二步：初始化容器，实现依赖注入（比如postgresql实例，对应的配置）
 core:
-  selector: default
+  which: default
   default:
     ## 物模型、传输协议（gateway）插件、消息协议插件
+device-manager:
+  which: default
+  default:
+    ##
 metadata-storage:
-  selector: postgresql
+  which: postgresql
   postgresql:
     url: r2dbc:postgresql://localhost:5432/giot
     username: postgres
     password: giot
 devicedata-storage:
-  selector: elasticsearch/mysql/postgresql/
+  which: elasticsearch/mysql/postgresql/
   elasticsearch:
     url: 127.0.0.1:9200
     username: elasticsearch

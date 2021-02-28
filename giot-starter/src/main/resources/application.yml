@@ -1,9 +1,14 @@
 ##架构设计：
+###配置文件中，第一层是数据模块，第二层是数据组件，ModuleConfiguration
+###一个模块对应对个组件(ModuleDef)，一个组件对应一个容器(ComponentConfiguration)，意思就是一个模块对应多个容器
 ###第一步：加载配置文件
 ###第二步：初始化容器，实现依赖注入（比如postgresql实例，对应的配置）
 core:
   which: default
   default:
+    a: a
+    b: 1
+    c: 1.6
     ## 物模型、传输协议（gateway）插件、消息协议插件
 device-manager:
   which: default

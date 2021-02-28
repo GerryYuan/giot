@@ -18,13 +18,11 @@
 
 package org.giot.core;
 
-import java.util.List;
 import java.util.ServiceLoader;
-import java.util.Set;
 import org.giot.core.container.AbstractContainer;
-import org.giot.core.container.ContainerConfig;
 import org.giot.core.container.ContainerHandler;
 import org.giot.core.module.ModuleConfiguration;
+import org.giot.core.utils.BeanUtils;
 
 /**
  * 容器管理者
@@ -34,34 +32,29 @@ import org.giot.core.module.ModuleConfiguration;
  */
 public class ContainerManager implements ContainerHandler {
 
-    private Set<String> modules;
+    private ModuleConfiguration moduleConfiguration;
 
     @Override
     public boolean has(final String moduleName) {
-        return modules.contains(moduleName);
+        return moduleConfiguration.getModules().contains(moduleName);
     }
 
     public void init(ModuleConfiguration moduleConfiguration) {
+        this.moduleConfiguration = moduleConfiguration;
         ServiceLoader<AbstractContainer> containers = ServiceLoader.load(AbstractContainer.class);
         for (AbstractContainer container : containers) {
-            //创建ContainerConfig
-            ContainerConfig containerConfig = container.createConfig();
-            for (String name : moduleConfiguration.getModules()) {
-                if (!name.equalsIgnoreCase(containerConfig.getName())) {
-                    continue;
-                }
-                //把配置文件的内容赋值给ContainerConfig
-
-            }
+            prepare(container);
+            container.start();
+            container.after();
         }
-        //prepare
-        //start
-        //after
     }
 
-    private void newContainerConfig(List<ModuleConfiguration.ComponentConfiguration> configurations) {
-        configurations.forEach(componentConfiguration -> {
-
-        });
+    private void prepare(AbstractContainer container) {
+        //获取组件
+        ModuleConfiguration.ComponentConfiguration component = moduleConfiguration.getComponentByContainerName(
+            container.name());
+        //把配置文件的内容赋值给ContainerConfig
+        BeanUtils.copy(component.getProperties(), container.createConfig());
+        container.prepare();
     }
 }

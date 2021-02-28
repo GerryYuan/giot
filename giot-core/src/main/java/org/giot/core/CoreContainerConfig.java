@@ -18,15 +18,22 @@
 
 package org.giot.core;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.giot.core.container.ContainerConfig;
 
 /**
  * @author Created by gerry
  * @date 2021-02-27-11:23 PM
  */
+@ToString
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class CoreContainerConfig extends ContainerConfig {
+    private String a;
 
-    public CoreContainerConfig(final String name) {
-        super(name);
-    }
+    private Integer b;
+
+    private Double c;
 }

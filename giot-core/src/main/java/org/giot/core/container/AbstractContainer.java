@@ -24,5 +24,7 @@ package org.giot.core.container;
  */
 public abstract class AbstractContainer implements Container {
 
+    public abstract String name();
+
     public abstract ContainerConfig createConfig();
 }

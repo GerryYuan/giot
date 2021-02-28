@@ -49,16 +49,28 @@ public class ModuleConfiguration {
 
     private ServiceLoader<ModuleDefinition> defs;
 
-    private ModuleDefinition supports(String name) {
-        if (this.defs == null) {
-            this.defs = ServiceLoader.load(ModuleDefinition.class);
-        }
-        for (ModuleDefinition moduleDefinition : this.defs) {
-            if (moduleDefinition.module().equalsIgnoreCase(name)) {
-                return moduleDefinition;
+    public List<ComponentConfiguration> getComponents(String name) {
+        ModuleDefinition moduleDefinition = supports(name);
+        return moduleConfigurations.get(moduleDefinition);
+    }
+
+    public List<ComponentConfiguration> getAllComponents() {
+        List<ComponentConfiguration> componentConfigurations = new ArrayList<>(10);
+        for (String module : modules) {
+            List<ModuleConfiguration.ComponentConfiguration> components = getComponents(module);
+            if (EmptyUtils.isEmpty(components)) {
+                continue;
             }
+            componentConfigurations.addAll(components);
         }
-        return null;
+        return componentConfigurations;
+    }
+
+    public ModuleConfiguration.ComponentConfiguration getComponentByContainerName(String containerName) {
+        return getAllComponents().stream()
+                                 .filter(component -> component.getName().equalsIgnoreCase(containerName))
+                                 .findFirst()
+                                 .orElse(null);
     }
 
     public void addModule(String name) {
@@ -88,6 +100,19 @@ public class ModuleConfiguration {
         modules.add(module.module());
     }
 
+    private ModuleDefinition supports(String name) {
+        if (this.defs == null) {
+            this.defs = ServiceLoader.load(ModuleDefinition.class);
+        }
+        for (ModuleDefinition moduleDefinition : this.defs) {
+            if (moduleDefinition.module().equalsIgnoreCase(name)) {
+                return moduleDefinition;
+            }
+        }
+        return null;
+    }
+
+    @Getter
     @AllArgsConstructor
     public static class ComponentConfiguration {
         private String name;

@@ -2,10 +2,12 @@ package org.giot.core.container;
 
 /**
  * 容器，提供生命周期的管理：准备、启动、后置等
+ *
  * @author Created by gerry
  * @date 2021-02-27-11:34 PM
  */
 public interface Container {
+    String DEFAULT = "default";
 
     /**
      * 初始化容器之前进行准备操作

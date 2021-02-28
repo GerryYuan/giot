@@ -16,49 +16,14 @@
  *
  */
 
-package org.giot.core;
-
-import org.giot.core.container.AbstractContainer;
-import org.giot.core.container.Container;
-import org.giot.core.container.ContainerConfig;
+package org.giot.core.exception;
 
 /**
  * @author Created by gerry
- * @date 2021-02-27-11:21 PM
+ * @date 2021-02-28-9:58 PM
  */
-public class CoreContainer extends AbstractContainer {
-
-    private CoreContainerConfig coreContainerConfig;
-
-    @Override
-    public String name() {
-        return Container.DEFAULT;
+public class InstantException extends RuntimeException {
+    public InstantException(final String s, final Exception ex) {
+        super(s, ex);
     }
-
-    @Override
-    public ContainerConfig createConfig() {
-        this.coreContainerConfig = new CoreContainerConfig();
-        return this.coreContainerConfig;
-    }
-
-    @Override
-    public void prepare() {
-        System.out.println(coreContainerConfig);
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void after() {
-
-    }
-
-    @Override
-    public String[] requireModules() {
-        return new String[0];
-    }
-
 }

@@ -1,7 +1,6 @@
 package org.giot.core.container;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 /**
  * 容器配置
@@ -11,10 +10,5 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public abstract class ContainerConfig {
-    /**
-     * 容器名称
-     */
-    @Getter
-    private String name;
 
 }

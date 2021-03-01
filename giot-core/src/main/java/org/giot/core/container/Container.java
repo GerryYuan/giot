@@ -1,5 +1,7 @@
 package org.giot.core.container;
 
+import org.giot.core.service.Service;
+
 /**
  * 容器，提供生命周期的管理：准备、启动、后置等
  *
@@ -25,10 +27,10 @@ public interface Container {
     void after();
 
     /**
-     * 依赖的模块
+     * 需要的服务
      *
      * @return
      */
-    String[] requireModules();
+    Service[] requireServices();
 
 }

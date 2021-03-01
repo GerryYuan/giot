@@ -28,7 +28,6 @@ import org.giot.core.container.ContainerConfig;
 import org.giot.core.container.ContainerHandler;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.module.ModuleConfiguration;
-import org.giot.core.utils.BeanUtils;
 
 /**
  * 容器管理者
@@ -65,13 +64,12 @@ public class ContainerManager implements ContainerHandler {
             copyProperties(component.getProperties(), container.createConfig(), container.name());
         } catch (IllegalAccessException e) {
             throw new ContainerConfigException(
-                container.name() + " container config transport to config bean failure.", e);
+                component.getName() + " component config transport to config bean failure.", e);
         }
         container.prepare();
     }
 
-    private void copyProperties(Properties src, ContainerConfig dest,
-                                String container) throws IllegalAccessException {
+    private void copyProperties(Properties src, ContainerConfig dest, String container) throws IllegalAccessException {
         if (dest == null) {
             return;
         }

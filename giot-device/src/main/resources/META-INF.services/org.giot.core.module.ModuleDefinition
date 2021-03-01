@@ -16,4 +16,4 @@
 #
 #
 
-org.giot.devidedata.storage.DeviceDataStorageModule
+org.giot.device.DeviceModule

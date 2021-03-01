@@ -16,51 +16,35 @@
  *
  */
 
-package org.giot.core;
+package org.giot.core.storage;
 
-import org.giot.core.container.AbstractContainer;
-import org.giot.core.container.Container;
-import org.giot.core.container.ContainerConfig;
-import org.giot.core.service.Service;
+import java.util.List;
+import lombok.AllArgsConstructor;
 
 /**
  * @author Created by gerry
- * @date 2021-02-27-11:21 PM
+ * @date 2021-03-01-10:43 PM
  */
-public class CoreContainer extends AbstractContainer {
+@AllArgsConstructor
+public class StorageModelCreator implements ModelManager, ModelCreator {
 
-    private CoreContainerConfig coreContainerConfig;
+    private List<Model> models;
 
     @Override
-    public String name() {
-        return Container.DEFAULT;
+    public void addModel(final Model model) {
+        models.add(model);
     }
 
     @Override
-    public ContainerConfig createConfig() {
-        this.coreContainerConfig = new CoreContainerConfig();
-        return this.coreContainerConfig;
+    public void addModel(final String name,
+                         final List<ModelColumn> columns,
+                         final boolean isMetadata,
+                         final boolean isTimeSeries) {
+        models.add(new Model(name, columns, isMetadata, isTimeSeries));
     }
 
     @Override
-    public void prepare() {
-        System.out.println(coreContainerConfig);
+    public List<Model> allModels() {
+        return this.models;
     }
-
-    @Override
-    public void start() {
-        //每个容器在启动时，需要初始化需要的具体的类
-        //比如
-    }
-
-    @Override
-    public void after() {
-
-    }
-
-    @Override
-    public Service[] requireServices() {
-        return new Service[0];
-    }
-
 }

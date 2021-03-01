@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.core;
+package org.giot.device;
 
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
@@ -25,11 +25,11 @@ import org.giot.core.service.Service;
 
 /**
  * @author Created by gerry
- * @date 2021-02-27-11:21 PM
+ * @date 2021-03-01-9:46 PM
  */
-public class CoreContainer extends AbstractContainer {
+public class DeviceContainer extends AbstractContainer {
 
-    private CoreContainerConfig coreContainerConfig;
+    private DeviceContainerConfig containerConfig;
 
     @Override
     public String name() {
@@ -38,19 +38,18 @@ public class CoreContainer extends AbstractContainer {
 
     @Override
     public ContainerConfig createConfig() {
-        this.coreContainerConfig = new CoreContainerConfig();
-        return this.coreContainerConfig;
+        this.containerConfig = new DeviceContainerConfig();
+        return containerConfig;
     }
 
     @Override
     public void prepare() {
-        System.out.println(coreContainerConfig);
+        //准备存储
     }
 
     @Override
     public void start() {
-        //每个容器在启动时，需要初始化需要的具体的类
-        //比如
+
     }
 
     @Override

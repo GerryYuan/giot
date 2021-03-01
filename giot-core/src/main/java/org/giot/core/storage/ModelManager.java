@@ -16,21 +16,16 @@
  *
  */
 
-package org.giot.device.manager;
+package org.giot.core.storage;
 
-import org.giot.core.module.AbastractModuleDefinition;
+import java.util.List;
 
 /**
  * @author Created by gerry
- * @version 1.0
- * @date 2021-02-27-10:41 PM
+ * @date 2021-03-01-10:47 PM
  */
-public class DeviceManagerModule extends AbastractModuleDefinition {
+public interface ModelManager {
 
-    private String name = "device-manager";
+    List<Model> allModels();
 
-    @Override
-    public String module() {
-        return name;
-    }
 }

@@ -10,18 +10,16 @@ core:
     b: 1
     c: 1.6
     ## 物模型、传输协议（gateway）插件、消息协议插件
-device-manager:
+device:
   which: default
   default:
     ##
-metadata-storage:
+storage:
   which: postgresql
   postgresql:
     url: r2dbc:postgresql://localhost:5432/giot
     username: postgres
     password: giot
-devicedata-storage:
-  which: elasticsearch/mysql/postgresql/
   elasticsearch:
     url: 127.0.0.1:9200
     username: elasticsearch

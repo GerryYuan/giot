@@ -16,26 +16,25 @@
  *
  */
 
-package org.giot.core.container;
+package org.giot.core.exception;
 
-import java.util.Arrays;
-import org.giot.core.exception.ServiceNotFoundException;
-import org.giot.core.service.Service;
+import java.util.function.Supplier;
 
 /**
  * @author Created by gerry
- * @date 2021-02-27-11:22 PM
+ * @date 2021-02-28-9:58 PM
  */
-public abstract class AbstractContainer implements Container {
+public class ServiceNotFoundException extends RuntimeException implements Supplier<ServiceNotFoundException> {
+    public ServiceNotFoundException(final String s) {
+        super(s);
+    }
 
-    public abstract String name();
+    public ServiceNotFoundException(final String s, final Exception ex) {
+        super(s, ex);
+    }
 
-    public abstract ContainerConfig createConfig();
-
-    public <T extends Service> Service getService(Class<T> clazz) {
-        return Arrays.stream(this.requireServices())
-                     .filter(service -> service.getClass() == clazz)
-                     .findFirst()
-                     .orElseThrow(new ServiceNotFoundException("Service [" + clazz.getName() + "] not found."));
+    @Override
+    public ServiceNotFoundException get() {
+        return this;
     }
 }

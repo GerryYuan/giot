@@ -45,6 +45,12 @@ public class ContainerManager implements ContainerHandler {
         return moduleConfiguration.getModules().contains(moduleName);
     }
 
+    @Override
+    public AbstractContainer getContainer(final String moduleName) {
+        //TODO 根据模块名称获取具体容器，然后根据容器获取Services
+        return null;
+    }
+
     public void init(ModuleConfiguration moduleConfiguration) throws ContainerConfigException {
         this.moduleConfiguration = moduleConfiguration;
         ServiceLoader<AbstractContainer> containers = ServiceLoader.load(AbstractContainer.class);

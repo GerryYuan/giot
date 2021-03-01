@@ -18,9 +18,15 @@
 
 package org.giot.core;
 
+import java.lang.reflect.Field;
+import java.util.Enumeration;
+import java.util.Properties;
 import java.util.ServiceLoader;
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.AbstractContainer;
+import org.giot.core.container.ContainerConfig;
 import org.giot.core.container.ContainerHandler;
+import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.module.ModuleConfiguration;
 import org.giot.core.utils.BeanUtils;
 
@@ -30,6 +36,7 @@ import org.giot.core.utils.BeanUtils;
  * @author Created by gerry
  * @date 2021-02-27-10:55 PM
  */
+@Slf4j
 public class ContainerManager implements ContainerHandler {
 
     private ModuleConfiguration moduleConfiguration;
@@ -39,7 +46,7 @@ public class ContainerManager implements ContainerHandler {
         return moduleConfiguration.getModules().contains(moduleName);
     }
 
-    public void init(ModuleConfiguration moduleConfiguration) {
+    public void init(ModuleConfiguration moduleConfiguration) throws ContainerConfigException {
         this.moduleConfiguration = moduleConfiguration;
         ServiceLoader<AbstractContainer> containers = ServiceLoader.load(AbstractContainer.class);
         for (AbstractContainer container : containers) {
@@ -49,12 +56,50 @@ public class ContainerManager implements ContainerHandler {
         }
     }
 
-    private void prepare(AbstractContainer container) {
+    private void prepare(AbstractContainer container) throws ContainerConfigException {
         //获取组件
         ModuleConfiguration.ComponentConfiguration component = moduleConfiguration.getComponentByContainerName(
             container.name());
         //把配置文件的内容赋值给ContainerConfig
-        BeanUtils.copy(component.getProperties(), container.createConfig());
+        try {
+            copyProperties(component.getProperties(), container.createConfig(), container.name());
+        } catch (IllegalAccessException e) {
+            throw new ContainerConfigException(
+                container.name() + " container config transport to config bean failure.", e);
+        }
         container.prepare();
+    }
+
+    private void copyProperties(Properties src, ContainerConfig dest,
+                                String container) throws IllegalAccessException {
+        if (dest == null) {
+            return;
+        }
+        Enumeration<?> propertyNames = src.propertyNames();
+        while (propertyNames.hasMoreElements()) {
+            String propertyName = (String) propertyNames.nextElement();
+            Class<? extends ContainerConfig> destClass = dest.getClass();
+            try {
+                Field field = getDeclaredField(destClass, propertyName);
+                field.setAccessible(true);
+                field.set(dest, src.get(propertyName));
+            } catch (NoSuchFieldException e) {
+                log.warn(propertyName + " setting is not supported in " + container + " container");
+            }
+        }
+    }
+
+    private Field getDeclaredField(Class<?> destClass, String fieldName) throws NoSuchFieldException {
+        if (destClass != null) {
+            Field[] fields = destClass.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getName().equals(fieldName)) {
+                    return field;
+                }
+            }
+            return getDeclaredField(destClass.getSuperclass(), fieldName);
+        }
+
+        throw new NoSuchFieldException();
     }
 }

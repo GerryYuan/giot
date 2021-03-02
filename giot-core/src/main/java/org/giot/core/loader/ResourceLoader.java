@@ -37,11 +37,11 @@ import org.giot.core.module.ModuleConfiguration;
  */
 public interface ResourceLoader {
 
-    List<ModuleConfiguration.ComponentConfiguration> loadComponents(Map<String, Object> config);
+    List<ModuleConfiguration.ContainerDefinition> loadContainerDefs(Map<String, Object> config);
 
     ModuleConfiguration load() throws FileNotFoundException;
 
-    void which(Map<String, Object> config, List<ModuleConfiguration.ComponentConfiguration> components);
+    void which(Map<String, Object> config, List<ModuleConfiguration.ContainerDefinition> components);
 
     default Reader read(String fileName) throws FileNotFoundException {
         return new InputStreamReader(readToStream(fileName));

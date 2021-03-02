@@ -16,16 +16,16 @@
  *
  */
 
-package org.giot.core;
+package org.giot.core.container;
 
 import java.lang.reflect.Field;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
-import org.giot.core.container.AbstractContainer;
-import org.giot.core.container.ContainerConfig;
-import org.giot.core.container.ContainerHandler;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.module.ModuleConfiguration;
 
@@ -38,39 +38,52 @@ import org.giot.core.module.ModuleConfiguration;
 @Slf4j
 public class ContainerManager implements ContainerHandler {
 
-    private ModuleConfiguration moduleConfiguration;
+    private List<ModuleConfiguration.ContainerDefinition> containerDefinitions;
 
-    @Override
-    public boolean has(final String moduleName) {
-        return moduleConfiguration.getModules().contains(moduleName);
+    private Map<String, AbstractContainer> containers = new ConcurrentHashMap<>();
+
+    public ContainerManager(final List<ModuleConfiguration.ContainerDefinition> containerDefinitions) {
+        this.containerDefinitions = containerDefinitions;
     }
 
     @Override
-    public AbstractContainer getContainer(final String moduleName) {
-        //TODO 根据模块名称获取具体容器，然后根据容器获取Services
-        return null;
+    public boolean has(final String containerName) {
+        return containerDefinitions.stream()
+                                   .filter(cd -> cd.getName().equalsIgnoreCase(containerName))
+                                   .findAny()
+                                   .isPresent();
     }
 
-    public void init(ModuleConfiguration moduleConfiguration) throws ContainerConfigException {
-        this.moduleConfiguration = moduleConfiguration;
-        ServiceLoader<AbstractContainer> containers = ServiceLoader.load(AbstractContainer.class);
-        for (AbstractContainer container : containers) {
+    @Override
+    public AbstractContainer getContainer(final String containerName) {
+        return containers.get(containerName);
+    }
+
+    public void init() throws ContainerConfigException {
+        ServiceLoader<AbstractContainer> containerServiceLoader = ServiceLoader.load(AbstractContainer.class);
+        for (AbstractContainer container : containerServiceLoader) {
             prepare(container);
             container.start();
             container.after();
+            containers.put(container.name(), container);
         }
     }
 
     private void prepare(AbstractContainer container) throws ContainerConfigException {
-        //获取组件
-        ModuleConfiguration.ComponentConfiguration component = moduleConfiguration.getComponentByContainerName(
-            container.name());
+        //获取容器def
+        ModuleConfiguration.ContainerDefinition containerDef = containerDefinitions.stream()
+                                                                                   .filter(cd -> cd.getName()
+                                                                                                   .equalsIgnoreCase(
+                                                                                                       container.name()))
+                                                                                   .findFirst()
+                                                                                   .orElse(null);
+
         //把配置文件的内容赋值给ContainerConfig
         try {
-            copyProperties(component.getProperties(), container.createConfig(), container.name());
+            copyProperties(containerDef.getProperties(), container.createConfig(), container.name());
         } catch (IllegalAccessException e) {
             throw new ContainerConfigException(
-                component.getName() + " component config transport to config bean failure.", e);
+                containerDef.getName() + " component config transport to config bean failure.", e);
         }
         container.prepare();
     }

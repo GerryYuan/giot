@@ -42,70 +42,44 @@ public class ModuleConfiguration {
     public static final String WHICH = "which";
 
     @Getter
-    private Map<ModuleDefinition, List<ComponentConfiguration>> moduleConfigurations = new ConcurrentHashMap<>();
+    private Map<ModuleDefinition, List<ContainerDefinition>> moduleConfigurations = new ConcurrentHashMap<>();
 
     @Getter
     private Set<String> modules = new HashSet<>();
 
+    @Getter
     private ServiceLoader<ModuleDefinition> defs;
 
-    public List<ComponentConfiguration> getComponents(String name) {
-        ModuleDefinition moduleDefinition = supports(name);
-        return moduleConfigurations.get(moduleDefinition);
+    public void addModule(String moduleName) {
+        addModule(moduleName, new ArrayList<>(1));
     }
 
-    public List<ComponentConfiguration> getAllComponents() {
-        List<ComponentConfiguration> componentConfigurations = new ArrayList<>(10);
-        for (String module : modules) {
-            List<ModuleConfiguration.ComponentConfiguration> components = getComponents(module);
-            if (EmptyUtils.isEmpty(components)) {
-                continue;
-            }
-            componentConfigurations.addAll(components);
-        }
-        return componentConfigurations;
-    }
-
-    public ModuleConfiguration.ComponentConfiguration getComponentByContainerName(String containerName) {
-        return getAllComponents().stream()
-                                 .filter(component -> component.getName().equalsIgnoreCase(containerName))
-                                 .findFirst()
-                                 .orElse(null);
-    }
-
-    public void addModule(String name) {
-        addModule(name, new ArrayList<>(1));
-    }
-
-    public void addModule(String name, List<ComponentConfiguration> components) {
-        ModuleDefinition moduleDefinition = supports(name);
+    public void addModule(String moduleName, List<ContainerDefinition> containerDefinitions) {
+        ModuleDefinition moduleDefinition = supports(moduleName);
         if (EmptyUtils.isEmpty(moduleDefinition)) {
-            log.warn("Module [{}] is not support, don't load it.", name);
+            log.warn("Module [{}] is not support, don't load it.", moduleName);
             return;
         }
-        addModule(moduleDefinition, components);
+        addModule(
+            moduleDefinition, EmptyUtils.isEmpty(containerDefinitions) ? new ArrayList<>(1) : containerDefinitions);
     }
 
-    private void addModule(ModuleDefinition module, List<ComponentConfiguration> components) {
-        if (EmptyUtils.isEmpty(components)) {
-            moduleConfigurations.put(module, new ArrayList<>(1));
+    private void addModule(ModuleDefinition module, List<ContainerDefinition> containerDefinitions) {
+        List<ContainerDefinition> containerDefs = moduleConfigurations.get(module);
+        if (EmptyUtils.isEmpty(containerDefs)) {
+            moduleConfigurations.put(module, containerDefinitions);
         } else {
-            List<ComponentConfiguration> oldC = moduleConfigurations.get(module);
-            if (EmptyUtils.isEmpty(oldC)) {
-                moduleConfigurations.put(module, components);
-            } else {
-                oldC.addAll(components);
-            }
+            containerDefs.addAll(containerDefinitions);
         }
         modules.add(module.module());
     }
 
-    private ModuleDefinition supports(String name) {
+    public ModuleDefinition supports(String moduleName) {
         if (this.defs == null) {
             this.defs = ServiceLoader.load(ModuleDefinition.class);
         }
         for (ModuleDefinition moduleDefinition : this.defs) {
-            if (moduleDefinition.module().equalsIgnoreCase(name)) {
+            if (moduleDefinition.module().equalsIgnoreCase(moduleName)) {
                 return moduleDefinition;
             }
         }
@@ -114,7 +88,7 @@ public class ModuleConfiguration {
 
     @Getter
     @AllArgsConstructor
-    public static class ComponentConfiguration {
+    public static class ContainerDefinition {
         private String name;
 
         private Properties properties;

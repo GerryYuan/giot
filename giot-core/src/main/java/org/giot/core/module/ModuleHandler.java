@@ -19,9 +19,10 @@
 package org.giot.core.module;
 
 /**
- * @author Created by gerry
- * @version 1.0
- * @date 2021-02-25-10:08 PM
+ * @author yuanguohua on 2021/3/2 19:01
  */
-public abstract class AbastractModuleDefinition implements ModuleDefinition {
+public interface ModuleHandler {
+
+    boolean hasModule(String moduleName);
+
 }

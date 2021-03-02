@@ -18,14 +18,14 @@
 
 package org.giot.device;
 
-import org.giot.core.module.AbastractModuleDefinition;
+import org.giot.core.module.AbstractModuleDefinition;
 
 /**
  * @author Created by gerry
  * @version 1.0
  * @date 2021-02-27-10:41 PM
  */
-public class DeviceModule extends AbastractModuleDefinition {
+public class DeviceModule extends AbstractModuleDefinition {
 
     private String name = "device";
 

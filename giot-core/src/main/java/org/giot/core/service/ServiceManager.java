@@ -16,22 +16,10 @@
  *
  */
 
-package org.giot.core;
-
-import org.giot.core.module.AbstractModuleDefinition;
+package org.giot.core.service;
 
 /**
- * @author Created by gerry
- * @version 1.0
- * @date 2021-02-25-9:58 PM
+ * @author yuanguohua on 2021/3/2 20:13
  */
-public class CoreModule extends AbstractModuleDefinition {
-
-    public final static String NAME = "core";
-
-    @Override
-    public String module() {
-        return CoreModule.NAME;
-    }
-
+public class ServiceManager implements ServiceHandler {
 }

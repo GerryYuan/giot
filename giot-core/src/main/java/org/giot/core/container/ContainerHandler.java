@@ -6,7 +6,7 @@ package org.giot.core.container;
  */
 public interface ContainerHandler {
 
-    boolean has(String moduleName);
+    boolean has(String containerName);
 
-    AbstractContainer getContainer(String moduleName);
+    AbstractContainer getContainer(String containerName);
 }

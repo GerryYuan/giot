@@ -18,12 +18,12 @@
 
 package org.giot.devidedata.storage;
 
-import org.giot.core.module.AbastractModuleDefinition;
+import org.giot.core.module.AbstractModuleDefinition;
 
 /**
  * @author yuanguohua on 2021/2/26 16:05
  */
-public class DeviceDataStorageModule extends AbastractModuleDefinition {
+public class DeviceDataStorageModule extends AbstractModuleDefinition {
     private String name = "metadata-storage";
 
     @Override

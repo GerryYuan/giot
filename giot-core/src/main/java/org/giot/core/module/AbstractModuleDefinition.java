@@ -16,22 +16,13 @@
  *
  */
 
-package org.giot.core;
-
-import org.giot.core.module.AbstractModuleDefinition;
+package org.giot.core.module;
 
 /**
  * @author Created by gerry
  * @version 1.0
- * @date 2021-02-25-9:58 PM
+ * @date 2021-02-25-10:08 PM
  */
-public class CoreModule extends AbstractModuleDefinition {
-
-    public final static String NAME = "core";
-
-    @Override
-    public String module() {
-        return CoreModule.NAME;
-    }
+public abstract class AbstractModuleDefinition implements ModuleDefinition {
 
 }

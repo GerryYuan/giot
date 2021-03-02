@@ -18,12 +18,12 @@
 
 package org.giot.metadata.storage;
 
-import org.giot.core.module.AbastractModuleDefinition;
+import org.giot.core.module.AbstractModuleDefinition;
 
 /**
  * @author yuanguohua on 2021/2/26 16:05
  */
-public class MetadataStorageModule extends AbastractModuleDefinition {
+public class MetadataStorageModule extends AbstractModuleDefinition {
     private String name = "metadata-storage";
 
     @Override

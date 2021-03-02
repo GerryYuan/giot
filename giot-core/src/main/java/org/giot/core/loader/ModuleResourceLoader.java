@@ -55,10 +55,10 @@ public class ModuleResourceLoader implements ResourceLoader {
     }
 
     @Override
-    public List<ModuleConfiguration.ComponentConfiguration> loadComponents(final Map<String, Object> config) {
-        List<ModuleConfiguration.ComponentConfiguration> components = new ArrayList<>(1);
-        which(config, components);
-        return components;
+    public List<ModuleConfiguration.ContainerDefinition> loadContainerDefs(final Map<String, Object> config) {
+        List<ModuleConfiguration.ContainerDefinition> containerDefinitions = new ArrayList<>(1);
+        which(config, containerDefinitions);
+        return containerDefinitions;
     }
 
     @Override
@@ -66,8 +66,8 @@ public class ModuleResourceLoader implements ResourceLoader {
         loadYaml(fileName);
         ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
         moduleConfig.forEach((k, v) -> {
-            //ymal文件读取模块，根据配置文件读取的模块名称去加载模块
-            moduleConfiguration.addModule(k, loadComponents(v));
+            //ymal文件读取模块，根据配置文件读取的模块名称去加载模块以及容器
+            moduleConfiguration.addModule(k, loadContainerDefs(v));
         });
         return moduleConfiguration;
     }
@@ -77,7 +77,7 @@ public class ModuleResourceLoader implements ResourceLoader {
      */
     @Override
     public void which(final Map<String, Object> config,
-                      final List<ModuleConfiguration.ComponentConfiguration> components) {
+                      final List<ModuleConfiguration.ContainerDefinition> containerDefinitions) {
         //如果不存在which，则过滤
         String which = (String) config.get(ModuleConfiguration.WHICH);
         if (EmptyUtils.isEmpty(which)) {
@@ -85,10 +85,10 @@ public class ModuleResourceLoader implements ResourceLoader {
         }
         Properties properties = new Properties();
         LinkedHashMap map = (LinkedHashMap) config.get(which);
-        if(EmptyUtils.isNotEmpty(map)){
+        if (EmptyUtils.isNotEmpty(map)) {
             properties.putAll(map);
         }
-        components.add(new ModuleConfiguration.ComponentConfiguration(which, properties));
+        containerDefinitions.add(new ModuleConfiguration.ContainerDefinition(which, properties));
     }
 
 }

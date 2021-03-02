@@ -30,6 +30,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.exception.ModuleNotFoundException;
 import org.giot.core.utils.EmptyUtils;
 
 /**
@@ -74,7 +75,7 @@ public class ModuleConfiguration {
         modules.add(module.module());
     }
 
-    public ModuleDefinition supports(String moduleName) {
+    protected ModuleDefinition supports(String moduleName) {
         if (this.defs == null) {
             this.defs = ServiceLoader.load(ModuleDefinition.class);
         }
@@ -83,12 +84,13 @@ public class ModuleConfiguration {
                 return moduleDefinition;
             }
         }
-        return null;
+        throw new ModuleNotFoundException("Module [" + moduleName + "] not found");
     }
 
     @Getter
     @AllArgsConstructor
     public static class ContainerDefinition {
+
         private String name;
 
         private Properties properties;

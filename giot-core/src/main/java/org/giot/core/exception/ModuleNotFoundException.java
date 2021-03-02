@@ -16,13 +16,25 @@
  *
  */
 
-package org.giot.core.module;
+package org.giot.core.exception;
+
+import java.util.function.Supplier;
 
 /**
- * @author yuanguohua on 2021/3/2 19:01
+ * @author Created by gerry
+ * @date 2021-02-28-9:58 PM
  */
-public interface ModuleHandler {
+public class ModuleNotFoundException extends RuntimeException implements Supplier<ModuleNotFoundException> {
+    public ModuleNotFoundException(final String s) {
+        super(s);
+    }
 
-    boolean hasModule(String moduleName);
+    public ModuleNotFoundException(final String s, final Exception ex) {
+        super(s, ex);
+    }
 
+    @Override
+    public ModuleNotFoundException get() {
+        return this;
+    }
 }

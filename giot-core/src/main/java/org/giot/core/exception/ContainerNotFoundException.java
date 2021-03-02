@@ -16,24 +16,25 @@
  *
  */
 
-package org.giot.starter;
+package org.giot.core.exception;
 
-import java.io.FileNotFoundException;
-import org.giot.core.exception.ContainerConfigException;
-import org.giot.core.loader.ModuleResourceLoader;
-import org.giot.core.loader.ResourceLoader;
-import org.giot.core.module.ModuleConfiguration;
-import org.giot.core.module.ModuleDefinitionManager;
+import java.util.function.Supplier;
 
 /**
- * @author yuanguohua on 2021/2/26 16:11
+ * @author Created by gerry
+ * @date 2021-02-28-9:58 PM
  */
-public class GiotStarter {
+public class ContainerNotFoundException extends RuntimeException implements Supplier<ContainerNotFoundException> {
+    public ContainerNotFoundException(final String s) {
+        super(s);
+    }
 
-    public static void main(String[] args) throws FileNotFoundException, ContainerConfigException {
-        ResourceLoader resourceLoader = new ModuleResourceLoader("application.yml");
-        ModuleConfiguration moduleConfiguration = resourceLoader.load();
-        ModuleDefinitionManager moduleManager = new ModuleDefinitionManager();
-        moduleManager.init(moduleConfiguration);
+    public ContainerNotFoundException(final String s, final Exception ex) {
+        super(s, ex);
+    }
+
+    @Override
+    public ContainerNotFoundException get() {
+        return this;
     }
 }

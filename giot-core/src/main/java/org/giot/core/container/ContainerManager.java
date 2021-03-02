@@ -19,6 +19,7 @@
 package org.giot.core.container;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,11 @@ import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.exception.ContainerConfigException;
+import org.giot.core.exception.ContainerNotFoundException;
 import org.giot.core.module.ModuleConfiguration;
+import org.giot.core.module.ModuleDefinition;
+import org.giot.core.module.ModuleDefinitionManager;
+import org.giot.core.utils.EmptyUtils;
 
 /**
  * 容器管理者
@@ -38,25 +43,29 @@ import org.giot.core.module.ModuleConfiguration;
 @Slf4j
 public class ContainerManager implements ContainerHandler {
 
-    private List<ModuleConfiguration.ContainerDefinition> containerDefinitions;
+    private ModuleDefinitionManager moduleDefinitionManager;
 
-    private Map<String, AbstractContainer> containers = new ConcurrentHashMap<>();
+    private Map<ModuleDefinition, List<AbstractContainer>> containers = new ConcurrentHashMap<>();
 
-    public ContainerManager(final List<ModuleConfiguration.ContainerDefinition> containerDefinitions) {
-        this.containerDefinitions = containerDefinitions;
+    public ContainerManager(final ModuleDefinitionManager moduleDefinitionManager) {
+        this.moduleDefinitionManager = moduleDefinitionManager;
     }
 
     @Override
-    public boolean has(final String containerName) {
-        return containerDefinitions.stream()
-                                   .filter(cd -> cd.getName().equalsIgnoreCase(containerName))
-                                   .findAny()
-                                   .isPresent();
+    public boolean has(final String moduleName, final String containerName) {
+        List<AbstractContainer> cs = containers.get(moduleDefinitionManager.find(moduleName));
+        return cs.stream()
+                 .filter(container -> container.name().equalsIgnoreCase(containerName))
+                 .findAny()
+                 .isPresent();
     }
 
     @Override
-    public AbstractContainer getContainer(final String containerName) {
-        return containers.get(containerName);
+    public AbstractContainer find(final String moduleName, final String containerName) {
+        List<AbstractContainer> cs = containers.get(moduleDefinitionManager.find(moduleName));
+        return cs.stream()
+                 .filter(container -> container.name().equalsIgnoreCase(containerName))
+                 .findAny().orElseThrow(new ContainerNotFoundException("Container [" + containerName + "] not found"));
     }
 
     public void init() throws ContainerConfigException {
@@ -65,18 +74,23 @@ public class ContainerManager implements ContainerHandler {
             prepare(container);
             container.start();
             container.after();
-            containers.put(container.name(), container);
+            addContainer(moduleDefinitionManager.find(container.module()), container);
+        }
+    }
+
+    private void addContainer(ModuleDefinition moduleDefinition, AbstractContainer container) {
+        List<AbstractContainer> cs = this.containers.get(moduleDefinition);
+        if (EmptyUtils.isEmpty(cs)) {
+            containers.put(moduleDefinition, new ArrayList<>(3));
+        } else {
+            cs.add(container);
         }
     }
 
     private void prepare(AbstractContainer container) throws ContainerConfigException {
         //获取容器def
-        ModuleConfiguration.ContainerDefinition containerDef = containerDefinitions.stream()
-                                                                                   .filter(cd -> cd.getName()
-                                                                                                   .equalsIgnoreCase(
-                                                                                                       container.name()))
-                                                                                   .findFirst()
-                                                                                   .orElse(null);
+        ModuleConfiguration.ContainerDefinition containerDef = moduleDefinitionManager.find(
+            container.module(), container.name());
 
         //把配置文件的内容赋值给ContainerConfig
         try {
@@ -85,6 +99,7 @@ public class ContainerManager implements ContainerHandler {
             throw new ContainerConfigException(
                 containerDef.getName() + " component config transport to config bean failure.", e);
         }
+        container.setContainerManager(this);
         container.prepare();
     }
 

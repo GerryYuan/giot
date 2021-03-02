@@ -37,6 +37,11 @@ public class CoreContainer extends AbstractContainer {
     }
 
     @Override
+    public String module() {
+        return CoreModule.NAME;
+    }
+
+    @Override
     public ContainerConfig createConfig() {
         this.coreContainerConfig = new CoreContainerConfig();
         return this.coreContainerConfig;
@@ -44,6 +49,8 @@ public class CoreContainer extends AbstractContainer {
 
     @Override
     public void prepare() {
+        //获取容器管理者，然后获取容器，再根据容器获取服务
+        find(CoreModule.NAME, Container.DEFAULT);
         System.out.println(coreContainerConfig);
     }
 

@@ -23,12 +23,13 @@ import java.util.List;
 import lombok.Getter;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.exception.ContainerConfigException;
+import org.giot.core.exception.ContainerNotFoundException;
 import org.giot.core.utils.EmptyUtils;
 
 /**
  * @author yuanguohua on 2021/3/2 19:01
  */
-public class ModuleManager implements ModuleHandler {
+public class ModuleDefinitionManager implements ModuleDefinitionHandler {
 
     private ModuleConfiguration moduleConfiguration;
 
@@ -36,8 +37,24 @@ public class ModuleManager implements ModuleHandler {
     private ContainerManager containerManager;
 
     @Override
-    public boolean hasModule(final String moduleName) {
+    public boolean has(final String moduleName) {
         return moduleConfiguration.getModules().contains(moduleName);
+    }
+
+    @Override
+    public ModuleDefinition find(final String moduleName) {
+        return moduleConfiguration.supports(moduleName);
+    }
+
+    @Override
+    public ModuleConfiguration.ContainerDefinition find(final String moduleName, final String containerName) {
+        return moduleConfiguration.getModuleConfigurations()
+                                  .get(find(moduleName))
+                                  .stream()
+                                  .filter(cd -> cd.getName().equalsIgnoreCase(containerName))
+                                  .findFirst()
+                                  .orElseThrow(new ContainerNotFoundException(
+                                      "Module [" + moduleName + "] not found container [" + containerName + "]"));
     }
 
     public void init(ModuleConfiguration moduleConfiguration) throws ContainerConfigException {
@@ -51,7 +68,7 @@ public class ModuleManager implements ModuleHandler {
             }
             containerDefinitions.addAll(containerDefs);
         }
-        this.containerManager = new ContainerManager(containerDefinitions);
+        this.containerManager = new ContainerManager(this);
         containerManager.init();
     }
 }

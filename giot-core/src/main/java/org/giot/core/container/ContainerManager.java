@@ -19,13 +19,14 @@
 package org.giot.core.container;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerNotFoundException;
@@ -68,20 +69,26 @@ public class ContainerManager implements ContainerHandler {
                  .findAny().orElseThrow(new ContainerNotFoundException("Container [" + containerName + "] not found"));
     }
 
+    @Override
+    public ModuleDefinition find(final String moduleName) {
+        return moduleDefinitionManager.find(moduleName);
+    }
+
     public void init() throws ContainerConfigException {
         ServiceLoader<AbstractContainer> containerServiceLoader = ServiceLoader.load(AbstractContainer.class);
         for (AbstractContainer container : containerServiceLoader) {
+            container.setContainerManager(this);
+            addContainer(moduleDefinitionManager.find(container.module().name()), container);
             prepare(container);
             container.start();
             container.after();
-            addContainer(moduleDefinitionManager.find(container.module()), container);
         }
     }
 
     private void addContainer(ModuleDefinition moduleDefinition, AbstractContainer container) {
         List<AbstractContainer> cs = this.containers.get(moduleDefinition);
         if (EmptyUtils.isEmpty(cs)) {
-            containers.put(moduleDefinition, new ArrayList<>(3));
+            containers.put(moduleDefinition, Stream.of(container).collect(Collectors.toList()));
         } else {
             cs.add(container);
         }
@@ -90,7 +97,7 @@ public class ContainerManager implements ContainerHandler {
     private void prepare(AbstractContainer container) throws ContainerConfigException {
         //获取容器def
         ModuleConfiguration.ContainerDefinition containerDef = moduleDefinitionManager.find(
-            container.module(), container.name());
+            container.module().name(), container.name());
 
         //把配置文件的内容赋值给ContainerConfig
         try {
@@ -99,7 +106,6 @@ public class ContainerManager implements ContainerHandler {
             throw new ContainerConfigException(
                 containerDef.getName() + " component config transport to config bean failure.", e);
         }
-        container.setContainerManager(this);
         container.prepare();
     }
 

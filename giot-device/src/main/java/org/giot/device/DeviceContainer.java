@@ -21,6 +21,8 @@ package org.giot.device;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.device.DeviceModule;
+import org.giot.core.module.ModuleDefinition;
 import org.giot.core.service.Service;
 
 /**
@@ -34,6 +36,11 @@ public class DeviceContainer extends AbstractContainer {
     @Override
     public String name() {
         return Container.DEFAULT;
+    }
+
+    @Override
+    public ModuleDefinition module() {
+        return find(DeviceModule.NAME);
     }
 
     @Override

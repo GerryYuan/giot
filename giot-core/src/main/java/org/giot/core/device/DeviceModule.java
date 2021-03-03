@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.device;
+package org.giot.core.device;
 
 import org.giot.core.module.AbstractModuleDefinition;
 
@@ -26,11 +26,10 @@ import org.giot.core.module.AbstractModuleDefinition;
  * @date 2021-02-27-10:41 PM
  */
 public class DeviceModule extends AbstractModuleDefinition {
-
-    private String name = "device";
+    public final static String NAME = "device";
 
     @Override
-    public String module() {
-        return name;
+    public String name() {
+        return NAME;
     }
 }

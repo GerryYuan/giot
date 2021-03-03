@@ -55,14 +55,9 @@ public class ModuleConfiguration {
         addModule(moduleName, new ArrayList<>(1));
     }
 
-    public void addModule(String moduleName, List<ContainerDefinition> containerDefinitions) {
-        ModuleDefinition moduleDefinition = supports(moduleName);
-        if (EmptyUtils.isEmpty(moduleDefinition)) {
-            log.warn("Module [{}] is not support, don't load it.", moduleName);
-            return;
-        }
-        addModule(
-            moduleDefinition, EmptyUtils.isEmpty(containerDefinitions) ? new ArrayList<>(1) : containerDefinitions);
+    public void addModule(String moduleName, List<ContainerDefinition> cds) {
+        ModuleDefinition md = supports(moduleName);
+        addModule(md, EmptyUtils.isEmpty(cds) ? new ArrayList<>(1) : cds);
     }
 
     private void addModule(ModuleDefinition module, List<ContainerDefinition> containerDefinitions) {
@@ -72,7 +67,7 @@ public class ModuleConfiguration {
         } else {
             containerDefs.addAll(containerDefinitions);
         }
-        modules.add(module.module());
+        modules.add(module.name());
     }
 
     protected ModuleDefinition supports(String moduleName) {
@@ -80,7 +75,7 @@ public class ModuleConfiguration {
             this.defs = ServiceLoader.load(ModuleDefinition.class);
         }
         for (ModuleDefinition moduleDefinition : this.defs) {
-            if (moduleDefinition.module().equalsIgnoreCase(moduleName)) {
+            if (moduleDefinition.name().equalsIgnoreCase(moduleName)) {
                 return moduleDefinition;
             }
         }

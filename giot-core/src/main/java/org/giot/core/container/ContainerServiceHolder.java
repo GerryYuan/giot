@@ -16,18 +16,11 @@
  *
  */
 
-package org.giot.devidedata.storage;
+package org.giot.core.container;
 
-import org.giot.core.module.AbstractModuleDefinition;
+import org.giot.core.service.Service;
 
-/**
- * @author yuanguohua on 2021/2/26 16:05
- */
-public class DeviceDataStorageModule extends AbstractModuleDefinition {
-    private String name = "metadata-storage";
+public interface ContainerServiceHolder {
 
-    @Override
-    public String module() {
-        return name;
-    }
+    <T extends Service> Service getService(Class<T> clazz);
 }

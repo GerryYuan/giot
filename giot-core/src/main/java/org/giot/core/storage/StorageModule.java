@@ -16,18 +16,18 @@
  *
  */
 
-package org.giot.metadata.storage;
+package org.giot.core.storage;
 
 import org.giot.core.module.AbstractModuleDefinition;
 
 /**
  * @author yuanguohua on 2021/2/26 16:05
  */
-public class MetadataStorageModule extends AbstractModuleDefinition {
-    private String name = "metadata-storage";
+public class StorageModule extends AbstractModuleDefinition {
+    private String name = "storage";
 
     @Override
-    public String module() {
+    public String name() {
         return name;
     }
 }

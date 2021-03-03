@@ -28,6 +28,6 @@ public interface ModuleDefinition {
      *
      * @return
      */
-    String module();
+    String name();
 
 }

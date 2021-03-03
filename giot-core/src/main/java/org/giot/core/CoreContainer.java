@@ -21,6 +21,7 @@ package org.giot.core;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.module.ModuleDefinition;
 import org.giot.core.service.Service;
 
 /**
@@ -37,8 +38,8 @@ public class CoreContainer extends AbstractContainer {
     }
 
     @Override
-    public String module() {
-        return CoreModule.NAME;
+    public ModuleDefinition module() {
+        return find(CoreModule.NAME);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class CoreContainer extends AbstractContainer {
     @Override
     public void prepare() {
         //获取容器管理者，然后获取容器，再根据容器获取服务
-        find(CoreModule.NAME, Container.DEFAULT);
+        find(CoreModule.NAME, Container.DEFAULT).getService(null);
         System.out.println(coreContainerConfig);
     }
 

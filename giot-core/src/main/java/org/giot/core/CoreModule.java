@@ -30,7 +30,7 @@ public class CoreModule extends AbstractModuleDefinition {
     public final static String NAME = "core";
 
     @Override
-    public String module() {
+    public String name() {
         return CoreModule.NAME;
     }
 

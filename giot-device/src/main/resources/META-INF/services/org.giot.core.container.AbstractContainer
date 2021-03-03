@@ -16,4 +16,4 @@
 #
 #
 
-org.giot.device.DeviceModule
+org.giot.device.DeviceContainer

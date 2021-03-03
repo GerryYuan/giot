@@ -18,13 +18,10 @@
 
 package org.giot.core.module;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerNotFoundException;
-import org.giot.core.utils.EmptyUtils;
 
 /**
  * @author yuanguohua on 2021/3/2 19:01
@@ -59,15 +56,6 @@ public class ModuleDefinitionManager implements ModuleDefinitionHandler {
 
     public void init(ModuleConfiguration moduleConfiguration) throws ContainerConfigException {
         this.moduleConfiguration = moduleConfiguration;
-        List<ModuleConfiguration.ContainerDefinition> containerDefinitions = new ArrayList<>(20);
-        for (ModuleDefinition moduleDef : moduleConfiguration.getDefs()) {
-            List<ModuleConfiguration.ContainerDefinition> containerDefs = moduleConfiguration.getModuleConfigurations()
-                                                                                             .get(moduleDef);
-            if (EmptyUtils.isEmpty(containerDefs)) {
-                continue;
-            }
-            containerDefinitions.addAll(containerDefs);
-        }
         this.containerManager = new ContainerManager(this);
         containerManager.init();
     }

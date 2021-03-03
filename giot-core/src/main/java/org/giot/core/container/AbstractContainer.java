@@ -18,34 +18,35 @@
 
 package org.giot.core.container;
 
-import java.util.Arrays;
 import lombok.Setter;
-import org.giot.core.exception.ServiceNotFoundException;
+import org.giot.core.module.ModuleDefinition;
 import org.giot.core.service.Service;
 
 /**
  * @author Created by gerry
  * @date 2021-02-27-11:22 PM
  */
-public abstract class AbstractContainer implements Container {
+public abstract class AbstractContainer implements Container, ContainerServiceHolder {
 
     @Setter
     private ContainerManager containerManager;
 
     public abstract String name();
 
-    public abstract String module();
+    public abstract ModuleDefinition module();
 
     public abstract ContainerConfig createConfig();
 
-    public <T extends Service> Service getService(Class<T> clazz) {
-        return Arrays.stream(this.requireServices())
-                     .filter(service -> service.getClass() == clazz)
-                     .findFirst()
-                     .orElseThrow(new ServiceNotFoundException("Service [" + clazz.getName() + "] not found."));
+    public ContainerServiceHolder find(String moduleName, String containerName) {
+        return this.containerManager.find(moduleName, containerName);
     }
 
-    public AbstractContainer find(String moduleName, String containerName) {
-        return this.containerManager.find(moduleName, containerName);
+    public ModuleDefinition find(String moduleName) {
+        return this.containerManager.find(moduleName);
+    }
+
+    @Override
+    public <T extends Service> Service getService(final Class<T> clazz) {
+        return null;
     }
 }

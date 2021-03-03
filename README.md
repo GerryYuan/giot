@@ -1,25 +1,38 @@
 ### giot IoT Platform, Device management, data collection, processing and visualization, multi protocol, rule engine
-### 数据上报上来，支持的协议（http、mqtt、tcp，自定义协议），网关（独立项目，类似thingsboard的gateway，用在协议解析），物模型，产品、设备管理，规则引擎core:
+##设计初衷
+希望能提供IOT平台一切支持，通过插件开发，支持设备管理、物模型，产品、设备管理、规则引擎、多种存储、sink、协议（http、mqtt、tcp，自定义协议）等等，只要改动配置文件就可以切换需要存储的方式
+把giot当成一个用于iot平台的中间件
+### 架构设计：
+###1、配置文件中，第一层是数据模块，第二层是数据组件，ModuleConfiguration
+###2、一个模块对应对个组件(ModuleDef)，一个组件对应一个容器(ContainerDefinition)，意思就是一个模块对应多个容器
+###3、加载配置文件
+###4、初始化容器，实现依赖注入（比如postgresql实例，对应的配置）
+```yaml
 core:
-  selector: default
+  which: default
   default:
-    
+    a: a
+    b: 1
+    c: 1.6
+    ## 物模型、传输协议（gateway）插件、消息协议插件
+device:
+  which: default
+  default:
+    ##
 storage:
-  selector: postgresql
+  which: postgresql
   postgresql:
     url: r2dbc:postgresql://localhost:5432/giot
     username: postgres
     password: giot
-
-### 设备数据上报插件，支持
-device-message-sink:
-  selector: elasticsearch/mysql/postgresql/
   elasticsearch:
     url: 127.0.0.1:9200
     username: elasticsearch
     password: giot
   mysql:
     url: xxx
+```
+
     
 ###IOT设备消息分为3个
 properties//设备消息上报属性

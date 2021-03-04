@@ -22,8 +22,9 @@ import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.device.DeviceModule;
+import org.giot.core.device.IDeviceService;
 import org.giot.core.module.ModuleDefinition;
-import org.giot.core.service.Service;
+import org.giot.device.service.DeviceService;
 
 /**
  * @author Created by gerry
@@ -40,7 +41,7 @@ public class DeviceContainer extends AbstractContainer {
 
     @Override
     public ModuleDefinition module() {
-        return find(DeviceModule.NAME);
+        return super.find(DeviceModule.NAME);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class DeviceContainer extends AbstractContainer {
 
     @Override
     public void prepare() {
-        //准备存储
+        super.register(IDeviceService.class, new DeviceService());
     }
 
     @Override
@@ -62,11 +63,6 @@ public class DeviceContainer extends AbstractContainer {
     @Override
     public void after() {
 
-    }
-
-    @Override
-    public Service[] requireServices() {
-        return new Service[0];
     }
 
 }

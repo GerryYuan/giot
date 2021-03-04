@@ -22,11 +22,12 @@ import lombok.Getter;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerNotFoundException;
+import org.giot.core.service.ServiceManager;
 
 /**
  * @author yuanguohua on 2021/3/2 19:01
  */
-public class ModuleDefinitionManager implements ModuleDefinitionHandler {
+public class ModuleManager implements ModuleHandler {
 
     private ModuleConfiguration moduleConfiguration;
 
@@ -56,7 +57,7 @@ public class ModuleDefinitionManager implements ModuleDefinitionHandler {
 
     public void init(ModuleConfiguration moduleConfiguration) throws ContainerConfigException {
         this.moduleConfiguration = moduleConfiguration;
-        this.containerManager = new ContainerManager(this);
+        this.containerManager = new ContainerManager(this, new ServiceManager());
         containerManager.init();
     }
 }

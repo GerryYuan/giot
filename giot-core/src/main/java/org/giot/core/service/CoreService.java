@@ -18,26 +18,8 @@
 
 package org.giot.core.service;
 
-import org.giot.core.exception.ServiceNotFoundException;
-
 /**
- * @author yuanguohua on 2021/3/2 20:13
+ * @author yuanguohua on 2021/3/4 18:04
  */
-public interface ServiceHandler {
-
-    /**
-     * 注册容器服务
-     * @param serviceType
-     * @param service
-     * @throws ServiceNotFoundException
-     */
-    void register(Class<? extends Service> serviceType, Service service) throws ServiceNotFoundException;
-
-    /**
-     * 获取容器服务实例
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    <T extends Service> T getService(Class<T> clazz);
+public class CoreService implements ICoreService {
 }

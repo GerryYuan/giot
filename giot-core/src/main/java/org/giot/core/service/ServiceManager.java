@@ -18,8 +18,36 @@
 
 package org.giot.core.service;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.giot.core.exception.ServiceNotFoundException;
+import org.giot.core.utils.EmptyUtils;
+
 /**
  * @author yuanguohua on 2021/3/2 20:13
  */
 public class ServiceManager implements ServiceHandler {
+
+    private final Map<Class<? extends Service>, Service> services = new HashMap<>();
+
+    @Override
+    public void register(final Class<? extends Service> serviceType,
+                         final Service service) throws ServiceNotFoundException {
+        if (serviceType.isInstance(service)) {
+            this.services.put(serviceType, service);
+        } else {
+            throw new ServiceNotFoundException(serviceType + " is not implemented by " + service);
+        }
+    }
+
+    @Override
+    public <T extends Service> T getService(final Class<T> clazz) {
+        Service service = services.get(clazz);
+        if (EmptyUtils.isNotEmpty(service)) {
+            return (T) service;
+        }
+        throw new ServiceNotFoundException(
+            "Service " + clazz.getName() + " should not be provided, based on container.");
+
+    }
 }

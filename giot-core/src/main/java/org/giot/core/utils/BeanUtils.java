@@ -1,6 +1,5 @@
 package org.giot.core.utils;
 
-import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,11 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.sf.cglib.beans.BeanCopier;
-import org.giot.core.CoreContainerConfig;
 import org.giot.core.exception.InstantException;
 
 /**
@@ -66,7 +62,7 @@ public class BeanUtils {
 
     public static <T> Set<T> copyBySet(Collection<?> datas, Class<T> clazz) {
         if (EmptyUtils.isEmpty(datas)) {
-            return Sets.newHashSet();
+            return new HashSet<>(1);
         }
         Objects.requireNonNull(clazz, "The 'class' must not be null!");
         Set<T> result = new HashSet<>(datas.size());
@@ -89,18 +85,4 @@ public class BeanUtils {
             throw new InstantException(clazz + ":Is the constructor accessible?", ex);
         }
     }
-
-    public static void main(String[] args) {
-        A a = new A("a", 1, 1.6);
-        CoreContainerConfig coreContainerConfig = BeanUtils.copy(a, CoreContainerConfig.class);
-        System.out.println(coreContainerConfig);
-    }
-}
-
-@AllArgsConstructor
-@Data
-class A {
-    private String a;
-    private int b;
-    private double c;
 }

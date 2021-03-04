@@ -16,28 +16,10 @@
  *
  */
 
-package org.giot.core.service;
+package org.giot.core.device;
 
-import org.giot.core.exception.ServiceNotFoundException;
+import org.giot.core.storage.IQueryDAO;
+import org.giot.core.storage.IStorageDAO;
 
-/**
- * @author yuanguohua on 2021/3/2 20:13
- */
-public interface ServiceHandler {
-
-    /**
-     * 注册容器服务
-     * @param serviceType
-     * @param service
-     * @throws ServiceNotFoundException
-     */
-    void register(Class<? extends Service> serviceType, Service service) throws ServiceNotFoundException;
-
-    /**
-     * 获取容器服务实例
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    <T extends Service> T getService(Class<T> clazz);
+public interface IDeviceService extends IStorageDAO, IQueryDAO {
 }

@@ -16,16 +16,7 @@
  *
  */
 
-package org.giot.core.module;
+package org.giot.core.storage;
 
-/**
- * @author yuanguohua on 2021/3/2 19:01
- */
-public interface ModuleDefinitionHandler {
-
-    boolean has(String moduleName);
-
-    ModuleDefinition find(String moduleName);
-
-    ModuleConfiguration.ContainerDefinition find(String moduleName, String containerName);
+public interface IQueryDAO extends DAO {
 }

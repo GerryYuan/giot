@@ -22,7 +22,8 @@ import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.module.ModuleDefinition;
-import org.giot.core.service.Service;
+import org.giot.core.service.CoreService;
+import org.giot.core.service.ICoreService;
 
 /**
  * @author Created by gerry
@@ -39,7 +40,7 @@ public class CoreContainer extends AbstractContainer {
 
     @Override
     public ModuleDefinition module() {
-        return find(CoreModule.NAME);
+        return super.find(CoreModule.NAME);
     }
 
     @Override
@@ -50,25 +51,21 @@ public class CoreContainer extends AbstractContainer {
 
     @Override
     public void prepare() {
+        //控制是否加载eg: es7、mysql、pgsql等容器
         //获取容器管理者，然后获取容器，再根据容器获取服务
-        find(CoreModule.NAME, Container.DEFAULT).getService(null);
+        super.register(ICoreService.class, new CoreService());
         System.out.println(coreContainerConfig);
     }
 
     @Override
     public void start() {
         //每个容器在启动时，需要初始化需要的具体的类
-        //比如
+        find(CoreModule.NAME, Container.DEFAULT).getService(ICoreService.class);
     }
 
     @Override
     public void after() {
 
-    }
-
-    @Override
-    public Service[] requireServices() {
-        return new Service[0];
     }
 
 }

@@ -32,7 +32,8 @@ import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerNotFoundException;
 import org.giot.core.module.ModuleConfiguration;
 import org.giot.core.module.ModuleDefinition;
-import org.giot.core.module.ModuleDefinitionManager;
+import org.giot.core.module.ModuleManager;
+import org.giot.core.service.ServiceManager;
 import org.giot.core.utils.EmptyUtils;
 
 /**
@@ -44,12 +45,16 @@ import org.giot.core.utils.EmptyUtils;
 @Slf4j
 public class ContainerManager implements ContainerHandler {
 
-    private ModuleDefinitionManager moduleDefinitionManager;
+    private ModuleManager moduleDefinitionManager;
+
+    private ServiceManager serviceManager;
 
     private Map<ModuleDefinition, List<AbstractContainer>> containers = new ConcurrentHashMap<>();
 
-    public ContainerManager(final ModuleDefinitionManager moduleDefinitionManager) {
+    public ContainerManager(final ModuleManager moduleDefinitionManager,
+                            final ServiceManager serviceManager) {
         this.moduleDefinitionManager = moduleDefinitionManager;
+        this.serviceManager = serviceManager;
     }
 
     @Override
@@ -77,24 +82,14 @@ public class ContainerManager implements ContainerHandler {
     public void init() throws ContainerConfigException {
         ServiceLoader<AbstractContainer> containerServiceLoader = ServiceLoader.load(AbstractContainer.class);
         for (AbstractContainer container : containerServiceLoader) {
-            container.setContainerManager(this);
-            addContainer(moduleDefinitionManager.find(container.module().name()), container);
             prepare(container);
             container.start();
-            container.after();
-        }
-    }
-
-    private void addContainer(ModuleDefinition moduleDefinition, AbstractContainer container) {
-        List<AbstractContainer> cs = this.containers.get(moduleDefinition);
-        if (EmptyUtils.isEmpty(cs)) {
-            containers.put(moduleDefinition, Stream.of(container).collect(Collectors.toList()));
-        } else {
-            cs.add(container);
+            after(container);
         }
     }
 
     private void prepare(AbstractContainer container) throws ContainerConfigException {
+        addContainer(container);
         //获取容器def
         ModuleConfiguration.ContainerDefinition containerDef = moduleDefinitionManager.find(
             container.module().name(), container.name());
@@ -107,6 +102,22 @@ public class ContainerManager implements ContainerHandler {
                 containerDef.getName() + " component config transport to config bean failure.", e);
         }
         container.prepare();
+    }
+
+    private void after(AbstractContainer container) {
+        container.after();
+    }
+
+    private void addContainer(AbstractContainer container) {
+        container.setContainerManager(this);
+        container.setServiceManager(this.serviceManager);
+        ModuleDefinition moduleDefinition = moduleDefinitionManager.find(container.module().name());
+        List<AbstractContainer> cs = this.containers.get(moduleDefinition);
+        if (EmptyUtils.isEmpty(cs)) {
+            containers.put(moduleDefinition, Stream.of(container).collect(Collectors.toList()));
+        } else {
+            cs.add(container);
+        }
     }
 
     private void copyProperties(Properties src, ContainerConfig dest, String container) throws IllegalAccessException {

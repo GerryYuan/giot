@@ -16,28 +16,16 @@
  *
  */
 
-package org.giot.core.service;
-
-import org.giot.core.exception.ServiceNotFoundException;
+package org.giot.core.module;
 
 /**
- * @author yuanguohua on 2021/3/2 20:13
+ * @author yuanguohua on 2021/3/2 19:01
  */
-public interface ServiceHandler {
+public interface ModuleHandler {
 
-    /**
-     * 注册容器服务
-     * @param serviceType
-     * @param service
-     * @throws ServiceNotFoundException
-     */
-    void register(Class<? extends Service> serviceType, Service service) throws ServiceNotFoundException;
+    boolean has(String moduleName);
 
-    /**
-     * 获取容器服务实例
-     * @param clazz
-     * @param <T>
-     * @return
-     */
-    <T extends Service> T getService(Class<T> clazz);
+    ModuleDefinition find(String moduleName);
+
+    ModuleConfiguration.ContainerDefinition find(String moduleName, String containerName);
 }

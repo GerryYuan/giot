@@ -16,11 +16,12 @@
  *
  */
 
-package org.giot.core.container;
+package org.giot.core.storage;
 
 import org.giot.core.service.Service;
 
-public interface ContainerServiceHolder {
-
-    <T extends Service> Service getService(Class<T> clazz);
+/**
+ * @author yuanguohua on 2021/3/4 16:48
+ */
+public interface DAO extends Service {
 }

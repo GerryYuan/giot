@@ -18,12 +18,10 @@
 
 package org.giot.device.service;
 
-import org.giot.core.service.Service;
+import org.giot.core.device.IDeviceService;
 
 /**
- * @author Created by gerry
- * @date 2021-03-01-9:58 PM
+ * @author yuanguohua on 2021/3/4 16:26
  */
-public interface DeviceManagerService extends Service {
-
+public class DeviceService implements IDeviceService {
 }

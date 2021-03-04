@@ -51,8 +51,7 @@ public class ModuleManager implements ModuleHandler {
                                   .stream()
                                   .filter(cd -> cd.getName().equalsIgnoreCase(containerName))
                                   .findFirst()
-                                  .orElseThrow(new ContainerNotFoundException(
-                                      "Module [" + moduleName + "] not found container [" + containerName + "]"));
+                                  .orElse(null);
     }
 
     public void init(ModuleConfiguration moduleConfiguration) throws ContainerConfigException {

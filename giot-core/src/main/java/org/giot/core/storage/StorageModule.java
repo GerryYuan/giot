@@ -24,10 +24,11 @@ import org.giot.core.module.AbstractModuleDefinition;
  * @author yuanguohua on 2021/2/26 16:05
  */
 public class StorageModule extends AbstractModuleDefinition {
-    private String name = "storage";
+
+    public final static String NAME = "storage";
 
     @Override
     public String name() {
-        return name;
+        return NAME;
     }
 }

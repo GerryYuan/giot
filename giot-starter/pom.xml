@@ -25,12 +25,7 @@
         </dependency>
         <dependency>
             <groupId>org.giot</groupId>
-            <artifactId>giot-devicedata-storage</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.giot</groupId>
-            <artifactId>giot-metadata-storage</artifactId>
+            <artifactId>storage-es7</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

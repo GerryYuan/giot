@@ -16,53 +16,47 @@
  *
  */
 
-package org.giot.device;
+package org.giot.storage.es7;
 
 import org.giot.core.container.AbstractContainer;
-import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
-import org.giot.core.device.DeviceModule;
-import org.giot.core.device.IDeviceService;
 import org.giot.core.module.ModuleDefinition;
-import org.giot.device.service.DeviceService;
+import org.giot.core.storage.StorageModule;
 
 /**
- * @author Created by gerry
- * @date 2021-03-01-9:46 PM
+ * @author yuanguohua on 2021/3/4 19:48
  */
-public class DeviceContainer extends AbstractContainer {
+public class ES7Container extends AbstractContainer {
 
-    private DeviceContainerConfig containerConfig;
+    private String ES7 = "elasticsearch7";
 
     @Override
     public String name() {
-        return Container.DEFAULT;
+        return ES7;
     }
 
     @Override
     public ModuleDefinition module() {
-        return super.find(DeviceModule.NAME);
+        return find(StorageModule.NAME);
     }
 
     @Override
     public ContainerConfig createConfig() {
-        this.containerConfig = new DeviceContainerConfig();
-        return containerConfig;
+        return null;
     }
 
     @Override
     public void prepare() {
-        super.register(IDeviceService.class, new DeviceService());
+
     }
 
     @Override
     public void start() {
-        System.out.println("DeviceContainer started...");
+
     }
 
     @Override
     public void after() {
 
     }
-
 }

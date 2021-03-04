@@ -45,21 +45,21 @@ import org.giot.core.utils.EmptyUtils;
 @Slf4j
 public class ContainerManager implements ContainerHandler {
 
-    private ModuleManager moduleDefinitionManager;
+    private ModuleManager moduleManager;
 
     private ServiceManager serviceManager;
 
     private Map<ModuleDefinition, List<AbstractContainer>> containers = new ConcurrentHashMap<>();
 
-    public ContainerManager(final ModuleManager moduleDefinitionManager,
+    public ContainerManager(final ModuleManager moduleManager,
                             final ServiceManager serviceManager) {
-        this.moduleDefinitionManager = moduleDefinitionManager;
+        this.moduleManager = moduleManager;
         this.serviceManager = serviceManager;
     }
 
     @Override
     public boolean has(final String moduleName, final String containerName) {
-        List<AbstractContainer> cs = containers.get(moduleDefinitionManager.find(moduleName));
+        List<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
         return cs.stream()
                  .filter(container -> container.name().equalsIgnoreCase(containerName))
                  .findAny()
@@ -68,7 +68,7 @@ public class ContainerManager implements ContainerHandler {
 
     @Override
     public AbstractContainer find(final String moduleName, final String containerName) {
-        List<AbstractContainer> cs = containers.get(moduleDefinitionManager.find(moduleName));
+        List<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
         return cs.stream()
                  .filter(container -> container.name().equalsIgnoreCase(containerName))
                  .findAny().orElseThrow(new ContainerNotFoundException("Container [" + containerName + "] not found"));
@@ -76,42 +76,63 @@ public class ContainerManager implements ContainerHandler {
 
     @Override
     public ModuleDefinition find(final String moduleName) {
-        return moduleDefinitionManager.find(moduleName);
+        return moduleManager.find(moduleName);
     }
 
     public void init() throws ContainerConfigException {
         ServiceLoader<AbstractContainer> containerServiceLoader = ServiceLoader.load(AbstractContainer.class);
         for (AbstractContainer container : containerServiceLoader) {
-            prepare(container);
+            initialize(container);
+            Properties properties = whichProperties(container);
+            if (properties == null) {
+                continue;
+            }
+            prepare(container, properties);
             container.start();
             after(container);
         }
     }
 
-    private void prepare(AbstractContainer container) throws ContainerConfigException {
-        addContainer(container);
-        //获取容器def
-        ModuleConfiguration.ContainerDefinition containerDef = moduleDefinitionManager.find(
-            container.module().name(), container.name());
+    private void initialize(AbstractContainer container) {
+        container.setContainerManager(this);
+        container.setServiceManager(this.serviceManager);
+    }
 
+    private Properties whichProperties(AbstractContainer container) {
+        String moduleName = container.module().name();
+        String containerName = container.name();
+        //获取容器def
+        ModuleConfiguration.ContainerDefinition containerDef = moduleManager.find(moduleName, containerName);
+        //如果当前代码中实现了很多容器插件，比如storage插件eg:es,es7,mysql等，但是配置文件中which中没有填写，则过滤
+        if (EmptyUtils.isEmpty(containerDef)) {
+            log.debug(
+                "Module [" + moduleName + "] should not be provided container [" + containerName + "], based on yaml file for 'which'.");
+            return null;
+        }
+        return containerDef.getProperties();
+    }
+
+    private void prepare(AbstractContainer container, final Properties properties) throws ContainerConfigException {
+        String containerName = container.name();
         //把配置文件的内容赋值给ContainerConfig
         try {
-            copyProperties(containerDef.getProperties(), container.createConfig(), container.name());
+            copyProperties(properties, container.createConfig(), containerName);
         } catch (IllegalAccessException e) {
             throw new ContainerConfigException(
-                containerDef.getName() + " component config transport to config bean failure.", e);
+                container.name() + " component config transport to config bean failure.", e);
         }
+        addContainer(container);
         container.prepare();
     }
 
     private void after(AbstractContainer container) {
         container.after();
+        log.info("The container [" + container.name() + "] provided by the module [" + container.module()
+                                                                                                .name() + "] is initialized");
     }
 
     private void addContainer(AbstractContainer container) {
-        container.setContainerManager(this);
-        container.setServiceManager(this.serviceManager);
-        ModuleDefinition moduleDefinition = moduleDefinitionManager.find(container.module().name());
+        ModuleDefinition moduleDefinition = moduleManager.find(container.module().name());
         List<AbstractContainer> cs = this.containers.get(moduleDefinition);
         if (EmptyUtils.isEmpty(cs)) {
             containers.put(moduleDefinition, Stream.of(container).collect(Collectors.toList()));

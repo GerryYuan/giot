@@ -18,10 +18,14 @@
 
 package org.giot.core;
 
+import java.io.IOException;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.exception.ContainerStartException;
 import org.giot.core.module.ModuleDefinition;
+import org.giot.core.scanner.AnnotationScanner;
+import org.giot.core.scanner.DefaultAnnotationScanner;
 import org.giot.core.service.CoreService;
 import org.giot.core.service.ICoreService;
 
@@ -54,13 +58,19 @@ public class CoreContainer extends AbstractContainer {
         //控制是否加载eg: es7、mysql、pgsql等容器
         //获取容器管理者，然后获取容器，再根据容器获取服务
         super.register(ICoreService.class, new CoreService());
+        super.register(AnnotationScanner.class, new DefaultAnnotationScanner());
         System.out.println(coreContainerConfig);
     }
 
     @Override
-    public void start() {
+    public void start() throws ContainerStartException {
         //每个容器在启动时，需要初始化需要的具体的类
-        find(CoreModule.NAME, Container.DEFAULT).getService(ICoreService.class);
+        AnnotationScanner scanner = find(CoreModule.NAME, Container.DEFAULT).getService(AnnotationScanner.class);
+        try {
+            scanner.scanner();
+        } catch (IOException e) {
+            throw new ContainerStartException("Container [" + name() + "] start error.", e);
+        }
     }
 
     @Override

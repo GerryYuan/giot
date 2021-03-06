@@ -1,5 +1,7 @@
 package org.giot.core.container;
 
+import org.giot.core.exception.ContainerStartException;
+
 /**
  * 容器，提供生命周期的管理：准备、启动、后置等
  *
@@ -18,7 +20,7 @@ public interface Container {
     /**
      * 启动容器 eg:storage模块ESClient、MysqlClient、PGSQLClient
      */
-    void start();
+    void start() throws ContainerStartException;
 
     /**
      * 容器启动后，进行后置操作 eg启异步线程处理独立任务等

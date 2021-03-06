@@ -16,28 +16,18 @@
  *
  */
 
-package org.giot.core.device;
+package org.giot.core.scanner;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.giot.core.storage.Metadata;
-import org.giot.core.storage.MetadataStreamProcessor;
-import org.giot.core.storage.annotation.Column;
-import org.giot.core.storage.annotation.Stream;
+import java.lang.annotation.Annotation;
 
 /**
- * @author yuanguohua on 2021/3/5 16:26
+ * @author yuanguohua on 2021/3/5 18:48
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
-@Stream(name = "device_instance", processor = MetadataStreamProcessor.class)
-public class DeviceInstance extends Metadata {
+public interface AnnotationScannerListener {
 
-    @Column(name = "name")
-    private String name;
+    void addClass(Class<?> clazz);
 
-    @Override
-    public String id() {
-        return null;
-    }
+    Class<? extends Annotation> match();
+
+    void listener();
 }

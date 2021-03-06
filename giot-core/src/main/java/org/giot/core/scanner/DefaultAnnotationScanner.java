@@ -16,18 +16,18 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.scanner;
 
-import java.io.IOException;
-import org.giot.core.storage.annotation.Stream;
+import com.google.common.collect.Lists;
+import org.giot.core.storage.SteamScannerListener;
 
 /**
- * @author yuanguohua on 2021/3/5 18:48
+ * @author Created by gerry
+ * @date 2021-03-06-10:11 PM
  */
-public abstract class AnnotationScanner {
+public class DefaultAnnotationScanner extends AnnotationScanner {
 
-    protected String packageName = "org.giot";
-
-    abstract void scanner(Class<? extends Stream> clazz) throws IOException;
-
+    public DefaultAnnotationScanner() {
+        super(Lists.newArrayList(new SteamScannerListener()));
+    }
 }

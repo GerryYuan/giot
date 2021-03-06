@@ -16,28 +16,40 @@
  *
  */
 
-package org.giot.core.device;
+package org.giot.core.storage;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.giot.core.storage.Metadata;
-import org.giot.core.storage.MetadataStreamProcessor;
-import org.giot.core.storage.annotation.Column;
+import java.lang.annotation.Annotation;
+import java.util.LinkedList;
+import java.util.List;
+import org.giot.core.scanner.AnnotationScannerListener;
 import org.giot.core.storage.annotation.Stream;
+import org.giot.core.utils.EmptyUtils;
 
 /**
- * @author yuanguohua on 2021/3/5 16:26
+ * @author Created by gerry
+ * @date 2021-03-06-10:39 PM
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
-@Stream(name = "device_instance", processor = MetadataStreamProcessor.class)
-public class DeviceInstance extends Metadata {
+public class SteamScannerListener implements AnnotationScannerListener {
 
-    @Column(name = "name")
-    private String name;
+    private List<Class<? extends StorageData>> classes;
 
     @Override
-    public String id() {
-        return null;
+    public void addClass(final Class<?> clazz) {
+        if (EmptyUtils.isEmpty(classes)) {
+            classes = new LinkedList<>();
+        }
+        classes.add((Class<? extends StorageData>) clazz);
+    }
+
+    @Override
+    public Class<? extends Annotation> match() {
+        return Stream.class;
+    }
+
+    @Override
+    public void listener() {
+        for (Class<? extends StorageData> clazz : classes) {
+            System.out.println(clazz);
+        }
     }
 }

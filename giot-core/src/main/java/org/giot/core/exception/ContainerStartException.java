@@ -16,16 +16,14 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.exception;
 
-import java.io.IOException;
+public class ContainerStartException extends Exception {
+    public ContainerStartException(String message) {
+        super(message);
+    }
 
-/**
- * @author yuanguohua on 2021/3/5 18:28
- */
-public interface StorageStreamDataLoader {
-    /**
-     * 加载streamData
-     */
-    void loadStreamData() throws IOException;
+    public ContainerStartException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

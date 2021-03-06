@@ -16,36 +16,40 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.scanner;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import org.giot.core.storage.annotation.Stream;
+import org.giot.core.service.Service;
 
 /**
- * @author yuanguohua on 2021/3/5 18:30
+ * @author yuanguohua on 2021/3/5 18:48
  */
-public class AnnotationStreamDataLoader extends AnnotationScanner implements StorageStreamDataLoader {
+public abstract class AnnotationScanner implements Service {
 
-    private List<Class<?>> classes = new ArrayList<>(30);
+    protected String packageName = "org.giot";
 
-    @Override
-    public void loadStreamData() throws IOException {
-        scanner(Stream.class);
+    private List<AnnotationScannerListener> listeners;
+
+    public AnnotationScanner(final List<AnnotationScannerListener> listeners) {
+        this.listeners = listeners;
     }
 
-    @Override
-    void scanner(final Class<? extends Stream> clazz) throws IOException {
+    public synchronized void scanner() throws IOException {
         ClassPath classpath = ClassPath.from(this.getClass().getClassLoader());
         ImmutableSet<ClassPath.ClassInfo> classes = classpath.getTopLevelClassesRecursive(packageName);
         for (ClassPath.ClassInfo classInfo : classes) {
             Class<?> aClass = classInfo.load();
-            if(aClass.isAnnotationPresent(clazz)){
-//                classes.add(aClass);
+            for (AnnotationScannerListener listener : listeners) {
+                if (aClass.isAnnotationPresent(listener.match())) {
+                    listener.addClass(aClass);
+                }
             }
+
         }
+        listeners.forEach(AnnotationScannerListener::listener);
     }
+
 }

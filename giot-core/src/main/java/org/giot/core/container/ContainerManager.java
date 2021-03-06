@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerNotFoundException;
+import org.giot.core.exception.ContainerStartException;
 import org.giot.core.module.ModuleConfiguration;
 import org.giot.core.module.ModuleDefinition;
 import org.giot.core.module.ModuleManager;
@@ -79,7 +80,7 @@ public class ContainerManager implements ContainerHandler {
         return moduleManager.find(moduleName);
     }
 
-    public void init() throws ContainerConfigException {
+    public void init() throws ContainerConfigException, ContainerStartException {
         ServiceLoader<AbstractContainer> containerServiceLoader = ServiceLoader.load(AbstractContainer.class);
         for (AbstractContainer container : containerServiceLoader) {
             initialize(container);

@@ -16,28 +16,18 @@
  *
  */
 
-package org.giot.core.storage.model;
+package org.giot.storage.es7.model;
 
-import java.lang.reflect.Type;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import org.giot.core.storage.model.Model;
+import org.giot.core.storage.model.ModelInstaller;
 
 /**
  * @author Created by gerry
- * @date 2021-03-01-10:18 PM
+ * @date 2021-03-07-11:02 PM
  */
-@ToString
-@Getter
-@EqualsAndHashCode
-public class ModelColumn {
-    private final String columnName;
-    private final Class<?> type;
-    private final Type genericType;
-
-    public ModelColumn(String columnName, Class<?> type, Type genericType) {
-        this.columnName = columnName;
-        this.type = type;
-        this.genericType = genericType;
+public class ES7ModelInstaller extends ModelInstaller {
+    @Override
+    public void createTable(final Model model) {
+        System.out.println("es7 model " + model + " installing....");
     }
 }

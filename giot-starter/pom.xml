@@ -23,9 +23,16 @@
             <artifactId>giot-device</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Storage Module -->
         <dependency>
             <groupId>org.giot</groupId>
             <artifactId>storage-es7</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.giot</groupId>
+            <artifactId>storage-pgsql</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -26,8 +26,8 @@ public abstract class ModelInstaller implements ModelCreator.WhenCompleteListene
 
     @Override
     public void listener(final Model model) {
-        installModel(model);
+        createTable(model);
     }
 
-    public abstract void installModel(Model model);
+    public abstract void createTable(Model model);
 }

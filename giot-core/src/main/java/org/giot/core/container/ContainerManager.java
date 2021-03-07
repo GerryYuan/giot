@@ -20,13 +20,10 @@ package org.giot.core.container;
 
 import java.lang.reflect.Field;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerNotFoundException;
@@ -48,32 +45,26 @@ public class ContainerManager implements ContainerHandler {
 
     private ModuleManager moduleManager;
 
-    private Map<ModuleDefinition, List<AbstractContainer>> containers = new ConcurrentHashMap<>();
+    private Map<ModuleDefinition, AbstractContainer> containers = new ConcurrentHashMap<>();
 
     public ContainerManager(final ModuleManager moduleManager) {
         this.moduleManager = moduleManager;
     }
 
     @Override
-    public boolean has(final String moduleName, final String containerName) {
-        List<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
-        return cs.stream()
-                 .filter(container -> container.name().equalsIgnoreCase(containerName))
-                 .findAny()
-                 .isPresent();
+    public boolean has(final String moduleName) {
+        AbstractContainer cs = containers.get(moduleManager.find(moduleName));
+        return EmptyUtils.isNotEmpty(cs);
     }
 
     @Override
-    public ServiceHandler find(final String moduleName, final String containerName) {
-        List<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
-        return cs.stream()
-                 .filter(container -> container.name().equalsIgnoreCase(containerName))
-                 .findAny().orElseThrow(new ContainerNotFoundException("Container [" + containerName + "] not found"));
-    }
-
-    @Override
-    public ModuleDefinition find(final String moduleName) {
-        return moduleManager.find(moduleName);
+    public ServiceHandler find(final String moduleName) {
+        AbstractContainer cs = containers.get(moduleManager.find(moduleName));
+        if (EmptyUtils.isEmpty(cs)) {
+            throw new ContainerNotFoundException(
+                "Module [" + moduleName + "] not provider container.");
+        }
+        return cs;
     }
 
     public void init() throws ContainerConfigException, ContainerStartException {
@@ -85,9 +76,9 @@ public class ContainerManager implements ContainerHandler {
                 continue;
             }
             prepare(container, properties);
-            container.start();
-            after(container);
         }
+        start();
+        after();
     }
 
     private void initialize(AbstractContainer container) {
@@ -95,7 +86,7 @@ public class ContainerManager implements ContainerHandler {
     }
 
     private Properties whichProperties(AbstractContainer container) {
-        String moduleName = container.module().name();
+        String moduleName = container.module();
         String containerName = container.name();
         //获取容器def
         ModuleConfiguration.ContainerDefinition containerDef = moduleManager.find(moduleName, containerName);
@@ -121,20 +112,23 @@ public class ContainerManager implements ContainerHandler {
         container.prepare();
     }
 
-    private void after(AbstractContainer container) {
-        container.after();
-        log.info("The container [" + container.name() + "] provided by the module [" + container.module()
-                                                                                                .name() + "] is initialized");
+    private void start() throws ContainerStartException {
+        for (AbstractContainer container : containers.values()) {
+            container.start();
+        }
+    }
+
+    private void after() {
+        for (AbstractContainer container : containers.values()) {
+            container.after();
+            log.info(
+                "The container [" + container.name() + "] provided by the module [" + container.module() + "] is initialized");
+        }
     }
 
     private void addContainer(AbstractContainer container) {
-        ModuleDefinition moduleDefinition = moduleManager.find(container.module().name());
-        List<AbstractContainer> cs = this.containers.get(moduleDefinition);
-        if (EmptyUtils.isEmpty(cs)) {
-            containers.put(moduleDefinition, Stream.of(container).collect(Collectors.toList()));
-        } else {
-            cs.add(container);
-        }
+        ModuleDefinition moduleDefinition = moduleManager.find(container.module());
+        containers.putIfAbsent(moduleDefinition, container);
     }
 
     private void copyProperties(Properties src, ContainerConfig dest, String container) throws IllegalAccessException {

@@ -23,7 +23,6 @@ import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.exception.ContainerStartException;
-import org.giot.core.module.ModuleDefinition;
 import org.giot.core.scanner.AnnotationScanner;
 import org.giot.core.scanner.DefaultAnnotationScanner;
 import org.giot.core.service.CoreService;
@@ -45,8 +44,8 @@ public class CoreContainer extends AbstractContainer {
     }
 
     @Override
-    public ModuleDefinition module() {
-        return super.find(CoreModule.NAME);
+    public String module() {
+        return CoreModule.NAME;
     }
 
     @Override
@@ -68,7 +67,7 @@ public class CoreContainer extends AbstractContainer {
     @Override
     public void start() throws ContainerStartException {
         try {
-            AnnotationScanner scanner = find(CoreModule.NAME, Container.DEFAULT).getService(AnnotationScanner.class);
+            AnnotationScanner scanner = find(CoreModule.NAME).getService(AnnotationScanner.class);
             scanner.scanner();
         } catch (IOException e) {
             throw new ContainerStartException("Container [" + name() + "] start failure.", e);

@@ -1,6 +1,5 @@
 package org.giot.core.container;
 
-import org.giot.core.module.ModuleDefinition;
 import org.giot.core.service.ServiceHandler;
 
 /**
@@ -9,9 +8,8 @@ import org.giot.core.service.ServiceHandler;
  */
 public interface ContainerHandler {
 
-    boolean has(String moduleName, String containerName);
+    boolean has(String moduleName);
 
-    ServiceHandler find(String moduleName, String containerName);
+    ServiceHandler find(String moduleName);
 
-    ModuleDefinition find(String moduleName);
 }

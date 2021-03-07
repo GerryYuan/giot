@@ -20,9 +20,7 @@ package org.giot.core.loader;
 
 import java.io.FileNotFoundException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
@@ -54,11 +52,22 @@ public class ModuleResourceLoader implements ResourceLoader {
         this.moduleConfig = yaml.loadAs(reader, Map.class);
     }
 
+    /**
+     * { "which": "xxx", "xxx":{ "a":"aa", "b":"bb" } }
+     */
     @Override
-    public List<ModuleConfiguration.ContainerDefinition> loadContainerDefs(final Map<String, Object> config) {
-        List<ModuleConfiguration.ContainerDefinition> containerDefinitions = new ArrayList<>(1);
-        which(config, containerDefinitions);
-        return containerDefinitions;
+    public ModuleConfiguration.ContainerDefinition loadContainerDef(final Map<String, Object> config) {
+        //如果不存在which，则过滤
+        String which = (String) config.get(ModuleConfiguration.WHICH);
+        if (EmptyUtils.isEmpty(which)) {
+            return null;
+        }
+        Properties properties = new Properties();
+        LinkedHashMap map = (LinkedHashMap) config.get(which);
+        if (EmptyUtils.isNotEmpty(map)) {
+            properties.putAll(map);
+        }
+        return new ModuleConfiguration.ContainerDefinition(which, properties);
     }
 
     @Override
@@ -67,28 +76,9 @@ public class ModuleResourceLoader implements ResourceLoader {
         ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
         moduleConfig.forEach((k, v) -> {
             //ymal文件读取模块，根据配置文件读取的模块名称去加载模块以及容器
-            moduleConfiguration.addModule(k, loadContainerDefs(v));
+            moduleConfiguration.addModule(k, loadContainerDef(v));
         });
         return moduleConfiguration;
-    }
-
-    /**
-     * { "which": "xxx", "xxx":{ "a":"aa", "b":"bb" } }
-     */
-    @Override
-    public void which(final Map<String, Object> config,
-                      final List<ModuleConfiguration.ContainerDefinition> containerDefinitions) {
-        //如果不存在which，则过滤
-        String which = (String) config.get(ModuleConfiguration.WHICH);
-        if (EmptyUtils.isEmpty(which)) {
-            return;
-        }
-        Properties properties = new Properties();
-        LinkedHashMap map = (LinkedHashMap) config.get(which);
-        if (EmptyUtils.isNotEmpty(map)) {
-            properties.putAll(map);
-        }
-        containerDefinitions.add(new ModuleConfiguration.ContainerDefinition(which, properties));
     }
 
 }

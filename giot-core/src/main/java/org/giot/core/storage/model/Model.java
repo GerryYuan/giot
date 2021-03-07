@@ -21,11 +21,13 @@ package org.giot.core.storage.model;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * @author Created by gerry
  * @date 2021-03-01-10:18 PM
  */
+@ToString
 @Getter
 @EqualsAndHashCode
 public class Model {

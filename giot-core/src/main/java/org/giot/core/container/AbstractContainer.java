@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.Setter;
 import org.giot.core.exception.ServiceNotFoundException;
-import org.giot.core.module.ModuleDefinition;
 import org.giot.core.service.Service;
 import org.giot.core.service.ServiceHandler;
 import org.giot.core.utils.EmptyUtils;
@@ -42,15 +41,11 @@ public abstract class AbstractContainer implements Container, ServiceHandler {
 
     public abstract String name();
 
-    public abstract ModuleDefinition module();
+    public abstract String module();
 
     public abstract ContainerConfig createConfig();
 
-    public ServiceHandler find(String moduleName, String containerName) {
-        return this.containerManager.find(moduleName, containerName);
-    }
-
-    protected ModuleDefinition find(String moduleName) {
+    public ServiceHandler find(String moduleName) {
         return this.containerManager.find(moduleName);
     }
 

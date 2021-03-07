@@ -56,7 +56,7 @@ public class StorageModelCreator implements ModelManager, ModelCreator {
     }
 
     private void loadColumns(Class<?> clazz, List<ModelColumn> columns) {
-        Field[] fields = clazz.getFields();
+        Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             if (!field.isAnnotationPresent(Column.class)) {
                 continue;

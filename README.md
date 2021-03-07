@@ -3,10 +3,10 @@
 希望能提供IOT平台一切支持，通过插件开发，支持设备管理、物模型，产品、设备管理、规则引擎、多种存储、sink、协议（http、mqtt、tcp，自定义协议）等等，只要改动配置文件就可以切换需要存储的方式
 把giot当成一个用于iot平台的中间件
 ### 架构设计：
-###1、配置文件中，第一层是数据模块，第二层是数据组件，ModuleConfiguration
-###2、一个模块对应对个组件(ModuleDef)，一个组件对应一个容器(ContainerDefinition)，意思就是一个模块对应多个容器
-###3、加载配置文件
-###4、初始化容器，实现依赖注入（比如postgresql实例，对应的配置）
+### 1、配置文件中，第一层是数据模块，第二层是数据组件，ModuleConfiguration
+### 2、一个模块(Module)对应一个容器(ContainerDefinition)，一个容器有多个服务(Service)
+### 3、加载配置文件
+### 4、初始化容器，实现依赖注入（比如postgresql实例，对应的配置）
 ```yaml
 core:
   which: default
@@ -34,7 +34,5 @@ storage:
 ```
 
     
-###IOT设备消息分为3个
-properties//设备消息上报属性
-funtions//设备接受的处理函数
-events//设备触发的事件
+### IOT设备消息分为3个
+properties//设备消息上报属性、funtions//设备接受的处理函数、events//设备触发的事件

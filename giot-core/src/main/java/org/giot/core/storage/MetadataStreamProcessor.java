@@ -18,7 +18,6 @@
 
 package org.giot.core.storage;
 
-import org.giot.core.CoreContainer;
 import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.storage.model.Model;
@@ -33,11 +32,11 @@ public class MetadataStreamProcessor implements StreamProcessor {
     public <T extends StorageData> void create(final ContainerManager containerManager,
                                                final String name,
                                                final Class<T> clazz) {
-        ModelCreator creator = containerManager.find(CoreModule.NAME, CoreContainer.DEFAULT)
+        ModelCreator creator = containerManager.find(CoreModule.NAME)
                                                .getService(ModelCreator.class);
         Model model = creator.addModel(name, clazz, true, true);
-        //处理model，TODO （很重要！！！！）不清楚到底是哪个容器实现了该接口
-        ModelCreator.WhenCompleteListener listener = containerManager.find(StorageModule.NAME, CoreContainer.DEFAULT)
+        //处理model
+        ModelCreator.WhenCompleteListener listener = containerManager.find(StorageModule.NAME)
                                                                      .getService(
                                                                          ModelCreator.WhenCompleteListener.class);
         listener.listener(model);

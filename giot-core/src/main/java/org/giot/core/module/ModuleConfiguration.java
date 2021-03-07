@@ -18,9 +18,7 @@
 
 package org.giot.core.module;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
@@ -31,7 +29,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.exception.ModuleNotFoundException;
-import org.giot.core.utils.EmptyUtils;
 
 /**
  * @author yuanguohua on 2021/2/25 13:48
@@ -43,7 +40,7 @@ public class ModuleConfiguration {
     public static final String WHICH = "which";
 
     @Getter
-    private Map<ModuleDefinition, List<ContainerDefinition>> moduleConfigurations = new ConcurrentHashMap<>();
+    private Map<ModuleDefinition, ContainerDefinition> moduleConfigurations = new ConcurrentHashMap<>();
 
     @Getter
     private Set<String> modules = new HashSet<>();
@@ -51,22 +48,13 @@ public class ModuleConfiguration {
     @Getter
     private ServiceLoader<ModuleDefinition> defs;
 
-    public void addModule(String moduleName) {
-        addModule(moduleName, new ArrayList<>(1));
-    }
-
-    public void addModule(String moduleName, List<ContainerDefinition> cds) {
+    public void addModule(String moduleName, ContainerDefinition cd) {
         ModuleDefinition md = supports(moduleName);
-        addModule(md, EmptyUtils.isEmpty(cds) ? new ArrayList<>(1) : cds);
+        addModule(md, cd);
     }
 
-    private void addModule(ModuleDefinition module, List<ContainerDefinition> containerDefinitions) {
-        List<ContainerDefinition> containerDefs = moduleConfigurations.get(module);
-        if (EmptyUtils.isEmpty(containerDefs)) {
-            moduleConfigurations.put(module, containerDefinitions);
-        } else {
-            containerDefs.addAll(containerDefinitions);
-        }
+    private void addModule(ModuleDefinition module, ContainerDefinition containerDefinition) {
+        moduleConfigurations.putIfAbsent(module, containerDefinition);
         modules.add(module.name());
     }
 

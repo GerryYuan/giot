@@ -16,20 +16,22 @@
  *
  */
 
-package org.giot.storage.es7;
+package org.giot.storage.pgsql;
 
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.exception.ContainerStartException;
 import org.giot.core.storage.StorageModule;
 import org.giot.core.storage.model.ModelCreator;
-import org.giot.storage.es7.model.ES7ModelInstaller;
+import org.giot.storage.pgsql.model.PGSQLModelInstaller;
 
 /**
- * @author yuanguohua on 2021/3/4 19:48
+ * @author Created by gerry
+ * @date 2021-03-07-11:31 PM
  */
-public class ES7Container extends AbstractContainer {
+public class PGSQLContainer extends AbstractContainer {
 
-    private String NAME = "elasticsearch7";
+    private String NAME = "postgresql";
 
     @Override
     public String name() {
@@ -48,11 +50,11 @@ public class ES7Container extends AbstractContainer {
 
     @Override
     public void prepare() {
-        super.register(ModelCreator.WhenCompleteListener.class, new ES7ModelInstaller());
+        super.register(ModelCreator.WhenCompleteListener.class, new PGSQLModelInstaller());
     }
 
     @Override
-    public void start() {
+    public void start() throws ContainerStartException {
 
     }
 

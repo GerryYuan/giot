@@ -35,7 +35,6 @@ import org.giot.core.module.ModuleConfiguration;
 import org.giot.core.module.ModuleDefinition;
 import org.giot.core.module.ModuleManager;
 import org.giot.core.service.ServiceHandler;
-import org.giot.core.service.ServiceManager;
 import org.giot.core.utils.EmptyUtils;
 
 /**
@@ -49,14 +48,10 @@ public class ContainerManager implements ContainerHandler {
 
     private ModuleManager moduleManager;
 
-    private ServiceManager serviceManager;
-
     private Map<ModuleDefinition, List<AbstractContainer>> containers = new ConcurrentHashMap<>();
 
-    public ContainerManager(final ModuleManager moduleManager,
-                            final ServiceManager serviceManager) {
+    public ContainerManager(final ModuleManager moduleManager) {
         this.moduleManager = moduleManager;
-        this.serviceManager = serviceManager;
     }
 
     @Override
@@ -97,7 +92,6 @@ public class ContainerManager implements ContainerHandler {
 
     private void initialize(AbstractContainer container) {
         container.setContainerManager(this);
-        container.setServiceManager(this.serviceManager);
     }
 
     private Properties whichProperties(AbstractContainer container) {

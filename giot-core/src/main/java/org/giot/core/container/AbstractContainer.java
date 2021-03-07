@@ -18,13 +18,15 @@
 
 package org.giot.core.container;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.Setter;
 import org.giot.core.exception.ServiceNotFoundException;
 import org.giot.core.module.ModuleDefinition;
 import org.giot.core.service.Service;
 import org.giot.core.service.ServiceHandler;
-import org.giot.core.service.ServiceManager;
+import org.giot.core.utils.EmptyUtils;
 
 /**
  * @author Created by gerry
@@ -32,12 +34,11 @@ import org.giot.core.service.ServiceManager;
  */
 public abstract class AbstractContainer implements Container, ServiceHandler {
 
+    private final Map<Class<? extends Service>, Service> services = new ConcurrentHashMap<>();
+
     @Getter
     @Setter
     private ContainerManager containerManager;
-
-    @Setter
-    private ServiceManager serviceManager;
 
     public abstract String name();
 
@@ -55,12 +56,22 @@ public abstract class AbstractContainer implements Container, ServiceHandler {
 
     @Override
     public <T extends Service> T getService(final Class<T> clazz) {
-        return serviceManager.getService(clazz);
+        Service service = services.get(clazz);
+        if (EmptyUtils.isNotEmpty(service)) {
+            return (T) service;
+        }
+        throw new ServiceNotFoundException(
+            "Service " + clazz.getName() + " should not be provided, based on container.");
+
     }
 
     @Override
     public void register(final Class<? extends Service> serviceType,
                          final Service service) throws ServiceNotFoundException {
-        serviceManager.register(serviceType, service);
+        if (serviceType.isInstance(service)) {
+            this.services.put(serviceType, service);
+        } else {
+            throw new ServiceNotFoundException(serviceType + " is not implemented by " + service);
+        }
     }
 }

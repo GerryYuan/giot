@@ -16,9 +16,9 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.storage.model;
 
-import java.lang.reflect.Type;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -28,25 +28,19 @@ import lombok.Getter;
  */
 @Getter
 @EqualsAndHashCode
-public class ModelColumn {
-    private final String columnName;
-    private final Class<?> type;
-    private final Type genericType;
-    private final boolean matchQuery;
-    private final boolean storageOnly;
-    private final int length;
+public class Model {
+    private final String name;
+    private final List<ModelColumn> columns;
+    private final boolean isMetadata;
+    private final boolean isTimeSeries;
 
-    public ModelColumn(String columnName,
-                       Class<?> type,
-                       Type genericType,
-                       boolean matchQuery,
-                       boolean storageOnly,
-                       int length) {
-        this.columnName = columnName;
-        this.type = type;
-        this.genericType = genericType;
-        this.matchQuery = matchQuery;
-        this.length = length;
-        this.storageOnly = storageOnly;
+    public Model(final String name,
+                 final List<ModelColumn> columns,
+                 final boolean isMetadata,
+                 final boolean isTimeSeries) {
+        this.name = name;
+        this.columns = columns;
+        this.isMetadata = isMetadata;
+        this.isTimeSeries = isTimeSeries;
     }
 }

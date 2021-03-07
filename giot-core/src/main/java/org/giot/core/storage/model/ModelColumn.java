@@ -16,16 +16,26 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.storage.model;
 
-import java.util.List;
+import java.lang.reflect.Type;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * @author Created by gerry
- * @date 2021-03-01-10:47 PM
+ * @date 2021-03-01-10:18 PM
  */
-public interface ModelManager {
+@Getter
+@EqualsAndHashCode
+public class ModelColumn {
+    private final String columnName;
+    private final Class<?> type;
+    private final Type genericType;
 
-    List<Model> allModels();
-
+    public ModelColumn(String columnName, Class<?> type, Type genericType) {
+        this.columnName = columnName;
+        this.type = type;
+        this.genericType = genericType;
+    }
 }

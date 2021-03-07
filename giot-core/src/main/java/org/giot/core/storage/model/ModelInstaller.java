@@ -16,31 +16,18 @@
  *
  */
 
-package org.giot.core.storage;
-
-import java.util.List;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+package org.giot.core.storage.model;
 
 /**
  * @author Created by gerry
- * @date 2021-03-01-10:18 PM
+ * @date 2021-03-07-9:49 PM
  */
-@Getter
-@EqualsAndHashCode
-public class Model {
-    private final String name;
-    private final List<ModelColumn> columns;
-    private final boolean isMetadata;
-    private final boolean isTimeSeries;
+public abstract class ModelInstaller implements ModelCreator.WhenCompleteListener {
 
-    public Model(final String name,
-                 final List<ModelColumn> columns,
-                 final boolean isMetadata,
-                 final boolean isTimeSeries) {
-        this.name = name;
-        this.columns = columns;
-        this.isMetadata = isMetadata;
-        this.isTimeSeries = isTimeSeries;
+    @Override
+    public void listener(final Model model) {
+        installModel(model);
     }
+
+    public abstract void installModel(Model model);
 }

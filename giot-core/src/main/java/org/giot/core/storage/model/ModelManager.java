@@ -16,21 +16,16 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.storage.model;
 
 import java.util.List;
-import org.giot.core.service.Service;
 
 /**
- * 当存储容器启动时，通过构建自己的ModelCreator#creator，创建一些表
- *
  * @author Created by gerry
- * @date 2021-03-01-10:17 PM
+ * @date 2021-03-01-10:47 PM
  */
-public interface ModelCreator extends Service {
+public interface ModelManager {
 
-    void addModel(Model model);
-
-    void addModel(String name, List<ModelColumn> columns, boolean isMetadata, boolean isTimeSeries);
+    List<Model> allModels();
 
 }

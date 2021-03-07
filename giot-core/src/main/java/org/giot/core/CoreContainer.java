@@ -28,8 +28,8 @@ import org.giot.core.scanner.AnnotationScanner;
 import org.giot.core.scanner.DefaultAnnotationScanner;
 import org.giot.core.service.CoreService;
 import org.giot.core.service.ICoreService;
-import org.giot.core.storage.ModelCreator;
-import org.giot.core.storage.StorageModelCreator;
+import org.giot.core.storage.model.ModelCreator;
+import org.giot.core.storage.model.StorageModelCreator;
 
 /**
  * @author Created by gerry
@@ -67,9 +67,8 @@ public class CoreContainer extends AbstractContainer {
 
     @Override
     public void start() throws ContainerStartException {
-        //每个容器在启动时，需要初始化需要的具体的类
-        AnnotationScanner scanner = find(CoreModule.NAME, Container.DEFAULT).getService(AnnotationScanner.class);
         try {
+            AnnotationScanner scanner = find(CoreModule.NAME, Container.DEFAULT).getService(AnnotationScanner.class);
             scanner.scanner();
         } catch (IOException e) {
             throw new ContainerStartException("Container [" + name() + "] start failure.", e);

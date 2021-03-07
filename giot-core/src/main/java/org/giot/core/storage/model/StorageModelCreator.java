@@ -16,10 +16,14 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.storage.model;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import org.giot.core.storage.StorageData;
+import org.giot.core.storage.annotation.Column;
 
 /**
  * @author Created by gerry
@@ -35,15 +39,34 @@ public class StorageModelCreator implements ModelManager, ModelCreator {
     }
 
     @Override
-    public void addModel(final String name,
-                         final List<ModelColumn> columns,
-                         final boolean isMetadata,
-                         final boolean isTimeSeries) {
-        models.add(new Model(name, columns, isMetadata, isTimeSeries));
+    public Model addModel(final String name,
+                          final Class<? extends StorageData> clazz,
+                          final boolean isMetadata,
+                          final boolean isTimeSeries) {
+        List<ModelColumn> columns = new ArrayList<>();
+        loadColumns(clazz, columns);
+        Model model = new Model(name, columns, isMetadata, isTimeSeries);
+        models.add(model);
+        return model;
     }
 
     @Override
     public List<Model> allModels() {
         return this.models;
+    }
+
+    private void loadColumns(Class<?> clazz, List<ModelColumn> columns) {
+        Field[] fields = clazz.getFields();
+        for (Field field : fields) {
+            if (!field.isAnnotationPresent(Column.class)) {
+                continue;
+            }
+            Column column = field.getAnnotation(Column.class);
+            ModelColumn modelColumn = new ModelColumn(column.name(), field.getType(), field.getGenericType());
+            columns.add(modelColumn);
+        }
+        if (Objects.nonNull(clazz.getSuperclass())) {
+            loadColumns(clazz.getSuperclass(), columns);
+        }
     }
 }

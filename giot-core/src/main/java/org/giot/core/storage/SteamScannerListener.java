@@ -21,6 +21,9 @@ package org.giot.core.storage;
 import java.lang.annotation.Annotation;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import org.giot.core.container.ContainerManager;
 import org.giot.core.scanner.AnnotationScannerListener;
 import org.giot.core.storage.annotation.Stream;
 import org.giot.core.utils.EmptyUtils;
@@ -32,6 +35,12 @@ import org.giot.core.utils.EmptyUtils;
 public class SteamScannerListener implements AnnotationScannerListener {
 
     private List<Class<? extends StorageData>> classes;
+
+    private ContainerManager containerManager;
+
+    public SteamScannerListener(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
 
     @Override
     public void addClass(final Class<?> clazz) {
@@ -48,8 +57,18 @@ public class SteamScannerListener implements AnnotationScannerListener {
 
     @Override
     public void listener() {
+        Map<Class<StreamProcessor>, StreamProcessor> processorMap = new ConcurrentHashMap<>(5);
         for (Class<? extends StorageData> clazz : classes) {
-            System.out.println(clazz);
+            Stream stream = (Stream) clazz.getAnnotation(match());
+            Class<StreamProcessor> classProcessor = (Class<StreamProcessor>) stream.processor();
+            processorMap.computeIfAbsent(classProcessor, key -> {
+                try {
+                    return classProcessor.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+            }).create(containerManager, stream.name(), clazz);
         }
     }
+
 }

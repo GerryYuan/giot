@@ -18,6 +18,7 @@
 
 package org.giot.core.container;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.giot.core.exception.ServiceNotFoundException;
 import org.giot.core.module.ModuleDefinition;
@@ -31,6 +32,7 @@ import org.giot.core.service.ServiceManager;
  */
 public abstract class AbstractContainer implements Container, ServiceHandler {
 
+    @Getter
     @Setter
     private ContainerManager containerManager;
 

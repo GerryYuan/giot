@@ -18,17 +18,16 @@
 
 package org.giot.core.storage;
 
+import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 
 /**
  * @author Created by gerry
  * @date 2021-03-01-10:43 PM
  */
-@AllArgsConstructor
 public class StorageModelCreator implements ModelManager, ModelCreator {
 
-    private List<Model> models;
+    private List<Model> models = new ArrayList<>();
 
     @Override
     public void addModel(final Model model) {

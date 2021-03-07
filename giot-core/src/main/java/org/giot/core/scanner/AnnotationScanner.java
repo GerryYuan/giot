@@ -49,7 +49,9 @@ public abstract class AnnotationScanner implements Service {
             }
 
         }
-        listeners.forEach(AnnotationScannerListener::listener);
+        for (AnnotationScannerListener listener : listeners) {
+            listener.listener();
+        }
     }
 
 }

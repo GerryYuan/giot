@@ -16,23 +16,28 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.device;
 
-import org.giot.core.CoreContainer;
-import org.giot.core.CoreModule;
-import org.giot.core.container.ContainerManager;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.giot.core.storage.Metadata;
+import org.giot.core.storage.MetadataStreamProcessor;
+import org.giot.core.storage.annotation.Column;
+import org.giot.core.storage.annotation.Stream;
 
 /**
- * @author yuanguohua on 2021/3/5 17:44
+ * @author yuanguohua on 2021/3/5 16:26
  */
-public class MetadataStreamProcessor implements StreamProcessor {
+@Data
+@EqualsAndHashCode(callSuper = false)
+@Stream(name = "product_instance", processor = MetadataStreamProcessor.class)
+public class ProductInstance extends Metadata {
+
+    @Column(name = "name")
+    private String name;
 
     @Override
-    public <T extends StorageData> void create(final ContainerManager containerManager,
-                                               final String name,
-                                               final Class<T> clazz) {
-        ModelCreator creator = containerManager.find(CoreModule.NAME, CoreContainer.DEFAULT)
-                                               .getService(ModelCreator.class);
-        System.out.println(name + creator);
+    public String id() {
+        return null;
     }
 }

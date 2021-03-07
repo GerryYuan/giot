@@ -18,9 +18,13 @@
 
 package org.giot.core.storage;
 
+import org.giot.core.container.ContainerManager;
+
 /**
  * 数据处理
+ *
  * @author yuanguohua on 2021/3/5 16:44
  */
-public interface StreamProcessor<Metadata> {
+public interface StreamProcessor {
+    <T extends StorageData> void create(ContainerManager containerManager, String name, Class<T> clazz);
 }

@@ -34,6 +34,7 @@ import org.giot.core.exception.ContainerStartException;
 import org.giot.core.module.ModuleConfiguration;
 import org.giot.core.module.ModuleDefinition;
 import org.giot.core.module.ModuleManager;
+import org.giot.core.service.ServiceHandler;
 import org.giot.core.service.ServiceManager;
 import org.giot.core.utils.EmptyUtils;
 
@@ -68,7 +69,7 @@ public class ContainerManager implements ContainerHandler {
     }
 
     @Override
-    public AbstractContainer find(final String moduleName, final String containerName) {
+    public ServiceHandler find(final String moduleName, final String containerName) {
         List<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
         return cs.stream()
                  .filter(container -> container.name().equalsIgnoreCase(containerName))

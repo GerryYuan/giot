@@ -58,6 +58,15 @@ public class ContainerManager implements ContainerHandler {
     }
 
     @Override
+    public boolean has(final String moduleName, final String containerName) {
+        AbstractContainer cs = containers.get(moduleManager.find(moduleName));
+        if (EmptyUtils.isEmpty(cs)) {
+            return false;
+        }
+        return cs.name().equalsIgnoreCase(containerName);
+    }
+
+    @Override
     public ServiceHandler find(final String moduleName) {
         AbstractContainer cs = containers.get(moduleManager.find(moduleName));
         if (EmptyUtils.isEmpty(cs)) {

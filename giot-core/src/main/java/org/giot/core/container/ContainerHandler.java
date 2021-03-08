@@ -10,6 +10,8 @@ public interface ContainerHandler {
 
     boolean has(String moduleName);
 
+    boolean has(String moduleName, String containerName);
+
     ServiceHandler find(String moduleName);
 
 }

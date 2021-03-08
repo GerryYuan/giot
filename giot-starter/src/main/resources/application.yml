@@ -6,14 +6,13 @@
 core:
   which: default
   default:
-    a: a
     b: 1
     c: 1.6
     ## 物模型、传输协议（gateway）插件、消息协议插件
 device:
   which: default
   default:
-    ##
+  ##
 storage:
   which: postgresql
   postgresql:
@@ -28,3 +27,9 @@ storage:
     url: xxx
   elasticsearch7:
     url: xxx
+snapshot:
+  which: default
+  default:
+    ##这里的值需要跟storage模块或者network模块的which属性功能一样，选择一个
+    storage: postgresql
+    network: grpc/http

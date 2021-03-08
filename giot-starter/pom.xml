@@ -35,6 +35,13 @@
             <artifactId>storage-pgsql</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Snapshot Module -->
+        <dependency>
+            <groupId>org.giot</groupId>
+            <artifactId>giot-snapshot</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 

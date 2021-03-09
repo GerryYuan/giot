@@ -13,7 +13,6 @@
         <module>giot-starter</module>
         <module>giot-device</module>
         <module>giot-storage</module>
-        <module>giot-snapshot</module>
     </modules>
 
     <properties>

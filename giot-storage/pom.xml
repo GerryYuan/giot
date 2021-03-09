@@ -14,6 +14,7 @@
     <modules>
         <module>storage-pgsql</module>
         <module>storage-es7</module>
+        <module>storage-mysql</module>
     </modules>
 
 

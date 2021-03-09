@@ -16,19 +16,18 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.storage.mysql.model;
 
-import lombok.Getter;
-import org.giot.core.CoreContainerConfig;
+import org.giot.core.storage.model.Model;
+import org.giot.core.storage.model.ModelInstaller;
 
 /**
- * @author yuanguohua on 2021/3/9 18:38
+ * @author Created by gerry
+ * @date 2021-03-07-11:02 PM
  */
-public abstract class AbstractStreamProcessor implements StreamProcessor {
-    @Getter
-    private CoreContainerConfig coreContainerConfig;
-
-    public AbstractStreamProcessor(final CoreContainerConfig coreContainerConfig) {
-        this.coreContainerConfig = coreContainerConfig;
+public class MySQLModelInstaller extends ModelInstaller {
+    @Override
+    public void createTable(final Model model) {
+        System.out.println("mysql model " + model + " installing....");
     }
 }

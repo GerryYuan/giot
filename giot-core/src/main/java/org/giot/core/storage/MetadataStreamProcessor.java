@@ -18,6 +18,7 @@
 
 package org.giot.core.storage;
 
+import org.giot.core.CoreContainerConfig;
 import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.storage.model.Model;
@@ -28,8 +29,8 @@ import org.giot.core.storage.model.ModelCreator;
  */
 public class MetadataStreamProcessor extends AbstractStreamProcessor {
 
-    public MetadataStreamProcessor(final String metaDataStorage) {
-        super(metaDataStorage);
+    public MetadataStreamProcessor(final CoreContainerConfig coreContainerConfig) {
+        super(coreContainerConfig);
     }
 
     @Override
@@ -39,7 +40,8 @@ public class MetadataStreamProcessor extends AbstractStreamProcessor {
         ModelCreator creator = containerManager.find(CoreModule.NAME).getService(ModelCreator.class);
         Model model = creator.addModel(name, clazz, true, true);
         //处理model
-        ModelCreator.WhenCompleteListener listener = containerManager.find(StorageModule.NAME, getMetaDataStorage())
+        ModelCreator.WhenCompleteListener listener = containerManager.find(
+            StorageModule.NAME, getCoreContainerConfig().getMetaDataStorage())
                                                                      .getService(
                                                                          ModelCreator.WhenCompleteListener.class);
         listener.listener(model);

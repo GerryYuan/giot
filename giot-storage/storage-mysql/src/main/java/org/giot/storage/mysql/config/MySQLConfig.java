@@ -16,19 +16,22 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.storage.mysql.config;
 
-import lombok.Getter;
-import org.giot.core.CoreContainerConfig;
+import java.util.Properties;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.giot.core.container.ContainerConfig;
 
 /**
- * @author yuanguohua on 2021/3/9 18:38
+ * @author Created by gerry
+ * @date 2021-03-09-10:54 PM
  */
-public abstract class AbstractStreamProcessor implements StreamProcessor {
-    @Getter
-    private CoreContainerConfig coreContainerConfig;
+@ToString
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class MySQLConfig extends ContainerConfig {
 
-    public AbstractStreamProcessor(final CoreContainerConfig coreContainerConfig) {
-        this.coreContainerConfig = coreContainerConfig;
-    }
+    private Properties properties;
 }

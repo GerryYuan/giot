@@ -16,25 +16,34 @@
  *
  */
 
-package org.giot.core.scanner;
+package org.giot.storage.mysql.hikaricp;
 
-import com.google.common.collect.Lists;
-import org.giot.core.CoreContainerConfig;
-import org.giot.core.container.ContainerManager;
-import org.giot.core.storage.SteamScannerListener;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
+import org.giot.storage.mysql.DBClient;
 
 /**
  * @author Created by gerry
- * @date 2021-03-06-10:11 PM
+ * @date 2021-03-09-10:53 PM
  */
-public class DefaultAnnotationScanner extends AnnotationScanner {
+public class HikariCPClient implements DBClient {
 
-    private ContainerManager containerManager;
+    private HikariConfig hikariConfig;
 
-    public DefaultAnnotationScanner(final ContainerManager containerManager,
-                                    final CoreContainerConfig coreContainerConfig) {
-        super(Lists.newArrayList(new SteamScannerListener(containerManager, coreContainerConfig)));
-        this.containerManager = containerManager;
+    private HikariDataSource hikariDataSource;
+
+    public HikariCPClient(final Properties properties) {
+        this.hikariConfig = new HikariConfig(properties);
+        this.hikariDataSource = new HikariDataSource(hikariConfig);
     }
 
+    @Override
+    public Connection getConnection() throws SQLException {
+        Connection connection = hikariDataSource.getConnection();
+        connection.setAutoCommit(true);
+        return connection;
+    }
 }

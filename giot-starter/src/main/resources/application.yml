@@ -15,7 +15,7 @@ device:
   default:
   ##
 storage:
-  which: postgresql,elasticsearch7
+  which: postgresql,elasticsearch7,mysql
   postgresql:
     url: r2dbc:postgresql://localhost:5432/giot
     username: postgres

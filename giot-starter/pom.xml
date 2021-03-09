@@ -35,6 +35,11 @@
             <artifactId>storage-pgsql</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.giot</groupId>
+            <artifactId>storage-mysql</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
     </dependencies>
 

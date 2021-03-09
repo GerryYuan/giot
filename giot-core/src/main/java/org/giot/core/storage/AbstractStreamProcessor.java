@@ -16,14 +16,18 @@
  *
  */
 
-package org.giot.snapshot.service;
+package org.giot.core.storage;
 
-import org.giot.core.service.Service;
+import lombok.Getter;
 
 /**
- * @author Created by gerry
- * @date 2021-03-08-10:47 PM
+ * @author yuanguohua on 2021/3/9 18:38
  */
-public interface IStorageSnapshotService extends Service {
-    <T extends Service> T getService(Class<T> clazz);
+public abstract class AbstractStreamProcessor implements StreamProcessor {
+    @Getter
+    private String metaDataStorage;
+
+    public AbstractStreamProcessor(final String metaDataStorage) {
+        this.metaDataStorage = metaDataStorage;
+    }
 }

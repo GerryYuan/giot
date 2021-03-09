@@ -18,12 +18,13 @@
 
 package org.giot.core.module;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -40,7 +41,7 @@ public class ModuleConfiguration {
     public static final String WHICH = "which";
 
     @Getter
-    private Map<ModuleDefinition, ContainerDefinition> moduleConfigurations = new ConcurrentHashMap<>();
+    private Multimap<ModuleDefinition, ContainerDefinition> moduleConfigurations = ArrayListMultimap.create();
 
     @Getter
     private Set<String> modules = new HashSet<>();
@@ -48,14 +49,12 @@ public class ModuleConfiguration {
     @Getter
     private ServiceLoader<ModuleDefinition> defs;
 
-    public void addModule(String moduleName, ContainerDefinition cd) {
+    public void addModule(String moduleName, List<ContainerDefinition> cds) {
         ModuleDefinition md = supports(moduleName);
-        addModule(md, cd);
-    }
-
-    private void addModule(ModuleDefinition module, ContainerDefinition containerDefinition) {
-        moduleConfigurations.putIfAbsent(module, containerDefinition);
-        modules.add(module.name());
+        for (ContainerDefinition cd : cds) {
+            moduleConfigurations.put(md, cd);
+        }
+        modules.add(md.name());
     }
 
     protected ModuleDefinition supports(String moduleName) {

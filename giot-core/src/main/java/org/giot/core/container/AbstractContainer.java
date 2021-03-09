@@ -31,7 +31,7 @@ import org.giot.core.utils.EmptyUtils;
  * @author Created by gerry
  * @date 2021-02-27-11:22 PM
  */
-public abstract class AbstractContainer implements Container, ServiceHandler {
+public abstract class AbstractContainer implements Container, ServiceHandler{
 
     private final Map<Class<? extends Service>, Service> services = new ConcurrentHashMap<>();
 

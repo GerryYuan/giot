@@ -19,6 +19,8 @@
 package org.giot.core.storage;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +40,11 @@ public class SteamScannerListener implements AnnotationScannerListener {
 
     private ContainerManager containerManager;
 
-    public SteamScannerListener(final ContainerManager containerManager) {
+    private String metaDataStorage;
+
+    public SteamScannerListener(final ContainerManager containerManager, final String metaDataStorage) {
         this.containerManager = containerManager;
+        this.metaDataStorage = metaDataStorage;
     }
 
     @Override
@@ -63,8 +68,9 @@ public class SteamScannerListener implements AnnotationScannerListener {
             Class<StreamProcessor> classProcessor = (Class<StreamProcessor>) stream.processor();
             processorMap.computeIfAbsent(classProcessor, key -> {
                 try {
-                    return classProcessor.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
+                    Constructor<?> constructor = classProcessor.getConstructor(String.class);
+                    return (StreamProcessor) constructor.newInstance(metaDataStorage);
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
             }).create(containerManager, stream.name(), clazz);

@@ -6,7 +6,8 @@
 core:
   which: default
   default:
-    b: 1
+    metaDataStorage: postgresql
+    deviceDataStorage: postgresql
     c: 1.6
     ## 物模型、传输协议（gateway）插件、消息协议插件
 device:
@@ -14,7 +15,7 @@ device:
   default:
   ##
 storage:
-  which: postgresql
+  which: postgresql,elasticsearch7
   postgresql:
     url: r2dbc:postgresql://localhost:5432/giot
     username: postgres
@@ -27,9 +28,3 @@ storage:
     url: xxx
   elasticsearch7:
     url: xxx
-snapshot:
-  which: default
-  default:
-    ##这里的值需要跟storage模块或者network模块的which属性功能一样，选择一个
-    storage: postgresql
-    network: grpc/http

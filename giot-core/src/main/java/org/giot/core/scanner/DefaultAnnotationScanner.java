@@ -19,6 +19,7 @@
 package org.giot.core.scanner;
 
 import com.google.common.collect.Lists;
+import org.giot.core.CoreContainerConfig;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.storage.SteamScannerListener;
 
@@ -30,8 +31,10 @@ public class DefaultAnnotationScanner extends AnnotationScanner {
 
     private ContainerManager containerManager;
 
-    public DefaultAnnotationScanner(final ContainerManager containerManager) {
-        super(Lists.newArrayList(new SteamScannerListener(containerManager)));
+    private CoreContainerConfig coreContainerConfig;
+
+    public DefaultAnnotationScanner(final ContainerManager containerManager, final CoreContainerConfig coreContainerConfig) {
+        super(Lists.newArrayList(new SteamScannerListener(containerManager, coreContainerConfig.getMetaDataStorage())));
         this.containerManager = containerManager;
     }
 

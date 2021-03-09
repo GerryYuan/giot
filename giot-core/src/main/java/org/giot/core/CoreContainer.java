@@ -25,8 +25,6 @@ import org.giot.core.container.ContainerConfig;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.scanner.AnnotationScanner;
 import org.giot.core.scanner.DefaultAnnotationScanner;
-import org.giot.core.service.CoreService;
-import org.giot.core.service.ICoreService;
 import org.giot.core.storage.model.ModelCreator;
 import org.giot.core.storage.model.StorageModelCreator;
 
@@ -58,16 +56,15 @@ public class CoreContainer extends AbstractContainer {
     public void prepare() {
         //控制是否加载eg: es7、mysql、pgsql等容器
         //获取容器管理者，然后获取容器，再根据容器获取服务
-        super.register(ICoreService.class, new CoreService());
         super.register(ModelCreator.class, new StorageModelCreator());
-        super.register(AnnotationScanner.class, new DefaultAnnotationScanner(getContainerManager()));
-        System.out.println(coreContainerConfig);
+        super.register(
+            AnnotationScanner.class, new DefaultAnnotationScanner(getContainerManager(), coreContainerConfig));
     }
 
     @Override
     public void start() throws ContainerStartException {
         try {
-            AnnotationScanner scanner = find(CoreModule.NAME).getService(AnnotationScanner.class);
+            AnnotationScanner scanner = super.find(CoreModule.NAME).getService(AnnotationScanner.class);
             scanner.scanner();
         } catch (IOException e) {
             throw new ContainerStartException("Container [" + name() + "] start failure.", e);

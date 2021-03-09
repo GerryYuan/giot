@@ -18,12 +18,13 @@
 
 package org.giot.core.container;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerNotFoundException;
@@ -45,7 +46,7 @@ public class ContainerManager implements ContainerHandler {
 
     private ModuleManager moduleManager;
 
-    private Map<ModuleDefinition, AbstractContainer> containers = new ConcurrentHashMap<>();
+    private Multimap<ModuleDefinition, AbstractContainer> containers = ArrayListMultimap.create();
 
     public ContainerManager(final ModuleManager moduleManager) {
         this.moduleManager = moduleManager;
@@ -53,27 +54,39 @@ public class ContainerManager implements ContainerHandler {
 
     @Override
     public boolean has(final String moduleName) {
-        AbstractContainer cs = containers.get(moduleManager.find(moduleName));
+        Collection<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
         return EmptyUtils.isNotEmpty(cs);
     }
 
     @Override
     public boolean has(final String moduleName, final String containerName) {
-        AbstractContainer cs = containers.get(moduleManager.find(moduleName));
+        Collection<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
         if (EmptyUtils.isEmpty(cs)) {
             return false;
         }
-        return cs.name().equalsIgnoreCase(containerName);
+        return cs.stream().filter(c -> c.name().equalsIgnoreCase(containerName)).findAny().isPresent();
     }
 
     @Override
     public ServiceHandler find(final String moduleName) {
-        AbstractContainer cs = containers.get(moduleManager.find(moduleName));
+        return find(moduleName, Container.DEFAULT);
+    }
+
+    @Override
+    public ServiceHandler find(final String moduleName, final String containerName) {
+        Collection<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
         if (EmptyUtils.isEmpty(cs)) {
-            throw new ContainerNotFoundException(
-                "Module [" + moduleName + "] not provider container.");
+            throw new ContainerNotFoundException("Module [" + moduleName + "] not provider container.");
         }
-        return cs;
+        ServiceHandler container = cs.stream()
+                                          .filter(c -> c.name().equalsIgnoreCase(containerName))
+                                          .findFirst()
+                                          .orElse(null);
+        if (EmptyUtils.isEmpty(container)) {
+            throw new ContainerNotFoundException(
+                "Module [" + moduleName + "] has not [" + containerName + "] provider container.");
+        }
+        return container;
     }
 
     public void init() throws ContainerConfigException, ContainerStartException {
@@ -137,7 +150,7 @@ public class ContainerManager implements ContainerHandler {
 
     private void addContainer(AbstractContainer container) {
         ModuleDefinition moduleDefinition = moduleManager.find(container.module());
-        containers.putIfAbsent(moduleDefinition, container);
+        containers.put(moduleDefinition, container);
     }
 
     private void copyProperties(Properties src, ContainerConfig dest, String container) throws IllegalAccessException {

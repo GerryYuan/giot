@@ -18,6 +18,8 @@
 
 package org.giot.core.module;
 
+import java.util.Collection;
+import java.util.List;
 import lombok.Getter;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.exception.ContainerConfigException;
@@ -46,12 +48,19 @@ public class ModuleManager implements ModuleHandler {
 
     @Override
     public ModuleConfiguration.ContainerDefinition find(final String moduleName, final String containerName) {
-        ModuleConfiguration.ContainerDefinition containerDefinition = moduleConfiguration.getModuleConfigurations()
-                                                                                         .get(find(moduleName));
-        if (EmptyUtils.isEmpty(containerDefinition)) {
+        Collection<ModuleConfiguration.ContainerDefinition> cds = moduleConfiguration.getModuleConfigurations()
+                                                                                     .get(find(
+                                                                                         moduleName));
+        if (EmptyUtils.isEmpty(cds)) {
             return null;
         }
-        if (!containerDefinition.getName().equalsIgnoreCase(containerName)) {
+        ModuleConfiguration.ContainerDefinition containerDefinition = cds.stream()
+                                                                         .filter(cd -> cd.getName()
+                                                                                         .equalsIgnoreCase(
+                                                                                             containerName))
+                                                                         .findAny()
+                                                                         .orElse(null);
+        if (EmptyUtils.isEmpty(containerDefinition)) {
             return null;
         }
         return containerDefinition;

@@ -19,4 +19,3 @@
 org.giot.core.CoreModule
 org.giot.core.storage.StorageModule
 org.giot.core.device.DeviceModule
-org.giot.core.snapshot.SnapshotModule

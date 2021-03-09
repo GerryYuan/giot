@@ -31,9 +31,8 @@ import org.giot.core.container.ContainerConfig;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CoreContainerConfig extends ContainerConfig {
-    private String a;
+    private String metaDataStorage;
 
-    private Integer b;
+    private String deviceDataStorage;
 
-    private Double c;
 }

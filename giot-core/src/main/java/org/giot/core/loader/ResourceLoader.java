@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -36,7 +37,7 @@ import org.giot.core.module.ModuleConfiguration;
  */
 public interface ResourceLoader {
 
-    ModuleConfiguration.ContainerDefinition loadContainerDef(Map<String, Object> config);
+    List<ModuleConfiguration.ContainerDefinition> loadContainerDefs(Map<String, Object> config);
 
     ModuleConfiguration load() throws FileNotFoundException;
 

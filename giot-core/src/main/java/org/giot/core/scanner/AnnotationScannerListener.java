@@ -19,6 +19,7 @@
 package org.giot.core.scanner;
 
 import java.lang.annotation.Annotation;
+import java.sql.SQLException;
 
 /**
  * @author yuanguohua on 2021/3/5 18:48
@@ -42,5 +43,5 @@ public interface AnnotationScannerListener {
     /**
      * 监听根据条件获取的class，然后进行处理
      */
-    void listener();
+    void listener() throws SQLException;
 }

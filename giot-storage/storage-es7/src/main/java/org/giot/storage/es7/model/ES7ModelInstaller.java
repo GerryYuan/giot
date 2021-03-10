@@ -20,12 +20,20 @@ package org.giot.storage.es7.model;
 
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelInstaller;
+import org.giot.storage.es7.ES7Client;
 
 /**
  * @author Created by gerry
  * @date 2021-03-07-11:02 PM
  */
 public class ES7ModelInstaller extends ModelInstaller {
+
+    private ES7Client es7Client;
+
+    public ES7ModelInstaller(final ES7Client es7Client) {
+        this.es7Client = es7Client;
+    }
+
     @Override
     public void createTable(final Model model) {
         System.out.println("es7 model " + model + " installing....");

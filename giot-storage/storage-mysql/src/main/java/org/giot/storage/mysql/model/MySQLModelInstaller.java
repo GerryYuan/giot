@@ -18,16 +18,39 @@
 
 package org.giot.storage.mysql.model;
 
+import java.sql.SQLException;
 import org.giot.core.storage.model.Model;
+import org.giot.core.storage.model.ModelColumn;
 import org.giot.core.storage.model.ModelInstaller;
+import org.giot.storage.mysql.MySQLClient;
+import org.jooq.CreateTableColumnStep;
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 
 /**
  * @author Created by gerry
  * @date 2021-03-07-11:02 PM
  */
 public class MySQLModelInstaller extends ModelInstaller {
+
+    private MySQLClient mySQLClient;
+
+    public MySQLModelInstaller(final MySQLClient mySQLClient) {
+        this.mySQLClient = mySQLClient;
+    }
+
     @Override
-    public void createTable(final Model model) {
-        System.out.println("mysql model " + model + " installing....");
+    public void createTable(final Model model) throws SQLException {
+        DSLContext dsl = mySQLClient.getDSLContext();
+        CreateTableColumnStep table = DSL.createTableIfNotExists(model.getName())
+                                         .column(Model.ID, SQLDataType.VARCHAR(512));
+        for (ModelColumn modelColumn : model.getColumns()) {
+            table.column(modelColumn.getColumnName(), SQLDataType.VARCHAR);
+        }
+        dsl.meta()
+           .apply(DSL.queries(table))
+           .ddl()
+           .executeBatch();
     }
 }

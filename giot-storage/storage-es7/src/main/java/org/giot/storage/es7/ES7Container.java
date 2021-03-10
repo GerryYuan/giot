@@ -20,6 +20,7 @@ package org.giot.storage.es7;
 
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.storage.StorageClient;
 import org.giot.core.storage.StorageModule;
 import org.giot.core.storage.model.ModelCreator;
 import org.giot.storage.es7.model.ES7ModelInstaller;
@@ -48,7 +49,9 @@ public class ES7Container extends AbstractContainer {
 
     @Override
     public void prepare() {
-        super.register(ModelCreator.WhenCompleteListener.class, new ES7ModelInstaller());
+        ES7Client es7Client = new ES7Client();
+        super.register(StorageClient.class, es7Client);
+        super.register(ModelCreator.WhenCompleteListener.class, new ES7ModelInstaller(es7Client));
     }
 
     @Override

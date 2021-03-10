@@ -16,40 +16,13 @@
  *
  */
 
-package org.giot.core.storage.model;
+package org.giot.storage.es7;
 
-import java.sql.SQLException;
-import org.giot.core.service.Service;
-import org.giot.core.storage.StorageData;
+import org.giot.core.storage.StorageClient;
 
 /**
- * 当存储容器启动时，通过构建自己的ModelCreator#creator，创建一些表
- *
  * @author Created by gerry
- * @date 2021-03-01-10:17 PM
+ * @date 2021-03-10-10:36 PM
  */
-public interface ModelCreator extends Service {
-
-    /**
-     * 添加model
-     *
-     * @param model
-     */
-    void addModel(Model model);
-
-    /**
-     * 添加model
-     *
-     * @param name
-     * @param clazz
-     * @return
-     */
-    Model addModel(String name, Class<? extends StorageData> clazz);
-
-    interface WhenCompleteListener extends Service {
-        /**
-         * model被创建完成后，调用Listener
-         */
-        void listener(Model model) throws SQLException;
-    }
+public class ES7Client implements StorageClient {
 }

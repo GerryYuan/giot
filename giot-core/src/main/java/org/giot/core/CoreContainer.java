@@ -19,6 +19,7 @@
 package org.giot.core;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
@@ -66,7 +67,7 @@ public class CoreContainer extends AbstractContainer {
         try {
             AnnotationScanner scanner = super.find(CoreModule.NAME).getService(AnnotationScanner.class);
             scanner.scanner();
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             throw new ContainerStartException("Container [" + name() + "] start failure.", e);
         }
     }

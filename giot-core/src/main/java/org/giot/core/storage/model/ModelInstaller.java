@@ -18,6 +18,8 @@
 
 package org.giot.core.storage.model;
 
+import java.sql.SQLException;
+
 /**
  * @author Created by gerry
  * @date 2021-03-07-9:49 PM
@@ -25,9 +27,9 @@ package org.giot.core.storage.model;
 public abstract class ModelInstaller implements ModelCreator.WhenCompleteListener {
 
     @Override
-    public void listener(final Model model) {
+    public void listener(final Model model) throws SQLException {
         createTable(model);
     }
 
-    public abstract void createTable(Model model);
+    public abstract void createTable(Model model) throws SQLException;
 }

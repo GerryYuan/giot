@@ -31,18 +31,13 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 public class Model {
+    public final static String ID = "id";
     private final String name;
     private final List<ModelColumn> columns;
-    private final boolean isMetadata;
-    private final boolean isTimeSeries;
 
     public Model(final String name,
-                 final List<ModelColumn> columns,
-                 final boolean isMetadata,
-                 final boolean isTimeSeries) {
+                 final List<ModelColumn> columns) {
         this.name = name;
         this.columns = columns;
-        this.isMetadata = isMetadata;
-        this.isTimeSeries = isTimeSeries;
     }
 }

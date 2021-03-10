@@ -28,7 +28,7 @@ storage:
     properties:
       jdbcUrl: jdbc:mysql://localhost:3306/giot
       dataSource.user: root
-      dataSource.password: root@1234
+      dataSource.password: 123456
       dataSource.cachePrepStmts: true
       dataSource.prepStmtCacheSize: 250
       dataSource.prepStmtCacheSqlLimit: 2048

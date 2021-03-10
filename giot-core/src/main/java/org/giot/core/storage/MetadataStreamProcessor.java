@@ -18,6 +18,7 @@
 
 package org.giot.core.storage;
 
+import java.sql.SQLException;
 import org.giot.core.CoreContainerConfig;
 import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
@@ -36,9 +37,9 @@ public class MetadataStreamProcessor extends AbstractStreamProcessor {
     @Override
     public <T extends StorageData> void create(final ContainerManager containerManager,
                                                final String name,
-                                               final Class<T> clazz) {
+                                               final Class<T> clazz) throws SQLException {
         ModelCreator creator = containerManager.find(CoreModule.NAME).getService(ModelCreator.class);
-        Model model = creator.addModel(name, clazz, true, true);
+        Model model = creator.addModel(name, clazz);
         //处理model
         ModelCreator.WhenCompleteListener listener = containerManager.find(
             StorageModule.NAME, getCoreContainerConfig().getMetaDataStorage())

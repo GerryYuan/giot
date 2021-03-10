@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.core.storage.hikaricp;
+package org.giot.storage.mysql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -24,26 +24,33 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.giot.core.storage.DBClient;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
 
 /**
  * @author Created by gerry
  * @date 2021-03-09-10:53 PM
  */
-public class HikariCPClient implements DBClient {
+public class MySQLClient implements DBClient {
 
     private HikariConfig hikariConfig;
 
     private HikariDataSource hikariDataSource;
 
-    public HikariCPClient(final Properties properties) {
+    private DSLContext dslContext;
+
+    public MySQLClient(final Properties properties) {
         this.hikariConfig = new HikariConfig(properties);
         this.hikariDataSource = new HikariDataSource(hikariConfig);
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        Connection connection = hikariDataSource.getConnection();
-        connection.setAutoCommit(true);
-        return connection;
+    public DSLContext getDSLContext() throws SQLException {
+        if (dslContext == null) {
+            Connection connection = hikariDataSource.getConnection();
+            dslContext = DSL.using(connection, SQLDialect.MYSQL);
+        }
+        return dslContext;
     }
 }

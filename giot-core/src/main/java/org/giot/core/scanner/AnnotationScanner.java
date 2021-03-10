@@ -21,6 +21,7 @@ package org.giot.core.scanner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import org.giot.core.service.Service;
 
@@ -37,7 +38,7 @@ public abstract class AnnotationScanner implements Service {
         this.listeners = listeners;
     }
 
-    public synchronized void scanner() throws IOException {
+    public synchronized void scanner() throws IOException, SQLException {
         ClassPath classpath = ClassPath.from(this.getClass().getClassLoader());
         ImmutableSet<ClassPath.ClassInfo> classes = classpath.getTopLevelClassesRecursive(packageName);
         for (ClassPath.ClassInfo classInfo : classes) {

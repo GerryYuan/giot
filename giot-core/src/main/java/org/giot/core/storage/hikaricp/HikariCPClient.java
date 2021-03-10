@@ -16,14 +16,14 @@
  *
  */
 
-package org.giot.storage.mysql.hikaricp;
+package org.giot.core.storage.hikaricp;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
-import org.giot.storage.mysql.DBClient;
+import org.giot.core.storage.DBClient;
 
 /**
  * @author Created by gerry

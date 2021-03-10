@@ -1,4 +1,4 @@
-package org.giot.storage.mysql;
+package org.giot.core.storage;
 
 import java.sql.Connection;
 import java.sql.SQLException;

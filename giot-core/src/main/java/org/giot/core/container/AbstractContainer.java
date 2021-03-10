@@ -46,7 +46,11 @@ public abstract class AbstractContainer implements Container, ServiceHandler{
     public abstract ContainerConfig createConfig();
 
     public ServiceHandler find(String moduleName) {
-        return this.containerManager.find(moduleName);
+        return find(moduleName, Container.DEFAULT);
+    }
+
+    public ServiceHandler find(String moduleName, String containerName) {
+        return this.containerManager.find(moduleName, containerName);
     }
 
     @Override

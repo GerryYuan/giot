@@ -18,9 +18,14 @@
 
 package org.giot.storage.mysql;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.exception.ContainerStartException;
+import org.giot.core.storage.DBClient;
 import org.giot.core.storage.StorageModule;
+import org.giot.core.storage.hikaricp.HikariCPClient;
 import org.giot.core.storage.model.ModelCreator;
 import org.giot.storage.mysql.config.MySQLConfig;
 import org.giot.storage.mysql.model.MySQLModelInstaller;
@@ -33,6 +38,8 @@ public class MySQLContainer extends AbstractContainer {
     private String NAME = "mysql";
 
     private MySQLConfig mySQLConfig;
+
+    private DBClient dbClient;
 
     @Override
     public String name() {
@@ -53,12 +60,17 @@ public class MySQLContainer extends AbstractContainer {
     @Override
     public void prepare() {
         super.register(ModelCreator.WhenCompleteListener.class, new MySQLModelInstaller());
-
+        super.register(DBClient.class, new HikariCPClient(mySQLConfig.getProperties()));
     }
 
     @Override
-    public void start() {
-
+    public void start() throws ContainerStartException {
+        try {
+            Connection connection = super.getService(DBClient.class).getConnection();
+            //TODO 初始化jooq的client
+        } catch (SQLException e) {
+            throw new ContainerStartException(e.getMessage(), e);
+        }
     }
 
     @Override

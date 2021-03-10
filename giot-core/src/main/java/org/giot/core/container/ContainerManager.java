@@ -79,9 +79,9 @@ public class ContainerManager implements ContainerHandler {
             throw new ContainerNotFoundException("Module [" + moduleName + "] not provider container.");
         }
         ServiceHandler container = cs.stream()
-                                          .filter(c -> c.name().equalsIgnoreCase(containerName))
-                                          .findFirst()
-                                          .orElse(null);
+                                     .filter(c -> c.name().equalsIgnoreCase(containerName))
+                                     .findFirst()
+                                     .orElse(null);
         if (EmptyUtils.isEmpty(container)) {
             throw new ContainerNotFoundException(
                 "Module [" + moduleName + "] has not [" + containerName + "] provider container.");

@@ -61,6 +61,9 @@ public class ModuleResourceLoader implements ResourceLoader {
     @Override
     public List<ModuleConfiguration.ContainerDefinition> loadContainerDefs(final Map<String, Object> config) {
         List<ModuleConfiguration.ContainerDefinition> containerDefinitions = new ArrayList<>(1);
+        if (EmptyUtils.isEmpty(config)) {
+            return containerDefinitions;
+        }
         //如果不存在which，则过滤
         String which = (String) config.get(ModuleConfiguration.WHICH);
         if (EmptyUtils.isEmpty(which)) {
@@ -87,9 +90,19 @@ public class ModuleResourceLoader implements ResourceLoader {
 
     private ModuleConfiguration.ContainerDefinition which(final String which, final Map<String, Object> config) {
         Properties properties = new Properties();
-        LinkedHashMap map = (LinkedHashMap) config.get(which);
-        if (EmptyUtils.isNotEmpty(map)) {
-            properties.putAll(map);
+        Map<String, ?> propertyConfig = (Map<String, ?>) config.get(which);
+        if (EmptyUtils.isNotEmpty(propertyConfig)) {
+            propertyConfig.forEach((propertyName, propertyValue) -> {
+                if (propertyValue instanceof Map) {
+                    Properties subProperties = new Properties();
+                    ((Map) propertyValue).forEach((key, value) -> {
+                        subProperties.put(key, value);
+                    });
+                    properties.put(propertyName, subProperties);
+                } else {
+                    properties.put(propertyName, propertyValue);
+                }
+            });
         }
         return new ModuleConfiguration.ContainerDefinition(which, properties);
     }

@@ -6,7 +6,7 @@
 core:
   which: default
   default:
-    metaDataStorage: postgresql
+    metaDataStorage: mysql
     deviceDataStorage: postgresql
     c: 1.6
     ## 物模型、传输协议（gateway）插件、消息协议插件

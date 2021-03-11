@@ -46,7 +46,7 @@ public class MySQLModelInstaller extends ModelInstaller {
         DSLContext dsl = mySQLClient.getDSLContext();
         CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName()).column(Model.ID, VARCHAR(512));
         for (ModelColumn column : model.getColumns()) {
-            table.column(column.getColumnName(), VARCHAR).comment(column.getDes());
+            table.column(column.getColumnName(), VARCHAR.length(column.getLength())).comment(column.getDes());
         }
         table.constraints(DSL.primaryKey(Model.ID)).execute();
     }

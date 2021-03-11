@@ -37,4 +37,5 @@ public @interface Column {
     int length();
 
     String des() default "";
+
 }

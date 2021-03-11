@@ -26,7 +26,6 @@ import org.giot.storage.mysql.MySQLClient;
 import org.jooq.CreateTableColumnStep;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
 
 import static org.jooq.impl.SQLDataType.VARCHAR;
 
@@ -47,7 +46,7 @@ public class MySQLModelInstaller extends ModelInstaller {
         DSLContext dsl = mySQLClient.getDSLContext();
         CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName()).column(Model.ID, VARCHAR(512));
         for (ModelColumn column : model.getColumns()) {
-            table.column(column.getColumnName(), SQLDataType.VARCHAR(1000)).comment(column.getDes());
+            table.column(column.getColumnName(), VARCHAR).comment(column.getDes());
         }
         System.out.println(table.constraints(DSL.primaryKey(Model.ID)).execute());
     }

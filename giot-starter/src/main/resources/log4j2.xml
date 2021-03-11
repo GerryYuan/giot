@@ -56,16 +56,10 @@
   </appenders>
   <loggers>
     <!-- 3rdparty Loggers -->
-    <Logger name="org.springframework" level="error" />
     <Logger name="com.google" level="error" />
-    <Logger name="net.rubyeye" level="error" />
-    <Logger name="org.hibernate" level="error" />
-    <Logger name="com.alibaba.dubbo" level="error" />
-    <Logger name="org.mybatis" level="error" />
+    <Logger name="org.jooq" level="error" />
     <Logger name="org.apache" level="error" />
-    <Logger name="io.undertow" level="error"/>
     <Logger name="org.giot" level="debug" />
-    <Logger name="springfox.documentation" level="error" />
     <Root level="info">
       <appender-ref ref="Console" />
       <appender-ref ref="LogstashFile" />

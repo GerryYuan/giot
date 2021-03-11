@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import org.giot.core.storage.StorageData;
 import org.giot.core.storage.annotation.Column;
+import org.giot.core.utils.EmptyUtils;
 
 /**
  * @author Created by gerry
@@ -60,7 +61,9 @@ public class StorageModelCreator implements ModelManager, ModelCreator {
                 continue;
             }
             Column column = field.getAnnotation(Column.class);
-            ModelColumn modelColumn = new ModelColumn(column.name(), field.getType(), field.getGenericType());
+            String name = EmptyUtils.isEmpty(column.name()) ? field.getName() : column.name();
+            ModelColumn modelColumn = new ModelColumn(
+                name, column.length(), column.des(), field.getType(), field.getGenericType());
             columns.add(modelColumn);
         }
         if (Objects.nonNull(clazz.getSuperclass())) {

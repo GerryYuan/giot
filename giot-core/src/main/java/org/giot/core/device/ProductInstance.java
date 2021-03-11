@@ -33,7 +33,7 @@ import org.giot.core.storage.annotation.Stream;
 @Stream(name = "product_instance", processor = MetadataStreamProcessor.class)
 public class ProductInstance extends Metadata {
 
-    @Column(name = "name")
+    @Column(name = "name", length = 255, des = "产品名称")
     private String name;
 
     @Override

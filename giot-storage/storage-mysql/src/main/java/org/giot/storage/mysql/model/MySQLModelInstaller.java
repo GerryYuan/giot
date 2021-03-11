@@ -28,6 +28,8 @@ import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 
+import static org.jooq.impl.SQLDataType.VARCHAR;
+
 /**
  * @author Created by gerry
  * @date 2021-03-07-11:02 PM
@@ -43,14 +45,10 @@ public class MySQLModelInstaller extends ModelInstaller {
     @Override
     public void createTable(final Model model) throws SQLException {
         DSLContext dsl = mySQLClient.getDSLContext();
-        CreateTableColumnStep table = DSL.createTableIfNotExists(model.getName())
-                                         .column(Model.ID, SQLDataType.VARCHAR(512));
-        for (ModelColumn modelColumn : model.getColumns()) {
-            table.column(modelColumn.getColumnName(), SQLDataType.VARCHAR);
+        CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName()).column(Model.ID, VARCHAR(512));
+        for (ModelColumn column : model.getColumns()) {
+            table.column(column.getColumnName(), SQLDataType.VARCHAR(1000)).comment(column.getDes());
         }
-        dsl.meta()
-           .apply(DSL.queries(table))
-           .ddl()
-           .executeBatch();
+        System.out.println(table.constraints(DSL.primaryKey(Model.ID)).execute());
     }
 }

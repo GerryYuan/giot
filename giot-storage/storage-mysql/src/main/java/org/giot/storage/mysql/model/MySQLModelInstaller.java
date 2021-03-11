@@ -48,6 +48,6 @@ public class MySQLModelInstaller extends ModelInstaller {
         for (ModelColumn column : model.getColumns()) {
             table.column(column.getColumnName(), VARCHAR).comment(column.getDes());
         }
-        System.out.println(table.constraints(DSL.primaryKey(Model.ID)).execute());
+        table.constraints(DSL.primaryKey(Model.ID)).execute();
     }
 }

@@ -18,7 +18,6 @@
 
 package org.giot.core.storage;
 
-public abstract class Metadata implements StorageData{
-
+public abstract class Metadata implements StorageData {
 
 }

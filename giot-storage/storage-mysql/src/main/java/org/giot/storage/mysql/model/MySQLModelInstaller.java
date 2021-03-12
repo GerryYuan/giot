@@ -25,9 +25,11 @@ import org.giot.core.storage.model.ModelInstaller;
 import org.giot.storage.mysql.MySQLClient;
 import org.jooq.CreateTableColumnStep;
 import org.jooq.DSLContext;
+import org.jooq.DataType;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 
-import static org.jooq.impl.SQLDataType.VARCHAR;
+import static org.jooq.impl.SQLDataType.BIGINT;
 
 /**
  * @author Created by gerry
@@ -44,10 +46,29 @@ public class MySQLModelInstaller extends ModelInstaller {
     @Override
     public void createTable(final Model model) throws SQLException {
         DSLContext dsl = mySQLClient.getDSLContext();
-        CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName()).column(Model.ID, VARCHAR(512));
+        CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName()).column(Model.ID, BIGINT.length(20));
         for (ModelColumn column : model.getColumns()) {
-            table.column(column.getColumnName(), VARCHAR.length(column.getLength())).comment(column.getDes());
+            table.column(column.getColumnName(), transform(column.getType(), column.getLength()))
+                 .comment(column.getDes());
         }
         table.constraints(DSL.primaryKey(Model.ID)).execute();
+    }
+
+    private DataType transform(Class<?> type, int length) {
+        if (Integer.class.equals(type) || int.class.equals(type)) {
+            return SQLDataType.INTEGER;
+        } else if (Long.class.equals(type) || long.class.equals(type)) {
+            return SQLDataType.BIGINT;
+        } else if (Double.class.equals(type) || double.class.equals(type)) {
+            return SQLDataType.DOUBLE;
+        } else if (String.class.equals(type)) {
+            return SQLDataType.VARCHAR(length);
+        } else if (Byte.class.equals(type)) {
+            return SQLDataType.TINYINT;
+        } else if (Float.class.equals(type) || float.class.equals(type)) {
+            return SQLDataType.FLOAT;
+        } else {
+            throw new IllegalArgumentException("Unsupported data type: " + type.getName());
+        }
     }
 }

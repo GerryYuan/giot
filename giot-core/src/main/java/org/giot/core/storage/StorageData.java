@@ -20,6 +20,6 @@ package org.giot.core.storage;
 
 public interface StorageData {
 
-    String id();
+    Long id();
 
 }

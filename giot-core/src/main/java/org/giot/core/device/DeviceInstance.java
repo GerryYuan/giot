@@ -37,7 +37,7 @@ public class DeviceInstance extends Metadata {
     private String name;
 
     @Override
-    public String id() {
+    public Long id() {
         return null;
     }
 }

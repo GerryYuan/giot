@@ -18,6 +18,7 @@
 
 package org.giot.network.mqtt.config;
 
+import io.netty.handler.codec.mqtt.MqttVersion;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -31,6 +32,7 @@ import org.giot.core.container.ContainerConfig;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class MqttConfig extends ContainerConfig {
+    private MqttVersion version = MqttVersion.MQTT_3_1_1;
 
     private String host;
 

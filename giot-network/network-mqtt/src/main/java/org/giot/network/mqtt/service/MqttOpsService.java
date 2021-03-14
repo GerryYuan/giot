@@ -18,18 +18,20 @@
 
 package org.giot.network.mqtt.service;
 
-import io.netty.bootstrap.ServerBootstrap;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
-import io.netty.util.ResourceLeakDetector;
+import io.netty.handler.timeout.IdleStateHandler;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.container.ContainerManager;
 import org.giot.network.mqtt.config.MqttConfig;
 
 /**
@@ -42,8 +44,11 @@ public class MqttOpsService implements IMqttOpsService {
     private MqttConfig config;
     private MqttConfig.NettyConfig netty;
 
-    public MqttOpsService(final MqttConfig config) {
+    private ContainerManager containerManager;
+
+    public MqttOpsService(final MqttConfig config, final ContainerManager containerManager) {
         this.config = config;
+        this.containerManager = containerManager;
         this.netty = config.getNetty();
     }
 
@@ -52,27 +57,23 @@ public class MqttOpsService implements IMqttOpsService {
     private EventLoopGroup workerGroup;
 
     @Override
-    public void connect() throws InterruptedException {
-        String leakDetectorLevel = netty.getLeakDetectorLevel();
-        log.info("Setting resource leak detector level to {}", leakDetectorLevel);
-        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.valueOf(leakDetectorLevel.toUpperCase()));
+    public void start() throws InterruptedException {
         bossGroup = new NioEventLoopGroup(netty.getBossGroupThreadCount());
         workerGroup = new NioEventLoopGroup(netty.getWorkerGroupThreadCount());
-        ServerBootstrap sb = new ServerBootstrap();
-        sb.group(bossGroup, workerGroup)
-          .channel(NioServerSocketChannel.class)
-          .childHandler(new ChannelInitializer<SocketChannel>() {
-              @Override
-              protected void initChannel(SocketChannel socketChannel) throws Exception {
-                  ChannelPipeline pipeline = socketChannel.pipeline();
-                  pipeline.addLast("decoder", new MqttDecoder(netty.getMaxPayloadSize()));
-                  pipeline.addLast("encoder", MqttEncoder.DEFAUL_ENCODER);
-                  //pipeline.addLast("idleStateHandler", new IdleStateHandler(10,2,12, TimeUnit.SECONDS));
-                  //                  MqttTransportHandler handler = new MqttTransportHandler(protocolProcess);
-                  //                  pipeline.addLast(handler);
-              }
-          });
-        serverChannel = sb.bind(config.getHost(), config.getPort()).sync().channel();
+        Bootstrap b = new Bootstrap();
+        b.group(workerGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel socketChannel) throws Exception {
+                ChannelPipeline pipeline = socketChannel.pipeline();
+                pipeline.addLast("decoder", new MqttDecoder(netty.getMaxPayloadSize()));
+                pipeline.addLast("encoder", MqttEncoder.DEFAUL_ENCODER);
+                pipeline.addLast("idleStateHandler", new IdleStateHandler(10, 2, 12, TimeUnit.SECONDS));
+                pipeline.addLast("handler", new MqttClientHandler());
+                //                  MqttTransportHandler handler = new MqttTransportHandler(protocolProcess);
+                //                  pipeline.addLast(handler);
+            }
+        });
+        serverChannel = b.connect(config.getHost(), config.getPort()).sync().channel();
     }
 
     @Override

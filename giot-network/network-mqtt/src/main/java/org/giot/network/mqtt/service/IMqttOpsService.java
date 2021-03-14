@@ -8,9 +8,9 @@ import org.giot.core.service.Service;
  */
 public interface IMqttOpsService extends Service {
     /**
-     * 连接mqtt broker
+     * 启动mqttops，负责跟mqtt broker链接
      */
-    void connect() throws InterruptedException;
+    void start() throws InterruptedException;
 
     /**
      * 关闭处理

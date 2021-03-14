@@ -24,8 +24,10 @@ import org.giot.core.exception.ContainerStartException;
 import org.giot.core.exception.ContainerStopException;
 import org.giot.core.network.NetworkModule;
 import org.giot.network.mqtt.config.MqttConfig;
+import org.giot.network.mqtt.service.IMqttConnectService;
 import org.giot.network.mqtt.service.IMqttOpsService;
 import org.giot.network.mqtt.service.MqttClientHandler;
+import org.giot.network.mqtt.service.MqttConnectService;
 import org.giot.network.mqtt.service.MqttOpsService;
 
 /**
@@ -58,16 +60,17 @@ public class MqttContainer extends AbstractContainer {
     public void prepare() {
         super.register(MqttClientHandler.class, new MqttClientHandler(config, getContainerManager()));
         super.register(IMqttOpsService.class, new MqttOpsService(config, getContainerManager()));
+        super.register(IMqttConnectService.class, new MqttConnectService(config, getContainerManager()));
     }
 
     @Override
     public void start() throws ContainerStartException {
         IMqttOpsService mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
-//        try {
-//            mqttOpsService.start();
-//        } catch (InterruptedException e) {
-//            throw new ContainerStartException("Container [" + name() + "] start failure.", e);
-//        }
+        //        try {
+        //            mqttOpsService.start();
+        //        } catch (InterruptedException e) {
+        //            throw new ContainerStartException("Container [" + name() + "] start failure.", e);
+        //        }
     }
 
     @Override
@@ -78,10 +81,10 @@ public class MqttContainer extends AbstractContainer {
     @Override
     public void stop() throws ContainerStopException {
         IMqttOpsService mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
-//        try {
-//            mqttOpsService.shutdown();
-//        } catch (InterruptedException e) {
-//            throw new ContainerStopException("Container [" + name() + "] stop failure.", e);
-//        }
+        //        try {
+        //            mqttOpsService.shutdown();
+        //        } catch (InterruptedException e) {
+        //            throw new ContainerStopException("Container [" + name() + "] stop failure.", e);
+        //        }
     }
 }

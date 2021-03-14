@@ -19,7 +19,6 @@
 package org.giot.network.mqtt.service;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.mqtt.MqttConnAckMessage;
 import org.giot.core.service.Service;
 import org.giot.network.mqtt.exception.MqttStartException;
@@ -30,7 +29,7 @@ import org.giot.network.mqtt.exception.MqttStartException;
  */
 public interface IMqttConnectService extends Service {
 
-    void connect(ChannelHandlerContext ctx);
+    void connect(Channel channel);
 
     void ack(Channel channel, MqttConnAckMessage msg) throws MqttStartException;
 }

@@ -19,10 +19,10 @@
 package org.giot.network.mqtt.service;
 
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.mqtt.MqttConnAckMessage;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import lombok.AllArgsConstructor;
+import org.giot.core.container.ContainerManager;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.exception.MqttStartException;
 
@@ -35,8 +35,10 @@ public class MqttConnectService implements IMqttConnectService {
 
     private MqttConfig config;
 
+    private ContainerManager containerManager;
+
     @Override
-    public void connect(final ChannelHandlerContext ctx) {
+    public void connect(final Channel channel) {
         //channel在初始化时，进行跟mqtt broker进行连接操作
         //        MqttFixedHeader fixedHeader =
         //            new MqttFixedHeader(MqttMessageType.CONNECT

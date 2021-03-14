@@ -60,7 +60,7 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         IMqttConnectService connectService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
                                                              .getService(IMqttConnectService.class);
-        connectService.connect(ctx);
+        connectService.connect(ctx.channel());
     }
 
     @Override

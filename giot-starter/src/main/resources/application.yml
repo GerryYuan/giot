@@ -14,6 +14,9 @@ device:
   which: default
   default:
   ##
+network:
+  which: default
+  default:
 storage:
   which: postgresql,elasticsearch7,mysql
   postgresql:

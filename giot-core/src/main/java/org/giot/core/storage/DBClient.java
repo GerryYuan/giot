@@ -8,5 +8,11 @@ import org.jooq.DSLContext;
  * @date 2021-03-10-10:31 PM
  */
 public interface DBClient extends StorageClient {
+    /**
+     * 获取jooq客户端DSL
+     *
+     * @return
+     * @throws SQLException
+     */
     DSLContext getDSLContext() throws SQLException;
 }

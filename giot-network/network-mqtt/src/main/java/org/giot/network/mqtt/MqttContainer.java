@@ -16,27 +16,48 @@
  *
  */
 
-package org.giot.core.storage.annotation;
+package org.giot.network.mqtt;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.giot.core.container.AbstractContainer;
+import org.giot.core.container.ContainerConfig;
+import org.giot.core.exception.ContainerStartException;
+import org.giot.core.network.NetworkModule;
 
 /**
- * 列注解
- *
- * @author yuanguohua on 2021/3/5 16:26
+ * @author Created by gerry
+ * @date 2021-03-14-5:53 PM
  */
-@Target({ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Column {
+public class MqttContainer extends AbstractContainer {
 
-    String name() default "";
+    private String NAME = "mqtt";
 
-    int length() default 0;
+    @Override
+    public String name() {
+        return NAME;
+    }
 
-    String des() default "";
+    @Override
+    public String module() {
+        return NetworkModule.NAME;
+    }
 
-    boolean isNull() default false;
+    @Override
+    public ContainerConfig createConfig() {
+        return null;
+    }
+
+    @Override
+    public void prepare() {
+
+    }
+
+    @Override
+    public void start() throws ContainerStartException {
+
+    }
+
+    @Override
+    public void after() {
+
+    }
 }

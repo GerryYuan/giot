@@ -16,27 +16,28 @@
  *
  */
 
-package org.giot.core.storage.annotation;
+package org.giot.network.mqtt.config;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.giot.core.container.ContainerConfig;
 
 /**
- * 列注解
- *
- * @author yuanguohua on 2021/3/5 16:26
+ * @author Created by gerry
+ * @date 2021-03-14-5:55 PM
  */
-@Target({ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Column {
+@ToString
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class MqttConfig extends ContainerConfig {
 
-    String name() default "";
+    private String host;
 
-    int length() default 0;
+    private int port;
 
-    String des() default "";
+    private String clientId;
 
-    boolean isNull() default false;
+    private String[] subTopics;
+
 }

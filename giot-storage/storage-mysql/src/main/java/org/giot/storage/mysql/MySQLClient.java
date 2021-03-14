@@ -20,7 +20,6 @@ package org.giot.storage.mysql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.giot.core.storage.DBClient;
@@ -38,7 +37,7 @@ public class MySQLClient implements DBClient {
 
     private HikariDataSource hikariDataSource;
 
-    private DSLContext dslContext;
+    private DSLContext dsl;
 
     public MySQLClient(final Properties properties) {
         this.hikariConfig = new HikariConfig(properties);
@@ -47,10 +46,9 @@ public class MySQLClient implements DBClient {
 
     @Override
     public DSLContext getDSLContext() throws SQLException {
-        if (dslContext == null) {
-            Connection connection = hikariDataSource.getConnection();
-            dslContext = DSL.using(connection, SQLDialect.MYSQL);
+        if (dsl == null) {
+            dsl = DSL.using(this.hikariDataSource.getConnection(), SQLDialect.MYSQL);
         }
-        return dslContext;
+        return dsl;
     }
 }

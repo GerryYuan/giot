@@ -38,4 +38,6 @@ public class ModelColumn {
     private final String des;
     private final Class<?> type;
     private final Type genericType;
+    private final boolean isNull;
+
 }

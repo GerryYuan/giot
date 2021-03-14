@@ -16,27 +16,19 @@
  *
  */
 
-package org.giot.core.storage.annotation;
+package org.giot.core.network;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.giot.core.module.AbstractModuleDefinition;
 
 /**
- * 列注解
- *
- * @author yuanguohua on 2021/3/5 16:26
+ * 网络模块，负责接收客户端数据和分发
  */
-@Target({ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Column {
+public class NetworkModule extends AbstractModuleDefinition {
 
-    String name() default "";
+    public final static String NAME = "network";
 
-    int length() default 0;
-
-    String des() default "";
-
-    boolean isNull() default false;
+    @Override
+    public String name() {
+        return NAME;
+    }
 }

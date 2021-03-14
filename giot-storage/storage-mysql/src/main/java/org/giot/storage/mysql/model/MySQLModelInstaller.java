@@ -48,25 +48,29 @@ public class MySQLModelInstaller extends ModelInstaller {
         DSLContext dsl = mySQLClient.getDSLContext();
         CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName()).column(Model.ID, BIGINT.length(20));
         for (ModelColumn column : model.getColumns()) {
-            Field field = transform(column.getColumnName(), column.getType(), column.getLength(), column.getDes());
-            table.column(field, field.getDataType());
+            table.column(transform(column));
         }
         table.constraints(DSL.primaryKey(Model.ID)).execute();
     }
 
-    private Field transform(String column, Class<?> type, int length, String des) {
+    private Field transform(ModelColumn column) {
+        Class<?> type = column.getType();
+        String columnName = column.getColumnName();
+        String des = column.getDes();
+        int length = column.getLength();
+        boolean isNull = column.isNull();
         if (Integer.class.equals(type) || int.class.equals(type)) {
-            return DSL.field(column, SQLDataType.INTEGER, DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.INTEGER.nullable(isNull), DSL.comment(des));
         } else if (Long.class.equals(type) || long.class.equals(type)) {
-            return DSL.field(column, SQLDataType.BIGINT, DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.BIGINT.nullable(isNull), DSL.comment(des));
         } else if (Double.class.equals(type) || double.class.equals(type)) {
-            return DSL.field(column, SQLDataType.DOUBLE, DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.DOUBLE.nullable(isNull), DSL.comment(des));
         } else if (String.class.equals(type)) {
-            return DSL.field(column, SQLDataType.VARCHAR(length), DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.VARCHAR(length).nullable(isNull), DSL.comment(des));
         } else if (Byte.class.equals(type)) {
-            return DSL.field(column, SQLDataType.TINYINT, DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.TINYINT.nullable(isNull), DSL.comment(des));
         } else if (Float.class.equals(type) || float.class.equals(type)) {
-            return DSL.field(column, SQLDataType.FLOAT, DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.FLOAT.nullable(isNull), DSL.comment(des));
         } else {
             throw new IllegalArgumentException("Unsupported data type: " + type.getName());
         }

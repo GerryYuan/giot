@@ -32,6 +32,8 @@ import io.netty.handler.timeout.IdleStateHandler;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
+import org.giot.core.network.NetworkModule;
+import org.giot.network.mqtt.MqttContainer;
 import org.giot.network.mqtt.config.MqttConfig;
 
 /**
@@ -42,49 +44,43 @@ import org.giot.network.mqtt.config.MqttConfig;
 public class MqttOpsService implements IMqttOpsService {
 
     private MqttConfig config;
-    private MqttConfig.NettyConfig netty;
 
     private ContainerManager containerManager;
 
     public MqttOpsService(final MqttConfig config, final ContainerManager containerManager) {
         this.config = config;
         this.containerManager = containerManager;
-        this.netty = config.getNetty();
     }
 
-    private Channel serverChannel;
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
+    private Channel channel;
+    private EventLoopGroup group;
 
     @Override
     public void start() throws InterruptedException {
-        bossGroup = new NioEventLoopGroup(netty.getBossGroupThreadCount());
-        workerGroup = new NioEventLoopGroup(netty.getWorkerGroupThreadCount());
+        group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
-        b.group(workerGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+        MqttClientHandler handler = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                    .getService(MqttClientHandler.class);
+        b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
                 ChannelPipeline pipeline = socketChannel.pipeline();
-                pipeline.addLast("decoder", new MqttDecoder(netty.getMaxPayloadSize()));
+                pipeline.addLast("decoder", new MqttDecoder());
                 pipeline.addLast("encoder", MqttEncoder.DEFAUL_ENCODER);
                 pipeline.addLast("idleStateHandler", new IdleStateHandler(10, 2, 12, TimeUnit.SECONDS));
-                pipeline.addLast("handler", new MqttClientHandler());
-                //                  MqttTransportHandler handler = new MqttTransportHandler(protocolProcess);
-                //                  pipeline.addLast(handler);
+                pipeline.addLast("handler", handler);
             }
         });
-        serverChannel = b.connect(config.getHost(), config.getPort()).sync().channel();
+        channel = b.connect(config.getHost(), config.getPort()).sync().channel();
     }
 
     @Override
     public void shutdown() throws InterruptedException {
-        log.info("Stopping MQTT transport!");
         try {
-            serverChannel.close().sync();
+            channel.close().sync();
         } finally {
-            workerGroup.shutdownGracefully();
-            bossGroup.shutdownGracefully();
+            group.shutdownGracefully();
         }
-        log.info("MQTT transport stopped!");
+        log.info("MQTT Channel closed!");
     }
 }

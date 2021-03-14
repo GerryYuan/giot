@@ -16,36 +16,14 @@
  *
  */
 
-package org.giot.network.mqtt.config;
+package org.giot.core.exception;
 
-import io.netty.handler.codec.mqtt.MqttVersion;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.giot.core.container.ContainerConfig;
+public class ContainerStopException extends Exception {
+    public ContainerStopException(String message) {
+        super(message);
+    }
 
-/**
- * @author Created by gerry
- * @date 2021-03-14-5:55 PM
- */
-@ToString
-@Data
-@EqualsAndHashCode(callSuper = false)
-public class MqttConfig extends ContainerConfig {
-    private MqttVersion version = MqttVersion.MQTT_3_1_1;
-
-    private String host;
-
-    private int port;
-
-    private String clientId;
-
-    private String[] subTopics;
-
-    private String username;
-
-    private String password;
-
-    private boolean cleanSession;
-
+    public ContainerStopException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

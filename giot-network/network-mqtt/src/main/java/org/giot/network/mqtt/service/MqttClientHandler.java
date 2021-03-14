@@ -35,8 +35,10 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
 import java.io.IOException;
+import lombok.AllArgsConstructor;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.network.NetworkModule;
+import org.giot.core.service.Service;
 import org.giot.network.mqtt.MqttContainer;
 import org.giot.network.mqtt.config.MqttConfig;
 
@@ -46,8 +48,9 @@ import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUS
  * @author Created by gerry
  * @date 2021-03-14-8:24 PM
  */
+@AllArgsConstructor
 @ChannelHandler.Sharable
-public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> {
+public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> implements Service {
 
     private MqttConfig mqttConfig;
 
@@ -55,7 +58,7 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        IMqttConnectService connectService = containerManager.find(NetworkModule.NAME, MqttContainer.DEFAULT)
+        IMqttConnectService connectService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
                                                              .getService(IMqttConnectService.class);
         connectService.connect(ctx);
     }

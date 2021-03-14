@@ -18,13 +18,23 @@
 
 package org.giot.network.mqtt.service;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.mqtt.MqttConnAckMessage;
+import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
+import lombok.AllArgsConstructor;
+import org.giot.network.mqtt.config.MqttConfig;
+import org.giot.network.mqtt.exception.MqttStartException;
 
 /**
  * @author Created by gerry
  * @date 2021-03-14-9:28 PM
  */
+@AllArgsConstructor
 public class MqttConnectService implements IMqttConnectService {
+
+    private MqttConfig config;
+
     @Override
     public void connect(final ChannelHandlerContext ctx) {
         //channel在初始化时，进行跟mqtt broker进行连接操作
@@ -53,5 +63,16 @@ public class MqttConnectService implements IMqttConnectService {
         //        ctx.writeAndFlush(connectMessage);
         //        System.out.println("Sent CONNECT");
         //        mqttSession.initChannel(ctx.channel());
+    }
+
+    @Override
+    public void ack(final Channel channel, final MqttConnAckMessage msg) throws MqttStartException {
+        if (msg.variableHeader().connectReturnCode().equals(MqttConnectReturnCode.CONNECTION_ACCEPTED)) {
+            // sub topic
+            //            mqttSession.subscribe("$msg/up", "$msg/down");
+            return;
+        }
+        throw new MqttStartException("mqtt connect ack error:" + msg.variableHeader().connectReturnCode());
+
     }
 }

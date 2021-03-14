@@ -21,7 +21,12 @@ package org.giot.network.mqtt;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.exception.ContainerStartException;
+import org.giot.core.exception.ContainerStopException;
 import org.giot.core.network.NetworkModule;
+import org.giot.network.mqtt.config.MqttConfig;
+import org.giot.network.mqtt.service.IMqttOpsService;
+import org.giot.network.mqtt.service.MqttClientHandler;
+import org.giot.network.mqtt.service.MqttOpsService;
 
 /**
  * @author Created by gerry
@@ -29,7 +34,9 @@ import org.giot.core.network.NetworkModule;
  */
 public class MqttContainer extends AbstractContainer {
 
-    private String NAME = "mqtt";
+    public static final String NAME = "mqtt";
+
+    private MqttConfig config;
 
     @Override
     public String name() {
@@ -43,21 +50,38 @@ public class MqttContainer extends AbstractContainer {
 
     @Override
     public ContainerConfig createConfig() {
-        return null;
+        this.config = new MqttConfig();
+        return config;
     }
 
     @Override
     public void prepare() {
-
+        super.register(MqttClientHandler.class, new MqttClientHandler(config, getContainerManager()));
+        super.register(IMqttOpsService.class, new MqttOpsService(config, getContainerManager()));
     }
 
     @Override
     public void start() throws ContainerStartException {
-
+        IMqttOpsService mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
+//        try {
+//            mqttOpsService.start();
+//        } catch (InterruptedException e) {
+//            throw new ContainerStartException("Container [" + name() + "] start failure.", e);
+//        }
     }
 
     @Override
     public void after() {
 
+    }
+
+    @Override
+    public void stop() throws ContainerStopException {
+        IMqttOpsService mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
+//        try {
+//            mqttOpsService.shutdown();
+//        } catch (InterruptedException e) {
+//            throw new ContainerStopException("Container [" + name() + "] stop failure.", e);
+//        }
     }
 }

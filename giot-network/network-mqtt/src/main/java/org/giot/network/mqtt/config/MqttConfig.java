@@ -40,4 +40,24 @@ public class MqttConfig extends ContainerConfig {
 
     private String[] subTopics;
 
+    private String username;
+
+    private String password;
+
+    private boolean cleanSession;
+
+    private NettyConfig netty;
+
+    @ToString
+    @Data
+    public static class NettyConfig {
+        private String leakDetectorLevel;
+
+        private int bossGroupThreadCount;
+
+        private int workerGroupThreadCount;
+
+        private int maxPayloadSize;
+
+    }
 }

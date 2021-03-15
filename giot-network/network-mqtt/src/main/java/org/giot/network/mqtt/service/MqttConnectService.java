@@ -45,6 +45,13 @@ public class MqttConnectService implements IMqttConnectService {
     private ContainerManager containerManager;
 
     @Override
+    public void disConnect(final Channel channel) {
+        //重连
+        channel.close();
+        //todo 负责通知下游
+    }
+
+    @Override
     public void connect(final Channel channel) {
         MqttFixedHeader fixedHeader = new MqttFixedHeader(
             MqttMessageType.CONNECT, connectOptions.isDup(), connectOptions.getMqttQoS(), connectOptions.isRetain(),

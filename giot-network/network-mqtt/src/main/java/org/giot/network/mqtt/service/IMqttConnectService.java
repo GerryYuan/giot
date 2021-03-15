@@ -29,6 +29,8 @@ import org.giot.network.mqtt.exception.MqttStartException;
  */
 public interface IMqttConnectService extends Service {
 
+    void disConnect(Channel channel);
+
     void connect(Channel channel);
 
     void ack(Channel channel, MqttConnAckMessage msg) throws MqttStartException;

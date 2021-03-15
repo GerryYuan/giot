@@ -30,6 +30,7 @@ import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import java.util.concurrent.TimeUnit;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.network.NetworkModule;
@@ -52,6 +53,7 @@ public class MqttOpsService implements IMqttOpsService {
         this.containerManager = containerManager;
     }
 
+    @Getter
     private Channel channel;
     private EventLoopGroup group;
 

@@ -22,6 +22,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.mqtt.MqttConnAckMessage;
 import io.netty.handler.codec.mqtt.MqttConnAckVariableHeader;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttFixedHeader;
@@ -87,7 +88,13 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
             case CONNECT:
                 //                protocolProcess.ack().processConnect(ctx.channel(), (MqttConnectMessage) msg);
                 break;
-            case CONNACK://当前是客户端，服务器返回ack
+            case CONNACK:
+                /**
+                 * broker接受当客户端连上的消息
+                 */
+                IMqttConnectService connectService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                                     .getService(IMqttConnectService.class);
+                connectService.ack(ctx.channel(), (MqttConnAckMessage) msg);
                 break;
             case PUBLISH://当前是客户端，向服务器发送消息
                 //                protocolProcess.publish().processPublish(ctx.channel(), (MqttPublishMessage) msg);

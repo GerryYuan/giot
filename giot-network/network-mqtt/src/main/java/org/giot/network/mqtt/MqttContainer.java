@@ -26,9 +26,11 @@ import org.giot.core.network.NetworkModule;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.service.IMqttConnectService;
 import org.giot.network.mqtt.service.IMqttOpsService;
+import org.giot.network.mqtt.service.IMqttSubService;
 import org.giot.network.mqtt.service.MqttClientHandler;
 import org.giot.network.mqtt.service.MqttConnectService;
 import org.giot.network.mqtt.service.MqttOpsService;
+import org.giot.network.mqtt.service.MqttSubService;
 
 /**
  * @author Created by gerry
@@ -58,9 +60,11 @@ public class MqttContainer extends AbstractContainer {
 
     @Override
     public void prepare() {
-        super.register(MqttClientHandler.class, new MqttClientHandler(config, getContainerManager()));
+        super.register(MqttClientHandler.class, new MqttClientHandler(getContainerManager()));
         super.register(IMqttOpsService.class, new MqttOpsService(config, getContainerManager()));
-        super.register(IMqttConnectService.class, new MqttConnectService(config, getContainerManager()));
+        super.register(
+            IMqttConnectService.class, new MqttConnectService(config.getConnectOptions(), getContainerManager()));
+        super.register(IMqttSubService.class, new MqttSubService(config.getConnectOptions()));
     }
 
     @Override

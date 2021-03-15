@@ -40,7 +40,6 @@ import org.giot.core.container.ContainerManager;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.service.Service;
 import org.giot.network.mqtt.MqttContainer;
-import org.giot.network.mqtt.config.MqttConfig;
 
 import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUSED_UNACCEPTABLE_PROTOCOL_VERSION;
 
@@ -51,8 +50,6 @@ import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUS
 @AllArgsConstructor
 @ChannelHandler.Sharable
 public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> implements Service {
-
-    private MqttConfig mqttConfig;
 
     private ContainerManager containerManager;
 

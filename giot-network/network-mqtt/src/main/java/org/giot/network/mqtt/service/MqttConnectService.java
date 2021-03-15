@@ -20,9 +20,16 @@ package org.giot.network.mqtt.service;
 
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttConnAckMessage;
+import io.netty.handler.codec.mqtt.MqttConnectPayload;
 import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
+import io.netty.handler.codec.mqtt.MqttConnectVariableHeader;
+import io.netty.handler.codec.mqtt.MqttFixedHeader;
+import io.netty.handler.codec.mqtt.MqttMessageFactory;
+import io.netty.handler.codec.mqtt.MqttMessageType;
 import lombok.AllArgsConstructor;
 import org.giot.core.container.ContainerManager;
+import org.giot.core.network.NetworkModule;
+import org.giot.network.mqtt.MqttContainer;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.exception.MqttStartException;
 
@@ -33,45 +40,35 @@ import org.giot.network.mqtt.exception.MqttStartException;
 @AllArgsConstructor
 public class MqttConnectService implements IMqttConnectService {
 
-    private MqttConfig config;
+    private MqttConfig.MqttConnectOptions connectOptions;
 
     private ContainerManager containerManager;
 
     @Override
     public void connect(final Channel channel) {
-        //channel在初始化时，进行跟mqtt broker进行连接操作
-        //        MqttFixedHeader fixedHeader =
-        //            new MqttFixedHeader(MqttMessageType.CONNECT
-        //                , mqttConnectOptions.isDup()
-        //                , mqttConnectOptions.getMqttQoS()
-        //                , mqttConnectOptions.isRetain()
-        //                , mqttConnectOptions.getRemainingLength());
-        //        MqttConnectVariableHeader variableHeader =
-        //            new MqttConnectVariableHeader(mqttConfig.getVersion().protocolName()
-        //                , mqttConfig.getVersion().protocolLevel()
-        //                , true
-        //                , true
-        //                , mqttConnectOptions.isWillRetain()
-        //                , mqttConnectOptions.getWillQos()
-        //                , mqttConnectOptions.isWillFlag()
-        //                , mqttConnectOptions.isCleanSession()
-        //                , mqttConfig.getKeepAliveTimeSeconds());
-        //        MqttConnectPayload payload = new MqttConnectPayload(mqttConfig.getClientId()
-        //            , mqttConnectOptions.getWillTopic()
-        //            , mqttConnectOptions.getWillMessage()
-        //            , mqttConfig.getUsername()
-        //            , mqttConfig.getPassword());
-        //        MqttConnectMessage connectMessage = new MqttConnectMessage(fixedHeader, variableHeader, payload);
-        //        ctx.writeAndFlush(connectMessage);
-        //        System.out.println("Sent CONNECT");
-        //        mqttSession.initChannel(ctx.channel());
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(
+            MqttMessageType.CONNECT, connectOptions.isDup(), connectOptions.getMqttQoS(), connectOptions.isRetain(),
+            connectOptions.getRemainingLength()
+        );
+        MqttConnectVariableHeader variableHeader = new MqttConnectVariableHeader(
+            connectOptions.getVersion().protocolName(), 4, true, true, connectOptions.isWillRetain(),
+            connectOptions.getWillQos(), connectOptions.isWillFlag(), connectOptions.isCleanSession(),
+            connectOptions.getKeepAliveTimeSeconds()
+        );
+        MqttConnectPayload payload = new MqttConnectPayload(connectOptions.getClientId(), connectOptions.getWillTopic(),
+                                                            connectOptions.getWillMessage(),
+                                                            connectOptions.getUserName(), connectOptions.getPassword()
+        );
+        MqttMessageFactory.newMessage(fixedHeader, variableHeader, payload);
+        channel.writeAndFlush(MqttMessageFactory.newMessage(fixedHeader, variableHeader, payload));
     }
 
     @Override
     public void ack(final Channel channel, final MqttConnAckMessage msg) throws MqttStartException {
         if (msg.variableHeader().connectReturnCode().equals(MqttConnectReturnCode.CONNECTION_ACCEPTED)) {
-            // sub topic
-            //            mqttSession.subscribe("$msg/up", "$msg/down");
+            IMqttSubService subService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                         .getService(IMqttSubService.class);
+            subService.sub(channel);
             return;
         }
         throw new MqttStartException("mqtt connect ack error:" + msg.variableHeader().connectReturnCode());

@@ -18,6 +18,7 @@
 
 package org.giot.network.mqtt.config;
 
+import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.handler.codec.mqtt.MqttVersion;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,20 +33,47 @@ import org.giot.core.container.ContainerConfig;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class MqttConfig extends ContainerConfig {
-    private MqttVersion version = MqttVersion.MQTT_3_1_1;
 
     private String host;
 
     private int port;
 
-    private String clientId;
+    private MqttConnectOptions connectOptions;
 
-    private String[] subTopics;
+    @Data
+    public static class MqttConnectOptions {
 
-    private String username;
+        private boolean isWillRetain;
 
-    private String password;
+        private int willQos;
 
-    private boolean cleanSession;
+        private boolean isWillFlag;
 
+        private boolean cleanSession;
+
+        private int keepAliveTimeSeconds;
+
+        private MqttQoS mqttQoS;
+
+        private boolean isDup;
+
+        private boolean isRetain;
+
+        private int remainingLength;
+
+        private MqttVersion version = MqttVersion.MQTT_3_1_1;
+
+        private String willTopic;
+
+        private String willMessage;
+
+        private String userName;
+
+        private String password;
+
+        private String clientId;
+
+        private String[] subTopics;
+
+    }
 }

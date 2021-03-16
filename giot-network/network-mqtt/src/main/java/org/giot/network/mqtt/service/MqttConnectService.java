@@ -26,6 +26,8 @@ import io.netty.handler.codec.mqtt.MqttConnectVariableHeader;
 import io.netty.handler.codec.mqtt.MqttFixedHeader;
 import io.netty.handler.codec.mqtt.MqttMessageFactory;
 import io.netty.handler.codec.mqtt.MqttMessageType;
+import io.netty.handler.codec.mqtt.MqttQoS;
+import java.nio.charset.Charset;
 import lombok.AllArgsConstructor;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.network.NetworkModule;
@@ -54,17 +56,22 @@ public class MqttConnectService implements IMqttConnectService {
     @Override
     public void connect(final Channel channel) {
         MqttFixedHeader fixedHeader = new MqttFixedHeader(
-            MqttMessageType.CONNECT, config.isDup(), config.getMqttQoS(), config.isRetain(),
-            config.getRemainingLength()
-        );
+            MqttMessageType.CONNECT, false, MqttQoS.AT_MOST_ONCE, false, 0);
         MqttConnectVariableHeader variableHeader = new MqttConnectVariableHeader(
-            config.getVersion().protocolName(), config.getVersion().protocolLevel(), true, true, config.isWillRetain(),
-            config.getWillQos(), config.isWillFlag(), config.isCleanSession(),
+            config.getVersion().protocolName(),
+            config.getVersion().protocolLevel(),
+            true,
+            true,
+            false,
+            0,
+            false,
+            config.isCleanSession(),
             config.getKeepAliveTimeSeconds()
         );
-        MqttConnectPayload payload = new MqttConnectPayload(config.getClientId(), config.getWillTopic(),
-                                                            config.getWillMessage(),
-                                                            config.getUserName(), config.getPassword()
+        MqttConnectPayload payload = new MqttConnectPayload(
+            config.getClientId(), null, null,
+            config.getUserName(),
+            config.getPassword().getBytes(Charset.defaultCharset())
         );
         channel.writeAndFlush(MqttMessageFactory.newMessage(fixedHeader, variableHeader, payload));
     }
@@ -77,7 +84,7 @@ public class MqttConnectService implements IMqttConnectService {
             subService.sub(channel);
             return;
         }
-        throw new MqttStartException("mqtt connect ack error:" + msg.variableHeader().connectReturnCode());
+        throw new MqttStartException("mqtt connect ack error: " + msg.variableHeader().connectReturnCode());
 
     }
 }

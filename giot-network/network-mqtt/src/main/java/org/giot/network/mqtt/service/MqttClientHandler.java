@@ -22,16 +22,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.mqtt.MqttConnAckMessage;
-import io.netty.handler.codec.mqtt.MqttConnAckVariableHeader;
-import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
-import io.netty.handler.codec.mqtt.MqttFixedHeader;
-import io.netty.handler.codec.mqtt.MqttIdentifierRejectedException;
 import io.netty.handler.codec.mqtt.MqttMessage;
-import io.netty.handler.codec.mqtt.MqttMessageFactory;
-import io.netty.handler.codec.mqtt.MqttMessageType;
-import io.netty.handler.codec.mqtt.MqttQoS;
-import io.netty.handler.codec.mqtt.MqttUnacceptableProtocolVersionException;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
@@ -41,8 +32,6 @@ import org.giot.core.container.ContainerManager;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.service.Service;
 import org.giot.network.mqtt.MqttContainer;
-
-import static io.netty.handler.codec.mqtt.MqttConnectReturnCode.CONNECTION_REFUSED_UNACCEPTABLE_PROTOCOL_VERSION;
 
 /**
  * @author Created by gerry
@@ -55,80 +44,42 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
     private ContainerManager containerManager;
 
     @Override
-    protected void messageReceived(final ChannelHandlerContext ctx, final MqttMessage msg) throws Exception {
-        if (msg.decoderResult().isFailure()) {
-            Throwable cause = msg.decoderResult().cause();
-            MqttFixedHeader fixedHeader = new MqttFixedHeader(
-                MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0);
-            MqttConnAckVariableHeader variableHeader = null;
-            if (cause instanceof MqttUnacceptableProtocolVersionException) {
-                variableHeader = new MqttConnAckVariableHeader(
-                    CONNECTION_REFUSED_UNACCEPTABLE_PROTOCOL_VERSION);
-                MqttMessage mqttMessage = MqttMessageFactory.newMessage(fixedHeader, variableHeader, null);
-                ctx.writeAndFlush(mqttMessage);
-            } else if (cause instanceof MqttIdentifierRejectedException) {
-                variableHeader = new MqttConnAckVariableHeader(
-                    MqttConnectReturnCode.CONNECTION_REFUSED_IDENTIFIER_REJECTED);
-                ctx.writeAndFlush(MqttMessageFactory.newMessage(fixedHeader, variableHeader, null));
-            }
-            ctx.close();
-            return;
-        }
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        IMqttConnectService service = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                      .getService(IMqttConnectService.class);
+        service.connect(ctx.channel());
+    }
 
-        switch (msg.fixedHeader().messageType()) {
-            //这个是客户端连接到当前broker
-            case CONNECT:
-                //                protocolProcess.ack().processConnect(ctx.channel(), (MqttConnectMessage) msg);
-                break;
-            case CONNACK:
-                /**
-                 * broker接受当客户端连上的消息
-                 */
-                IMqttConnectService connectService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
-                                                                     .getService(IMqttConnectService.class);
-                connectService.ack(ctx.channel(), (MqttConnAckMessage) msg);
-                break;
-            case PUBLISH://当前是客户端，向服务器发送消息
-                //                protocolProcess.publish().processPublish(ctx.channel(), (MqttPublishMessage) msg);
-                break;
-            case PUBACK://当前是客户端，服务器返回ack消息
-                //                protocolProcess.pubAck()
-                //                               .processPubAck(ctx.channel(), (MqttMessageIdVariableHeader) msg.variableHeader());
-                break;
-            case PUBREC:
-                //                protocolProcess.pubRec()
-                //                               .processPubRec(ctx.channel(), (MqttMessageIdVariableHeader) msg.variableHeader());
-                break;
-            case PUBREL:
-                //                protocolProcess.pubRel()
-                //                               .processPubRel(ctx.channel(), (MqttMessageIdVariableHeader) msg.variableHeader());
-                break;
-            case PUBCOMP:
-                //                protocolProcess.pubComp()
-                //                               .processPubComp(ctx.channel(), (MqttMessageIdVariableHeader) msg.variableHeader());
-                break;
-            case SUBSCRIBE:
-                //                protocolProcess.subscribe().processSubscribe(ctx.channel(), (MqttSubscribeMessage) msg);
-                break;
-            case SUBACK:
-                break;
-            case UNSUBSCRIBE:
-                //                protocolProcess.unSubscribe().processUnSubscribe(ctx.channel(), (MqttUnsubscribeMessage) msg);
-                break;
-            case UNSUBACK:
-                break;
-            case PINGREQ:
-                //                protocolProcess.pingReq().processPingReq(ctx.channel(), msg);
-                break;
-            case PINGRESP:
-                break;
-            case DISCONNECT:
-                //                protocolProcess.disConnect().processDisConnect(ctx.channel(), msg);
-                break;
-            default:
-                break;
-
-        }
+    @Override
+    protected void channelRead0(final ChannelHandlerContext channelHandlerContext,
+                                final MqttMessage msg) throws Exception {
+        //        switch (msg.fixedHeader().messageType()) {
+        //            case CONNACK:
+        //                handleConack(ctx.channel(), (MqttConnAckMessage) msg);
+        //                break;
+        //            case SUBACK:
+        //                handleSubAck((MqttSubAckMessage) msg);
+        //                break;
+        //            case PUBLISH:
+        //                handlePublish(ctx.channel(), (MqttPublishMessage) msg);
+        //                break;
+        //            case UNSUBACK:
+        //                handleUnsuback((MqttUnsubAckMessage) msg);
+        //                break;
+        //            case PUBACK:
+        //                handlePuback((MqttPubAckMessage) msg);
+        //                break;
+        //            case PUBREC:
+        //                handlePubrec(ctx.channel(), msg);
+        //                break;
+        //            case PUBREL:
+        //                handlePubrel(ctx.channel(), msg);
+        //                break;
+        //            case PUBCOMP:
+        //                handlePubcomp(msg);
+        //                break;
+        //        }
     }
 
     @Override

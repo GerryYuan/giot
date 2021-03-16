@@ -20,9 +20,8 @@ package org.giot.network.mqtt.service;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -65,29 +64,21 @@ public class MqttOpsService implements IMqttOpsService {
         Bootstrap b = new Bootstrap();
         MqttClientHandler handler = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
                                                     .getService(MqttClientHandler.class);
-        b.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
-            @Override
-            protected void initChannel(SocketChannel socketChannel) throws Exception {
-                ChannelPipeline pipeline = socketChannel.pipeline();
-                pipeline.addLast("decoder", new MqttDecoder());
-                pipeline.addLast("encoder", MqttEncoder.DEFAUL_ENCODER);
-                pipeline.addLast("idleStateHandler", new IdleStateHandler(10, 2, 12, TimeUnit.SECONDS));
-                pipeline.addLast("handler", handler);
-            }
-        });
-        ChannelFuture channelFuture = b.connect(config.getHost(), config.getPort())
-                                       .addListener((ChannelFutureListener) future -> {
-                                           if (future.isSuccess()) {
-                                               log.info("通道建立成功");
-                                               IMqttConnectService connectService = containerManager.find(
-                                                   NetworkModule.NAME, MqttContainer.NAME)
-                                                                                                    .getService(
-                                                                                                        IMqttConnectService.class);
-                                               connectService.connect(future.channel());
-                                           }
-                                       })
-                                       .sync();
-        channelFuture.channel().closeFuture().sync();
+        b.group(group)
+         .channel(NioSocketChannel.class)
+         .option(ChannelOption.SO_REUSEADDR, true)
+         .remoteAddress(config.getHost(), config.getPort())
+         .handler(new ChannelInitializer<SocketChannel>() {
+             @Override
+             protected void initChannel(SocketChannel socketChannel) throws Exception {
+                 ChannelPipeline pipeline = socketChannel.pipeline();
+                 pipeline.addLast("decoder", new MqttDecoder());
+                 pipeline.addLast("encoder", MqttEncoder.INSTANCE);
+                 pipeline.addLast("idleStateHandler", new IdleStateHandler(10, 2, 12, TimeUnit.SECONDS));
+                 pipeline.addLast("handler", handler);
+             }
+         });
+        b.connect().await(5, TimeUnit.SECONDS);
     }
 
     @Override

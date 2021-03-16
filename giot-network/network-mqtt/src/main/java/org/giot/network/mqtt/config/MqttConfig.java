@@ -18,7 +18,6 @@
 
 package org.giot.network.mqtt.config;
 
-import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.handler.codec.mqtt.MqttVersion;
 import java.util.List;
 import lombok.Data;
@@ -45,17 +44,9 @@ public class MqttConfig extends ContainerConfig {
 
     private boolean isWillFlag;
 
-    private boolean cleanSession;
+    private boolean cleanSession = true;
 
     private int keepAliveTimeSeconds = 60;
-
-    private MqttQoS mqttQoS;
-
-    private boolean isDup;
-
-    private boolean isRetain;
-
-    private int remainingLength;
 
     private MqttVersion version = MqttVersion.MQTT_3_1_1;
 

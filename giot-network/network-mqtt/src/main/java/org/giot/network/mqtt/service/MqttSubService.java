@@ -45,10 +45,8 @@ public class MqttSubService implements IMqttSubService {
 
     @Override
     public void sub(final Channel channel) throws MqttStartException {
-        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.SUBSCRIBE, mqttConfig.isDup(),
-                                                          mqttConfig.getMqttQoS(), mqttConfig.isRetain(),
-                                                          mqttConfig.getRemainingLength()
-        );
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(
+            MqttMessageType.CONNECT, false, MqttQoS.AT_MOST_ONCE, false, 0);
 
         MqttSubscribePayload payload = new MqttSubscribePayload(mqttConfig.getSubTopics()
                                                                           .stream()

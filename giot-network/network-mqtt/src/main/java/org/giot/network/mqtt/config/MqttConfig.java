@@ -47,7 +47,7 @@ public class MqttConfig extends ContainerConfig {
 
     private boolean cleanSession;
 
-    private int keepAliveTimeSeconds;
+    private int keepAliveTimeSeconds = 60;
 
     private MqttQoS mqttQoS;
 

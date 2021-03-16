@@ -11,7 +11,7 @@
 core:
   which: default
   default:
-    metaDataStorage: postgresql
+    metaDataStorage: mysql
     deviceDataStorage: postgresql
     c: 1.6
     ## 物模型、传输协议（gateway）插件、消息协议插件
@@ -19,8 +19,20 @@ device:
   which: default
   default:
   ##
+network:
+  which: mqtt
+  mqtt:
+    host: localhost
+    port: 1883
+    userName: admin
+    password: public
+    clientId: test-clientId
+    subTopics:
+      - test-1
+      - test-2
+      - test-3
 storage:
-  which: postgresql,elasticsearch7
+  which: postgresql,elasticsearch7,mysql
   postgresql:
     url: r2dbc:postgresql://localhost:5432/giot
     username: postgres
@@ -30,7 +42,14 @@ storage:
     username: elasticsearch
     password: giot
   mysql:
-    url: xxx
+    properties:
+      jdbcUrl: jdbc:mysql://localhost:3306/giot
+      dataSource.user: root
+      dataSource.password: 123456
+      dataSource.cachePrepStmts: true
+      dataSource.prepStmtCacheSize: 250
+      dataSource.prepStmtCacheSqlLimit: 2048
+      dataSource.useServerPrepStmts: true
   elasticsearch7:
     url: xxx
 ```

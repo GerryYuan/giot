@@ -41,6 +41,13 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Network Module -->
+        <dependency>
+            <groupId>org.giot</groupId>
+            <artifactId>network-mqtt</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
 

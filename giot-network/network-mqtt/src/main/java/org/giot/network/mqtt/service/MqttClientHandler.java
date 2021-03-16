@@ -55,15 +55,7 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
     private ContainerManager containerManager;
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        IMqttConnectService connectService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
-                                                             .getService(IMqttConnectService.class);
-        connectService.connect(ctx.channel());
-    }
-
-    @Override
-    protected void messageReceived(final ChannelHandlerContext ctx,
-                                   final MqttMessage msg) throws Exception {
+    protected void messageReceived(final ChannelHandlerContext ctx, final MqttMessage msg) throws Exception {
         if (msg.decoderResult().isFailure()) {
             Throwable cause = msg.decoderResult().cause();
             MqttFixedHeader fixedHeader = new MqttFixedHeader(
@@ -137,7 +129,6 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
                 break;
 
         }
-
     }
 
     @Override
@@ -170,4 +161,5 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
             super.userEventTriggered(ctx, evt);
         }
     }
+
 }

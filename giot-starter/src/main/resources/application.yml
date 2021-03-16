@@ -15,8 +15,17 @@ device:
   default:
   ##
 network:
-  which: default
-  default:
+  which: mqtt
+  mqtt:
+    host: localhost
+    port: 1883
+    userName: admin
+    password: public
+    clientId: test-clientId
+    subTopics:
+      - test-1
+      - test-2
+      - test-3
 storage:
   which: postgresql,elasticsearch7,mysql
   postgresql:

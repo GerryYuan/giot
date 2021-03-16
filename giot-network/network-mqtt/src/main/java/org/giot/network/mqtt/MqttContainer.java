@@ -63,18 +63,18 @@ public class MqttContainer extends AbstractContainer {
         super.register(MqttClientHandler.class, new MqttClientHandler(getContainerManager()));
         super.register(IMqttOpsService.class, new MqttOpsService(config, getContainerManager()));
         super.register(
-            IMqttConnectService.class, new MqttConnectService(config.getConnectOptions(), getContainerManager()));
-        super.register(IMqttSubService.class, new MqttSubService(config.getConnectOptions()));
+            IMqttConnectService.class, new MqttConnectService(config, getContainerManager()));
+        super.register(IMqttSubService.class, new MqttSubService(config));
     }
 
     @Override
     public void start() throws ContainerStartException {
         IMqttOpsService mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
-        //        try {
-        //            mqttOpsService.start();
-        //        } catch (InterruptedException e) {
-        //            throw new ContainerStartException("Container [" + name() + "] start failure.", e);
-        //        }
+        try {
+            mqttOpsService.start();
+        } catch (InterruptedException e) {
+            throw new ContainerStartException("Container [" + name() + "] start failure.", e);
+        }
     }
 
     @Override
@@ -85,10 +85,10 @@ public class MqttContainer extends AbstractContainer {
     @Override
     public void stop() throws ContainerStopException {
         IMqttOpsService mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
-        //        try {
-        //            mqttOpsService.shutdown();
-        //        } catch (InterruptedException e) {
-        //            throw new ContainerStopException("Container [" + name() + "] stop failure.", e);
-        //        }
+        try {
+            mqttOpsService.shutdown();
+        } catch (InterruptedException e) {
+            throw new ContainerStopException("Container [" + name() + "] stop failure.", e);
+        }
     }
 }

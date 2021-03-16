@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.sf.cglib.beans.BeanCopier;
+import net.sf.cglib.beans.BeanMap;
 import org.giot.core.exception.InstantException;
 
 /**
@@ -85,4 +87,29 @@ public class BeanUtils {
             throw new InstantException(clazz + ":Is the constructor accessible?", ex);
         }
     }
+
+    public static <T> T mapToBean(Map map, Class<T> clazz) {
+        T bean = instantiate(clazz);
+        BeanMap beanMap = BeanMap.create(bean);
+        for (Object k : map.keySet()) {
+            Object v = map.get(k);
+            if (v instanceof Map) {
+                Object val = mapToBean((Map) v, beanMap.getPropertyType((String) k));
+                beanMap.put(k, val);
+            } else {
+                beanMap.put(k, v);
+            }
+        }
+        return bean;
+    }
+
+    public static <T> List<T> mapToBean(List<Map> map, Class<T> clazz) {
+        List<T> beans = new ArrayList<>(map.size());
+        for (Map m : map) {
+            beans.add(mapToBean(m, clazz));
+        }
+        return beans;
+    }
+
+
 }

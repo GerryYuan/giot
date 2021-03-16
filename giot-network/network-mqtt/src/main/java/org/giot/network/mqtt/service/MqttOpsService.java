@@ -20,6 +20,8 @@ package org.giot.network.mqtt.service;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
@@ -73,7 +75,19 @@ public class MqttOpsService implements IMqttOpsService {
                 pipeline.addLast("handler", handler);
             }
         });
-        channel = b.connect(config.getHost(), config.getPort()).sync().channel();
+        ChannelFuture channelFuture = b.connect(config.getHost(), config.getPort())
+                                       .addListener((ChannelFutureListener) future -> {
+                                           if (future.isSuccess()) {
+                                               log.info("通道建立成功");
+                                               IMqttConnectService connectService = containerManager.find(
+                                                   NetworkModule.NAME, MqttContainer.NAME)
+                                                                                                    .getService(
+                                                                                                        IMqttConnectService.class);
+                                               connectService.connect(future.channel());
+                                           }
+                                       })
+                                       .sync();
+        channelFuture.channel().closeFuture().sync();
     }
 
     @Override

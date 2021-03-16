@@ -40,7 +40,7 @@ import org.giot.network.mqtt.exception.MqttStartException;
 @AllArgsConstructor
 public class MqttConnectService implements IMqttConnectService {
 
-    private MqttConfig.MqttConnectOptions connectOptions;
+    private MqttConfig config;
 
     private ContainerManager containerManager;
 
@@ -54,19 +54,18 @@ public class MqttConnectService implements IMqttConnectService {
     @Override
     public void connect(final Channel channel) {
         MqttFixedHeader fixedHeader = new MqttFixedHeader(
-            MqttMessageType.CONNECT, connectOptions.isDup(), connectOptions.getMqttQoS(), connectOptions.isRetain(),
-            connectOptions.getRemainingLength()
+            MqttMessageType.CONNECT, config.isDup(), config.getMqttQoS(), config.isRetain(),
+            config.getRemainingLength()
         );
         MqttConnectVariableHeader variableHeader = new MqttConnectVariableHeader(
-            connectOptions.getVersion().protocolName(), 4, true, true, connectOptions.isWillRetain(),
-            connectOptions.getWillQos(), connectOptions.isWillFlag(), connectOptions.isCleanSession(),
-            connectOptions.getKeepAliveTimeSeconds()
+            config.getVersion().protocolName(), config.getVersion().protocolLevel(), true, true, config.isWillRetain(),
+            config.getWillQos(), config.isWillFlag(), config.isCleanSession(),
+            config.getKeepAliveTimeSeconds()
         );
-        MqttConnectPayload payload = new MqttConnectPayload(connectOptions.getClientId(), connectOptions.getWillTopic(),
-                                                            connectOptions.getWillMessage(),
-                                                            connectOptions.getUserName(), connectOptions.getPassword()
+        MqttConnectPayload payload = new MqttConnectPayload(config.getClientId(), config.getWillTopic(),
+                                                            config.getWillMessage(),
+                                                            config.getUserName(), config.getPassword()
         );
-        MqttMessageFactory.newMessage(fixedHeader, variableHeader, payload);
         channel.writeAndFlush(MqttMessageFactory.newMessage(fixedHeader, variableHeader, payload));
     }
 

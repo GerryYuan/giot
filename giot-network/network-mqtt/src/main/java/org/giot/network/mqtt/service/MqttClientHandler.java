@@ -23,6 +23,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.mqtt.MqttConnAckMessage;
 import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttSubAckMessage;
 import io.netty.handler.timeout.IdleStateEvent;
 import java.io.IOException;
@@ -46,11 +47,14 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
 
     private IMqttConnectService connectService;
 
+    private IMqttPubService pubService;
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         connectService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
                                          .getService(IMqttConnectService.class);
+        pubService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME).getService(IMqttPubService.class);
         connectService.connect(ctx.channel());
     }
 
@@ -70,8 +74,9 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
                 break;
             case PINGRESP:
                 pingService.ack(channelHandlerContext.channel(), msg);
+                break;
             case PUBLISH:
-                //                handlePublish(ctx.channel(), (MqttPublishMessage) msg);
+                pubService.pub(channelHandlerContext.channel(), (MqttPublishMessage) msg);
                 break;
             case UNSUBACK:
                 //                handleUnsuback((MqttUnsubAckMessage) msg);
@@ -87,9 +92,6 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
                 break;
             case PUBCOMP:
                 //                handlePubcomp(msg);
-                break;
-            case DISCONNECT:
-                System.out.println("断开连接");
                 break;
         }
     }

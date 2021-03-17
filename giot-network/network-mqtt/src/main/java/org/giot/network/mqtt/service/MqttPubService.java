@@ -19,8 +19,14 @@
 package org.giot.network.mqtt.service;
 
 import io.netty.channel.Channel;
+import io.netty.handler.codec.mqtt.MqttFixedHeader;
+import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
+import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttPubAckMessage;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
+import io.netty.handler.codec.mqtt.MqttQoS;
+import java.nio.charset.Charset;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.network.mqtt.exception.MqttStartException;
 
@@ -32,47 +38,41 @@ public class MqttPubService implements IMqttPubService {
 
     @Override
     public void pub(final Channel channel, final MqttPublishMessage msg) throws MqttStartException {
-        //        switch (message.fixedHeader().qosLevel()) {
-        //            case AT_MOST_ONCE:
-        //                invokeHandlersForIncomingPublish(message);
-        //                break;
-        //
-        //            case AT_LEAST_ONCE:
-        //                invokeHandlersForIncomingPublish(message);
-        //                if (message.variableHeader().messageId() != -1) {
-        //                    MqttFixedHeader fixedHeader = new MqttFixedHeader(
-        //                        MqttMessageType.PUBACK, false, MqttQoS.AT_MOST_ONCE, false, 0);
-        //                    MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(
-        //                        message.variableHeader().messageId());
-        //                    channel.writeAndFlush(new MqttPubAckMessage(fixedHeader, variableHeader));
-        //                }
-        //                break;
-        //
-        //            case EXACTLY_ONCE:
-        //                if (message.variableHeader().messageId() != -1) {
-        //                    MqttFixedHeader fixedHeader = new MqttFixedHeader(
-        //                        MqttMessageType.PUBREC, false, MqttQoS.AT_MOST_ONCE, false, 0);
-        //                    MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(
-        //                        message.variableHeader().messageId());
-        //                    MqttMessage pubrecMessage = new MqttMessage(fixedHeader, variableHeader);
-        //
-        //                    MqttIncomingQos2Publish incomingQos2Publish = new MqttIncomingQos2Publish(message, pubrecMessage);
-        //                    this.client.getQos2PendingIncomingPublishes()
-        //                               .put(message.variableHeader().messageId(), incomingQos2Publish);
-        //                    message.payload().retain();
-        //                    incomingQos2Publish.startPubrecRetransmitTimer(
-        //                        this.client.getEventLoop().next(), this.client::sendAndFlushPacket);
-        //
-        //                    channel.writeAndFlush(pubrecMessage);
-        //                }
-        //                break;
-        //        }
+        switch (msg.fixedHeader().qosLevel()) {
+            case AT_MOST_ONCE:
+                //TODO 解析消息，然后消息格式化，丢给dispatcher
+                System.out.println(msg.payload().toString(Charset.defaultCharset()));
+                //                invokeHandlersForIncomingPublish(message);
+                break;
+            case AT_LEAST_ONCE:
+                //                invokeHandlersForIncomingPublish(message);
+                if (msg.variableHeader().packetId() != -1) {
+                    ack(channel, msg.variableHeader().packetId());
+                }
+                break;
+
+            case EXACTLY_ONCE:
+                if (msg.variableHeader().packetId() != -1) {
+                    pubrec(channel, msg.variableHeader().packetId());
+                }
+                break;
+        }
     }
 
     @Override
-    public void ack(final Channel channel, final MqttPubAckMessage msg) throws MqttStartException {
-        if (log.isDebugEnabled()) {
-            log.info("publish msg received ack, msgId is {}", msg.variableHeader().messageId());
-        }
+    public void ack(final Channel channel, final int msgId) throws MqttStartException {
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(
+            MqttMessageType.PUBACK, false, MqttQoS.AT_MOST_ONCE, false, 0);
+        MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(msgId);
+        channel.writeAndFlush(new MqttPubAckMessage(fixedHeader, variableHeader));
+    }
+
+    @Override
+    public void pubrec(final Channel channel, final int msgId) {
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(
+            MqttMessageType.PUBREC, false, MqttQoS.AT_MOST_ONCE, false, 0);
+        MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(msgId);
+        MqttMessage pubrecMessage = new MqttMessage(fixedHeader, variableHeader);
+        channel.writeAndFlush(pubrecMessage);
     }
 }

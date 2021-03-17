@@ -19,9 +19,7 @@
 package org.giot.network.mqtt.service;
 
 import io.netty.channel.Channel;
-import io.netty.handler.codec.mqtt.MqttPubAckMessage;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
-import io.netty.handler.codec.mqtt.MqttSubAckMessage;
 import org.giot.core.service.Service;
 import org.giot.network.mqtt.exception.MqttStartException;
 
@@ -32,5 +30,7 @@ public interface IMqttPubService extends Service {
 
     void pub(Channel channel, MqttPublishMessage msg) throws MqttStartException;
 
-    void ack(Channel channel, MqttPubAckMessage msg) throws MqttStartException;
+    void ack(Channel channel, int msgId) throws MqttStartException;
+
+    void pubrec(Channel channel, int msgId);
 }

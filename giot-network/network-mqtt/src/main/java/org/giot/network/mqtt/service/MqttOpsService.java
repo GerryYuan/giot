@@ -30,7 +30,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
@@ -74,11 +73,13 @@ public class MqttOpsService implements IMqttOpsService {
                  ChannelPipeline pipeline = socketChannel.pipeline();
                  pipeline.addLast("decoder", new MqttDecoder());
                  pipeline.addLast("encoder", MqttEncoder.INSTANCE);
-                 pipeline.addLast("idleStateHandler", new IdleStateHandler(10, 2, 12, TimeUnit.SECONDS));
+                 pipeline.addLast(
+                     "idleStateHandler",
+                     new IdleStateHandler(config.getKeepAliveTimeSeconds(), config.getKeepAliveTimeSeconds(), 0)
+                 );
                  pipeline.addLast("handler", handler);
              }
-         });
-        b.connect().await(5, TimeUnit.SECONDS);
+         }).connect();
     }
 
     @Override

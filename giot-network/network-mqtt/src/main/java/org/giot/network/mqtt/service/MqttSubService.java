@@ -20,11 +20,11 @@ package org.giot.network.mqtt.service;
 
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttFixedHeader;
+import io.netty.handler.codec.mqtt.MqttMessageFactory;
 import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
 import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.netty.handler.codec.mqtt.MqttSubAckMessage;
-import io.netty.handler.codec.mqtt.MqttSubscribeMessage;
 import io.netty.handler.codec.mqtt.MqttSubscribePayload;
 import io.netty.handler.codec.mqtt.MqttTopicSubscription;
 import java.io.ByteArrayInputStream;
@@ -45,9 +45,7 @@ public class MqttSubService implements IMqttSubService {
 
     @Override
     public void sub(final Channel channel) throws MqttStartException {
-        MqttFixedHeader fixedHeader = new MqttFixedHeader(
-            MqttMessageType.CONNECT, false, MqttQoS.AT_MOST_ONCE, false, 0);
-
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.SUBSCRIBE, false, MqttQoS.AT_LEAST_ONCE, false, 0);
         MqttSubscribePayload payload = new MqttSubscribePayload(mqttConfig.getSubTopics()
                                                                           .stream()
                                                                           .map(topic -> new MqttTopicSubscription(
@@ -60,8 +58,7 @@ public class MqttSubService implements IMqttSubService {
             DataInputStream dis = new DataInputStream(bais);
             MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(dis.readUnsignedShort());
             dis.close();
-            MqttSubscribeMessage mqttSubscribeMessage = new MqttSubscribeMessage(fixedHeader, variableHeader, payload);
-            channel.writeAndFlush(mqttSubscribeMessage);
+            channel.writeAndFlush(MqttMessageFactory.newMessage(fixedHeader, variableHeader, payload));
         } catch (IOException e) {
             throw new MqttStartException(e.getMessage(), e);
         }
@@ -70,7 +67,7 @@ public class MqttSubService implements IMqttSubService {
 
     @Override
     public void ack(final Channel channel, final MqttSubAckMessage msg) throws MqttStartException {
-
+        System.out.println(msg);
     }
 
 }

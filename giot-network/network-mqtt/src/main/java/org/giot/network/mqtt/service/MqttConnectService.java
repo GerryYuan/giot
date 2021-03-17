@@ -83,8 +83,10 @@ public class MqttConnectService implements IMqttConnectService {
                                                          .getService(IMqttSubService.class);
             subService.sub(channel);
             return;
+        } else {
+            channel.close();
+            throw new MqttStartException("mqtt connect ack error: " + msg.variableHeader().connectReturnCode());
         }
-        throw new MqttStartException("mqtt connect ack error: " + msg.variableHeader().connectReturnCode());
 
     }
 }

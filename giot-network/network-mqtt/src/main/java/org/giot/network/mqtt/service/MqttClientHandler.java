@@ -18,16 +18,14 @@
 
 package org.giot.network.mqtt.service;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.mqtt.MqttConnAckMessage;
 import io.netty.handler.codec.mqtt.MqttMessage;
-import io.netty.handler.timeout.IdleState;
+import io.netty.handler.codec.mqtt.MqttSubAckMessage;
 import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.util.AttributeKey;
 import java.io.IOException;
-import lombok.AllArgsConstructor;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.service.Service;
@@ -37,49 +35,63 @@ import org.giot.network.mqtt.MqttContainer;
  * @author Created by gerry
  * @date 2021-03-14-8:24 PM
  */
-@AllArgsConstructor
 @ChannelHandler.Sharable
 public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> implements Service {
 
+    public MqttClientHandler(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
+
     private ContainerManager containerManager;
+
+    private IMqttConnectService connectService;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        IMqttConnectService service = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
-                                                      .getService(IMqttConnectService.class);
-        service.connect(ctx.channel());
+        connectService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                         .getService(IMqttConnectService.class);
+        connectService.connect(ctx.channel());
     }
 
     @Override
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext,
                                 final MqttMessage msg) throws Exception {
-        //        switch (msg.fixedHeader().messageType()) {
-        //            case CONNACK:
-        //                handleConack(ctx.channel(), (MqttConnAckMessage) msg);
-        //                break;
-        //            case SUBACK:
-        //                handleSubAck((MqttSubAckMessage) msg);
-        //                break;
-        //            case PUBLISH:
-        //                handlePublish(ctx.channel(), (MqttPublishMessage) msg);
-        //                break;
-        //            case UNSUBACK:
-        //                handleUnsuback((MqttUnsubAckMessage) msg);
-        //                break;
-        //            case PUBACK:
-        //                handlePuback((MqttPubAckMessage) msg);
-        //                break;
-        //            case PUBREC:
-        //                handlePubrec(ctx.channel(), msg);
-        //                break;
-        //            case PUBREL:
-        //                handlePubrel(ctx.channel(), msg);
-        //                break;
-        //            case PUBCOMP:
-        //                handlePubcomp(msg);
-        //                break;
-        //        }
+        IMqttPingService pingService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                       .getService(IMqttPingService.class);
+        switch (msg.fixedHeader().messageType()) {
+            case CONNACK:
+                connectService.ack(channelHandlerContext.channel(), (MqttConnAckMessage) msg);
+                break;
+            case SUBACK:
+                IMqttSubService subService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                             .getService(IMqttSubService.class);
+                subService.ack(channelHandlerContext.channel(), (MqttSubAckMessage) msg);
+                break;
+            case PINGRESP:
+                pingService.ack(channelHandlerContext.channel(), msg);
+            case PUBLISH:
+                //                handlePublish(ctx.channel(), (MqttPublishMessage) msg);
+                break;
+            case UNSUBACK:
+                //                handleUnsuback((MqttUnsubAckMessage) msg);
+                break;
+            case PUBACK:
+                //                handlePuback((MqttPubAckMessage) msg);
+                break;
+            case PUBREC:
+                //                handlePubrec(ctx.channel(), msg);
+                break;
+            case PUBREL:
+                //                handlePubrel(ctx.channel(), msg);
+                break;
+            case PUBCOMP:
+                //                handlePubcomp(msg);
+                break;
+            case DISCONNECT:
+                System.out.println("断开连接");
+                break;
+        }
     }
 
     @Override
@@ -94,22 +106,18 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        super.userEventTriggered(ctx, evt);
         if (evt instanceof IdleStateEvent) {
-            IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
-            if (idleStateEvent.state() == IdleState.ALL_IDLE) {
-                Channel channel = ctx.channel();
-                String clientId = (String) channel.attr(AttributeKey.valueOf("clientId")).get();
-                // 发送遗嘱消息
-                //                if (this.protocolProcess.getGrozaSessionStoreService().containsKey(clientId)) {
-                //                    SessionStore sessionStore = this.protocolProcess.getGrozaSessionStoreService().get(clientId);
-                //                    if (sessionStore.getWillMessage() != null) {
-                //                        this.protocolProcess.publish().processPublish(ctx.channel(), sessionStore.getWillMessage());
-                //                    }
-                //                }
-                ctx.close();
+            IdleStateEvent event = (IdleStateEvent) evt;
+            switch (event.state()) {
+                case READER_IDLE:
+                    break;
+                case WRITER_IDLE:
+                    IMqttPingService pingService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                                   .getService(IMqttPingService.class);
+                    pingService.ping(ctx.channel());
+                    break;
             }
-        } else {
-            super.userEventTriggered(ctx, evt);
         }
     }
 

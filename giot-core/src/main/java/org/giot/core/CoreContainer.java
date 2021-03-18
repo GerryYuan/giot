@@ -67,7 +67,7 @@ public class CoreContainer extends AbstractContainer {
         try {
             AnnotationScanner scanner = super.find(CoreModule.NAME).getService(AnnotationScanner.class);
             scanner.scanner();
-        } catch (IOException | SQLException e) {
+        } catch (Exception e) {
             throw new ContainerStartException("Container [" + name() + "] start failure.", e);
         }
     }

@@ -16,31 +16,15 @@
  *
  */
 
-package org.giot.core.scanner;
+package org.giot.core.device;
 
-import java.lang.annotation.Annotation;
+import org.giot.core.network.DispatcherProcessor;
 
 /**
- * @author yuanguohua on 2021/3/5 18:48
+ * 设备属性消息分发器
+ *
+ * @author Created by gerry
+ * @date 2021-03-18-10:35 PM
  */
-public interface AnnotationScannerListener {
-
-    /**
-     * 扫描后的class进行添加
-     *
-     * @param clazz
-     */
-    void addClass(Class<?> clazz);
-
-    /**
-     * 匹配该注解的所有class
-     *
-     * @return
-     */
-    Class<? extends Annotation> match();
-
-    /**
-     * 监听根据条件获取的class，然后进行处理
-     */
-    void listener() throws Exception;
+public class DevicePropMsgDispatcherProcessor implements DispatcherProcessor {
 }

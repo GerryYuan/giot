@@ -21,7 +21,6 @@ package org.giot.core.storage;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,8 @@ public class SteamScannerListener implements AnnotationScannerListener {
 
     private CoreContainerConfig coreContainerConfig;
 
-    public SteamScannerListener(final ContainerManager containerManager, final CoreContainerConfig coreContainerConfig) {
+    public SteamScannerListener(final ContainerManager containerManager,
+                                final CoreContainerConfig coreContainerConfig) {
         this.containerManager = containerManager;
         this.coreContainerConfig = coreContainerConfig;
     }
@@ -63,7 +63,7 @@ public class SteamScannerListener implements AnnotationScannerListener {
     }
 
     @Override
-    public void listener() throws SQLException {
+    public void listener() throws Exception {
         Map<Class<StreamProcessor>, StreamProcessor> processorMap = new ConcurrentHashMap<>(5);
         for (Class<? extends StorageData> clazz : classes) {
             Stream stream = (Stream) clazz.getAnnotation(match());

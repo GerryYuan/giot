@@ -16,31 +16,38 @@
  *
  */
 
-package org.giot.core.scanner;
+package org.giot.core.network.annotation;
 
-import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import org.giot.core.network.DispatcherProcessor;
+import org.giot.core.network.MsgVersion;
 
 /**
- * @author yuanguohua on 2021/3/5 18:48
+ * Dispatcher注解 具体的消息分发器
+ * <p>
+ * See {@link DispatcherProcessor}
+ * </p>
+ *
+ * @author yuanguohua
  */
-public interface AnnotationScannerListener {
-
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Dispatcher {
     /**
-     * 扫描后的class进行添加
-     *
-     * @param clazz
-     */
-    void addClass(Class<?> clazz);
-
-    /**
-     * 匹配该注解的所有class
+     * 当前分发器可以分发的版本
      *
      * @return
      */
-    Class<? extends Annotation> match();
+    MsgVersion version();
 
     /**
-     * 监听根据条件获取的class，然后进行处理
+     * 对应的下游处理器
+     *
+     * @return
      */
-    void listener() throws Exception;
+    Class<? extends DispatcherProcessor> processor();
+
 }

@@ -16,31 +16,32 @@
  *
  */
 
-package org.giot.core.scanner;
-
-import java.lang.annotation.Annotation;
+package org.giot.core.network;
 
 /**
- * @author yuanguohua on 2021/3/5 18:48
+ * @author Created by gerry
+ * @date 2021-03-18-9:56 PM
  */
-public interface AnnotationScannerListener {
+public enum MsgVersion {
+    V1,
+    ;
 
-    /**
-     * 扫描后的class进行添加
-     *
-     * @param clazz
-     */
-    void addClass(Class<?> clazz);
+    public static boolean supports(MsgVersion version) {
+        for (MsgVersion v : MsgVersion.values()) {
+            if (version.equals(v)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    /**
-     * 匹配该注解的所有class
-     *
-     * @return
-     */
-    Class<? extends Annotation> match();
+    public static boolean supports(String version) {
+        for (MsgVersion v : MsgVersion.values()) {
+            if (v.name().startsWith(version)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    /**
-     * 监听根据条件获取的class，然后进行处理
-     */
-    void listener() throws Exception;
 }

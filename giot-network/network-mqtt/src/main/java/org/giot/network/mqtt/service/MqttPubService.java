@@ -28,6 +28,7 @@ import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import java.nio.charset.Charset;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.network.MsgVersion;
 import org.giot.network.mqtt.exception.MqttStartException;
 
 /**
@@ -41,6 +42,9 @@ public class MqttPubService implements IMqttPubService {
         switch (msg.fixedHeader().qosLevel()) {
             case AT_MOST_ONCE:
                 //TODO 解析消息，然后消息格式化，丢给dispatcher
+                //TODO 根据不同的topic进行数据的分发
+                String topicName = msg.variableHeader().topicName();
+                MsgVersion.supports(topicName);
                 System.out.println(msg.payload().toString(Charset.defaultCharset()));
                 //                invokeHandlersForIncomingPublish(message);
                 break;

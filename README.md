@@ -4,8 +4,8 @@ GIoT
 
 [![GitHub stars](https://img.shields.io/github/stars/GerryYuan/giot.svg?style=for-the-badge&label=Stars&logo=github)](https://github.com/GerryYuan/giot)
 
-# 架构图
 ![IoT云边协同架构图](https://user-images.githubusercontent.com/11907624/111753822-41009900-88d2-11eb-9018-3d37dd2a9493.png)
+
 # Documentation
 # Downloads
 # Live Demo

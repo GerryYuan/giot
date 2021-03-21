@@ -21,6 +21,8 @@ package org.giot.core.network;
 import java.lang.annotation.Annotation;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.giot.core.network.annotation.Dispatcher;
 import org.giot.core.scanner.AnnotationScannerListener;
 import org.giot.core.utils.EmptyUtils;
@@ -38,6 +40,8 @@ public class DispatcherScannerListener implements AnnotationScannerListener {
 
     private List<Class<? extends ProcessorMapping>> classes;
 
+    private Map<String, ProcessorMapping> processorMap = new ConcurrentHashMap<>();
+
     @Override
     public void addClass(final Class<?> clazz) {
         if (EmptyUtils.isEmpty(classes)) {
@@ -54,5 +58,8 @@ public class DispatcherScannerListener implements AnnotationScannerListener {
     @Override
     public void listener() throws Exception {
         //初始化ProcessorMapping，ProcessorAdapter
+        classes.forEach(aClass -> {
+
+        });
     }
 }

@@ -36,6 +36,14 @@ import org.giot.core.network.MsgVersion;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Dispatcher {
+
+    /**
+     * processor名字
+     *
+     * @return
+     */
+    String procName();
+
     /**
      * 当前分发器可以分发的版本
      *

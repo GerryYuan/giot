@@ -19,8 +19,11 @@
 package org.giot.core.network;
 
 import java.lang.annotation.Annotation;
+import java.util.LinkedList;
+import java.util.List;
 import org.giot.core.network.annotation.Dispatcher;
 import org.giot.core.scanner.AnnotationScannerListener;
+import org.giot.core.utils.EmptyUtils;
 
 /**
  * Dispatcher注解监听者，一些添加了该注解的类，就可以实现通过DispatcherManager知道该数据往哪个processor进行发送。比如：直连device属性消息、gateway属性消息，子设备属性消息
@@ -32,9 +35,15 @@ import org.giot.core.scanner.AnnotationScannerListener;
  * @date 2021-03-18-10:18 PM
  */
 public class DispatcherScannerListener implements AnnotationScannerListener {
+
+    private List<Class<? extends ProcessorMapping>> classes;
+
     @Override
     public void addClass(final Class<?> clazz) {
-
+        if (EmptyUtils.isEmpty(classes)) {
+            classes = new LinkedList<>();
+        }
+        classes.add((Class<? extends ProcessorMapping>) clazz);
     }
 
     @Override
@@ -44,6 +53,6 @@ public class DispatcherScannerListener implements AnnotationScannerListener {
 
     @Override
     public void listener() throws Exception {
-        //这里主要拿到所有带有Dispatcher注解的类，然后进行初始化，并执行一些方法
+        //初始化ProcessorMapping，ProcessorAdapter
     }
 }

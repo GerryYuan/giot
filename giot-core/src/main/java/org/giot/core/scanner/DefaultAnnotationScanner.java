@@ -30,15 +30,12 @@ import org.giot.core.storage.SteamScannerListener;
  */
 public class DefaultAnnotationScanner extends AnnotationScanner {
 
-    private ContainerManager containerManager;
-
     public DefaultAnnotationScanner(final ContainerManager containerManager,
                                     final CoreContainerConfig coreContainerConfig) {
         super(Lists.newArrayList(
             new SteamScannerListener(containerManager, coreContainerConfig),
-            new ProcessorScannerListener()
+            new ProcessorScannerListener(containerManager)
         ));
-        this.containerManager = containerManager;
     }
 
 }

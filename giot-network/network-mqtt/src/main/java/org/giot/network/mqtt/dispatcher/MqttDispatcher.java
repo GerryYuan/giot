@@ -18,17 +18,24 @@
 
 package org.giot.network.mqtt.dispatcher;
 
-import org.giot.core.network.SourceDispatcher;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.network.AbstractDispatcher;
 import org.giot.core.network.Source;
+import org.giot.core.network.SourceProcessor;
 
 /**
  * @author yuanguohua on 2021/3/22 13:04
  */
-public class MqttDispatcher implements SourceDispatcher {
+public class MqttDispatcher extends AbstractDispatcher {
+
+    public MqttDispatcher(final ContainerManager containerManager) {
+        super(containerManager);
+    }
 
     @Override
     public <T extends Source> void dispatch(final T source) {
-
-        //get processorMapping，然后processorMapping get Processor,
+        SourceProcessor processor = getDispatcherManager().getProcessor(source);
+        processor.invoke(source);
     }
+
 }

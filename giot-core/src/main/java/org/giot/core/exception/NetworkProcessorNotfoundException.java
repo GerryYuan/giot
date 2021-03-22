@@ -16,15 +16,24 @@
  *
  */
 
-package org.giot.core.network;
+package org.giot.core.exception;
+
+import java.util.function.Supplier;
 
 /**
- * @author yuanguohua on 2021/3/22 13:03
+ * @author yuanguohua on 2021/3/22 17:37
  */
-public abstract class Source {
+public class NetworkProcessorNotfoundException extends RuntimeException implements Supplier<NetworkProcessorNotfoundException> {
+    public NetworkProcessorNotfoundException(final String s) {
+        super(s);
+    }
 
-    public abstract String name();
+    public NetworkProcessorNotfoundException(final String s, final Exception ex) {
+        super(s, ex);
+    }
 
-    public abstract MsgVersion version();
-
+    @Override
+    public NetworkProcessorNotfoundException get() {
+        return this;
+    }
 }

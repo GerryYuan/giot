@@ -23,6 +23,6 @@ package org.giot.core.network;
  */
 public interface SourceProcessor {
 
-   <T extends Source> void invoke(T source);
+    <T extends Source> void invoke(T source);
 
 }

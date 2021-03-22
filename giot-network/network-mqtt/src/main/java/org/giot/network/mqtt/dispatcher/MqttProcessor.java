@@ -18,12 +18,15 @@
 
 package org.giot.network.mqtt.dispatcher;
 
+import org.giot.core.network.MsgVersion;
 import org.giot.core.network.Source;
 import org.giot.core.network.SourceProcessor;
+import org.giot.core.network.annotation.Processor;
 
 /**
  * @author yuanguohua on 2021/3/22 15:46
  */
+@Processor(procName = "default", version = MsgVersion.V1)
 public class MqttProcessor implements SourceProcessor {
     @Override
     public <T extends Source> void invoke(final T source) {

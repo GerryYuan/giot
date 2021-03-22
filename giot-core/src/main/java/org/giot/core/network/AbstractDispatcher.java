@@ -18,20 +18,30 @@
 
 package org.giot.core.network;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+import org.giot.core.CoreModule;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.utils.EmptyUtils;
 
 /**
- * @author yuanguohua on 2021/3/22 13:51
+ * @author yuanguohua on 2021/3/22 17:18
  */
-@ToString
-@Getter
-@Builder
-public class ProcessorInfo {
+public abstract class AbstractDispatcher implements SourceDispatcher {
 
-    private String procName;
+    private DispatcherManager dispatcherManager;
 
-    private MsgVersion version;
+    @Getter
+    private ContainerManager containerManager;
 
+    public AbstractDispatcher(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
+
+    public DispatcherManager getDispatcherManager() {
+        if (EmptyUtils.isEmpty(dispatcherManager)) {
+            this.dispatcherManager = (DispatcherManager) containerManager.find(CoreModule.NAME)
+                                                                         .getService(SourceDispatcher.class);
+        }
+        return this.dispatcherManager;
+    }
 }

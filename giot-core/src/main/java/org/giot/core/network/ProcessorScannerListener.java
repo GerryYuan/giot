@@ -21,8 +21,8 @@ package org.giot.core.network;
 import java.lang.annotation.Annotation;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import org.giot.core.CoreModule;
+import org.giot.core.container.ContainerManager;
 import org.giot.core.network.annotation.Processor;
 import org.giot.core.scanner.AnnotationScannerListener;
 import org.giot.core.utils.EmptyUtils;
@@ -38,16 +38,22 @@ import org.giot.core.utils.EmptyUtils;
  */
 public class ProcessorScannerListener implements AnnotationScannerListener {
 
-    private List<Class<? extends ProcessorMapping>> classes;
+    private List<Class<? extends SourceProcessor>> classes;
 
-    private Map<ProcessorInfo, ProcessorMapping> processorMap = new ConcurrentHashMap<>();
+    private ContainerManager containerManager;
+
+    private DispatcherManager dispatcherManager;
+
+    public ProcessorScannerListener(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
 
     @Override
     public void addClass(final Class<?> clazz) {
         if (EmptyUtils.isEmpty(classes)) {
             classes = new LinkedList<>();
         }
-        classes.add((Class<? extends ProcessorMapping>) clazz);
+        classes.add((Class<? extends SourceProcessor>) clazz);
     }
 
     @Override
@@ -57,11 +63,17 @@ public class ProcessorScannerListener implements AnnotationScannerListener {
 
     @Override
     public void listener() throws Exception {
-        //初始化ProcessorMapping，ProcessorAdapter
-        for (Class<? extends ProcessorMapping> clazz : classes) {
+        if (EmptyUtils.isEmpty(dispatcherManager)) {
+            this.dispatcherManager = (DispatcherManager) containerManager.find(CoreModule.NAME)
+                                                                         .getService(SourceDispatcher.class);
+        }
+        for (Class<? extends SourceProcessor> clazz : classes) {
             Processor stream = (Processor) clazz.getAnnotation(match());
-            processorMap.put(
-                ProcessorInfo.builder().procName(stream.procName()).version(stream.version()).build(),
+            dispatcherManager.initProcessor(
+                ProcessorInfo.builder()
+                             .procName(stream.procName())
+                             .version(stream.version())
+                             .build(),
                 clazz.newInstance()
             );
         }

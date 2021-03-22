@@ -18,12 +18,12 @@
 
 package org.giot.core;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.exception.ContainerStartException;
+import org.giot.core.network.DispatcherManager;
+import org.giot.core.network.SourceDispatcher;
 import org.giot.core.scanner.AnnotationScanner;
 import org.giot.core.scanner.DefaultAnnotationScanner;
 import org.giot.core.storage.model.ModelCreator;
@@ -58,6 +58,7 @@ public class CoreContainer extends AbstractContainer {
         //控制是否加载eg: es7、mysql、pgsql等容器
         //获取容器管理者，然后获取容器，再根据容器获取服务
         super.register(ModelCreator.class, new StorageModelCreator());
+        super.register(SourceDispatcher.class, new DispatcherManager());
         super.register(
             AnnotationScanner.class, new DefaultAnnotationScanner(getContainerManager(), coreContainerConfig));
     }

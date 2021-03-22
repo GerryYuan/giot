@@ -23,12 +23,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.giot.core.network.MsgVersion;
-import org.giot.core.network.ProcessorMapping;
+import org.giot.core.network.SourceProcessor;
 
 /**
  * Processor注解 具体的消息分发器
  * <p>
- * See {@link ProcessorMapping}
+ * See {@link SourceProcessor}
  * </p>
  *
  * @author yuanguohua

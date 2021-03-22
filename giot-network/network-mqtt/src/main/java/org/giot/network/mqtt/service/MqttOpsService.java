@@ -30,7 +30,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.mqtt.MqttDecoder;
 import io.netty.handler.codec.mqtt.MqttEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.network.NetworkModule;
@@ -53,7 +52,6 @@ public class MqttOpsService implements IMqttOpsService {
         this.containerManager = containerManager;
     }
 
-    @Getter
     private Channel channel;
     private EventLoopGroup group;
 
@@ -63,23 +61,24 @@ public class MqttOpsService implements IMqttOpsService {
         Bootstrap b = new Bootstrap();
         MqttClientHandler handler = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
                                                     .getService(MqttClientHandler.class);
-        b.group(group)
-         .channel(NioSocketChannel.class)
-         .option(ChannelOption.SO_REUSEADDR, true)
-         .remoteAddress(config.getHost(), config.getPort())
-         .handler(new ChannelInitializer<SocketChannel>() {
-             @Override
-             protected void initChannel(SocketChannel socketChannel) throws Exception {
-                 ChannelPipeline pipeline = socketChannel.pipeline();
-                 pipeline.addLast("decoder", new MqttDecoder());
-                 pipeline.addLast("encoder", MqttEncoder.INSTANCE);
-                 pipeline.addLast(
-                     "idleStateHandler",
-                     new IdleStateHandler(config.getKeepAliveTimeSeconds(), config.getKeepAliveTimeSeconds(), 0)
-                 );
-                 pipeline.addLast("handler", handler);
-             }
-         }).connect();
+        channel = b.group(group)
+                   .channel(NioSocketChannel.class)
+                   .option(ChannelOption.SO_REUSEADDR, true)
+                   .remoteAddress(config.getHost(), config.getPort())
+                   .handler(new ChannelInitializer<SocketChannel>() {
+                       @Override
+                       protected void initChannel(SocketChannel socketChannel) throws Exception {
+                           ChannelPipeline pipeline = socketChannel.pipeline();
+                           pipeline.addLast("decoder", new MqttDecoder());
+                           pipeline.addLast("encoder", MqttEncoder.INSTANCE);
+                           pipeline.addLast(
+                               "idleStateHandler",
+                               new IdleStateHandler(
+                                   config.getKeepAliveTimeSeconds(), config.getKeepAliveTimeSeconds(), 0)
+                           );
+                           pipeline.addLast("handler", handler);
+                       }
+                   }).connect().channel();
     }
 
     @Override

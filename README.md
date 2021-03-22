@@ -7,6 +7,19 @@ GIoT
 ![IoT云边协同架构图](https://user-images.githubusercontent.com/11907624/111753822-41009900-88d2-11eb-9018-3d37dd2a9493.png)
 
 # Documentation
+##Quick Start
+`Module` -> `giot-starter`
+```java
+public class GiotStarter {
+
+    public static void main(String[] args) throws FileNotFoundException, ContainerConfigException, ContainerStartException {
+        ResourceLoader resourceLoader = new ModuleResourceLoader("application.yml");
+        ModuleConfiguration moduleConfiguration = resourceLoader.load();
+        ModuleManager moduleManager = new ModuleManager();
+        moduleManager.init(moduleConfiguration);
+    }
+}
+```
 # Downloads
 # Live Demo
 # License

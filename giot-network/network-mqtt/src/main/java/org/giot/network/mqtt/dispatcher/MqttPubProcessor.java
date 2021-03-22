@@ -16,24 +16,19 @@
  *
  */
 
-package org.giot.core.network;
+package org.giot.network.mqtt.dispatcher;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import org.giot.core.network.MsgVersion;
+import org.giot.core.network.Source;
+import org.giot.core.network.annotation.Processor;
 
 /**
- * @author yuanguohua on 2021/3/22 13:51
+ * @author yuanguohua on 2021/3/22 15:46
  */
-@ToString
-@Getter
-@Builder
-public class ProcessorInfo {
+@Processor(procName = "default", version = MsgVersion.V1)
+public class MqttPubProcessor implements MqttProcessor {
+    @Override
+    public <T extends Source> void invoke(final T source) {
 
-    private String procName;
-
-    private MsgVersion version;
-
-    private Class<? extends SourceProcessor> processor;
-
+    }
 }

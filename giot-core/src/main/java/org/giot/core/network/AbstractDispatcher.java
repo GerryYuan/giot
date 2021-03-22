@@ -18,30 +18,9 @@
 
 package org.giot.core.network;
 
-import lombok.Getter;
-import org.giot.core.CoreModule;
-import org.giot.core.container.ContainerManager;
-import org.giot.core.utils.EmptyUtils;
-
 /**
  * @author yuanguohua on 2021/3/22 17:18
  */
 public abstract class AbstractDispatcher implements SourceDispatcher {
 
-    private DispatcherManager dispatcherManager;
-
-    @Getter
-    private ContainerManager containerManager;
-
-    public AbstractDispatcher(final ContainerManager containerManager) {
-        this.containerManager = containerManager;
-    }
-
-    public DispatcherManager getDispatcherManager() {
-        if (EmptyUtils.isEmpty(dispatcherManager)) {
-            this.dispatcherManager = (DispatcherManager) containerManager.find(CoreModule.NAME)
-                                                                         .getService(SourceDispatcher.class);
-        }
-        return this.dispatcherManager;
-    }
 }

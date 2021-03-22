@@ -18,7 +18,6 @@
 
 package org.giot.network.mqtt.dispatcher;
 
-import org.giot.core.container.ContainerManager;
 import org.giot.core.network.AbstractDispatcher;
 import org.giot.core.network.Source;
 import org.giot.core.network.SourceProcessor;
@@ -28,13 +27,15 @@ import org.giot.core.network.SourceProcessor;
  */
 public class MqttDispatcher extends AbstractDispatcher {
 
-    public MqttDispatcher(final ContainerManager containerManager) {
-        super(containerManager);
+    private MqttProcessorAdapter processorAdapter;
+
+    public MqttDispatcher(final MqttProcessorAdapter processorAdapter) {
+        this.processorAdapter = processorAdapter;
     }
 
     @Override
     public <T extends Source> void dispatch(final T source) {
-        SourceProcessor processor = getDispatcherManager().getProcessor(source);
+        SourceProcessor processor = processorAdapter.supports(source);
         processor.invoke(source);
     }
 

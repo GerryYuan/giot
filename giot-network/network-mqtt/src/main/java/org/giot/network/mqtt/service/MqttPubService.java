@@ -31,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.network.MsgVersion;
 import org.giot.core.network.NetworkModule;
-import org.giot.core.network.Source;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.network.mqtt.MqttContainer;
 import org.giot.network.mqtt.exception.MqttStartException;
@@ -48,12 +47,14 @@ public class MqttPubService implements IMqttPubService {
 
     public MqttPubService(final ContainerManager containerManager) {
         this.containerManager = containerManager;
-        this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
-                                                     .getService(SourceDispatcher.class);
     }
 
     @Override
     public void pub(final Channel channel, final MqttPublishMessage msg) throws MqttStartException {
+        if (sourceDispatcher == null) {
+            this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                         .getService(SourceDispatcher.class);
+        }
         switch (msg.fixedHeader().qosLevel()) {
             case AT_MOST_ONCE:
                 sourceDispatcher.dispatch(null);

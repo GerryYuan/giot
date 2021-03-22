@@ -19,8 +19,8 @@
 package org.giot.core.network;
 
 import java.util.Collection;
+import java.util.Map;
 import org.giot.core.exception.NetworkProcessorNotfoundException;
-import org.giot.core.utils.EmptyUtils;
 
 /**
  * @author yuanguohua on 2021/3/22 16:51
@@ -33,17 +33,17 @@ public class DispatcherManager extends AbstractManagerDispatcher {
     }
 
     @Override
-    public <T extends Source> SourceProcessor getProcessor(final T source) {
-        ProcessorInfo processorInfo = ProcessorInfo.builder().procName(source.name()).version(source.version()).build();
-        SourceProcessor processor = getProcessorMap().get(processorInfo);
-        if (EmptyUtils.isEmpty(processor)) {
-            throw new NetworkProcessorNotfoundException(processorInfo + " processor not found.");
-        }
-        return processor;
+    public Collection<SourceProcessor> processors() {
+        return getProcessorMap().values();
     }
 
     @Override
-    public Collection<SourceProcessor> processors() {
-        return getProcessorMap().values();
+    public ProcessorInfo getProcessorInfo(final SourceProcessor processor) {
+        for (Map.Entry<ProcessorInfo, SourceProcessor> entrySet : getProcessorMap().entrySet()) {
+            if (entrySet.getValue() == processor) {
+                return entrySet.getKey();
+            }
+        }
+        throw new NetworkProcessorNotfoundException(processor + " processor not exists.");
     }
 }

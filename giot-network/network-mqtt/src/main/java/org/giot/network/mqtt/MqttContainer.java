@@ -26,6 +26,7 @@ import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.dispatcher.MqttDispatcher;
+import org.giot.network.mqtt.dispatcher.MqttProcessorAdapter;
 import org.giot.network.mqtt.service.IMqttConnectService;
 import org.giot.network.mqtt.service.IMqttOpsService;
 import org.giot.network.mqtt.service.IMqttPingService;
@@ -72,7 +73,7 @@ public class MqttContainer extends AbstractContainer {
         super.register(IMqttPingService.class, new MqttPingService());
         super.register(IMqttSubService.class, new MqttSubService(config));
         super.register(IMqttPubService.class, new MqttPubService(getContainerManager()));
-        super.register(SourceDispatcher.class, new MqttDispatcher(getContainerManager()));
+        super.register(SourceDispatcher.class, new MqttDispatcher(new MqttProcessorAdapter(getContainerManager())));
     }
 
     @Override

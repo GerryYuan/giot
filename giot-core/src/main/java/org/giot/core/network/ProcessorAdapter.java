@@ -18,29 +18,11 @@
 
 package org.giot.core.network;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import lombok.Getter;
-import org.giot.core.exception.NetworkProcessorException;
-
 /**
- * @author yuanguohua on 2021/3/22 16:53
+ * @author yuanguohua on 2021/3/22 19:46
  */
-public abstract class AbstractManagerDispatcher implements SourceDispatcher {
+public interface ProcessorAdapter {
 
-    @Getter
-    private Map<ProcessorInfo, SourceProcessor> processorMap = new ConcurrentHashMap<>();
-
-    public void initProcessor(final ProcessorInfo info, final SourceProcessor processor) {
-        if (processorMap.keySet().contains(info)) {
-            throw new NetworkProcessorException(info + " processor exists.");
-        }
-        processorMap.put(info, processor);
-    }
-
-    public abstract Collection<SourceProcessor> processors();
-
-    public abstract ProcessorInfo getProcessorInfo(SourceProcessor processor);
+    <T extends Source> SourceProcessor supports(T source);
 
 }

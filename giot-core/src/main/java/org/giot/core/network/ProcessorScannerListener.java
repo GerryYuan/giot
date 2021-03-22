@@ -68,11 +68,12 @@ public class ProcessorScannerListener implements AnnotationScannerListener {
                                                                          .getService(SourceDispatcher.class);
         }
         for (Class<? extends SourceProcessor> clazz : classes) {
-            Processor stream = (Processor) clazz.getAnnotation(match());
+            Processor processor = (Processor) clazz.getAnnotation(match());
             dispatcherManager.initProcessor(
                 ProcessorInfo.builder()
-                             .procName(stream.procName())
-                             .version(stream.version())
+                             .procName(processor.procName())
+                             .version(processor.version())
+                             .processor(clazz)
                              .build(),
                 clazz.newInstance()
             );

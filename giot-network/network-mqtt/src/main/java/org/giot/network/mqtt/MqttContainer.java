@@ -22,8 +22,10 @@ import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.exception.ContainerStopException;
+import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.NetworkModule;
 import org.giot.network.mqtt.config.MqttConfig;
+import org.giot.network.mqtt.dispatcher.MqttDispatcher;
 import org.giot.network.mqtt.service.IMqttConnectService;
 import org.giot.network.mqtt.service.IMqttOpsService;
 import org.giot.network.mqtt.service.IMqttPingService;
@@ -69,7 +71,8 @@ public class MqttContainer extends AbstractContainer {
         super.register(IMqttConnectService.class, new MqttConnectService(config, getContainerManager()));
         super.register(IMqttPingService.class, new MqttPingService());
         super.register(IMqttSubService.class, new MqttSubService(config));
-        super.register(IMqttPubService.class, new MqttPubService());
+        super.register(IMqttPubService.class, new MqttPubService(getContainerManager()));
+        super.register(SourceDispatcher.class, new MqttDispatcher());
     }
 
     @Override

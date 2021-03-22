@@ -7,4 +7,9 @@ package org.giot.core.network;
  * @date 2021-03-21-2:33 PM
  */
 public interface ProcessorAdapter {
+
+    boolean supports(SourceProcessor processor);
+
+    <T extends Source> void processor(T source);
+
 }

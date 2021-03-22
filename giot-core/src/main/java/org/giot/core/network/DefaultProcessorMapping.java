@@ -16,29 +16,18 @@
  *
  */
 
-package org.giot.core.scanner;
+package org.giot.core.network;
 
-import com.google.common.collect.Lists;
-import org.giot.core.CoreContainerConfig;
-import org.giot.core.container.ContainerManager;
-import org.giot.core.network.ProcessorScannerListener;
-import org.giot.core.storage.SteamScannerListener;
+import org.giot.core.network.annotation.Processor;
 
 /**
- * @author Created by gerry
- * @date 2021-03-06-10:11 PM
+ * @author yuanguohua on 2021/3/22 13:35
  */
-public class DefaultAnnotationScanner extends AnnotationScanner {
+@Processor(procName = "default", version = MsgVersion.V1)
+public class DefaultProcessorMapping implements ProcessorMapping {
 
-    private ContainerManager containerManager;
-
-    public DefaultAnnotationScanner(final ContainerManager containerManager,
-                                    final CoreContainerConfig coreContainerConfig) {
-        super(Lists.newArrayList(
-            new SteamScannerListener(containerManager, coreContainerConfig),
-            new ProcessorScannerListener()
-        ));
-        this.containerManager = containerManager;
+    @Override
+    public <T extends Source> SourceProcessor getProcessor(final T source) {
+        return null;
     }
-
 }

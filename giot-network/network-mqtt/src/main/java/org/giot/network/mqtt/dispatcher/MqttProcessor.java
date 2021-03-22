@@ -16,29 +16,17 @@
  *
  */
 
-package org.giot.core.scanner;
+package org.giot.network.mqtt.dispatcher;
 
-import com.google.common.collect.Lists;
-import org.giot.core.CoreContainerConfig;
-import org.giot.core.container.ContainerManager;
-import org.giot.core.network.ProcessorScannerListener;
-import org.giot.core.storage.SteamScannerListener;
+import org.giot.core.network.Source;
+import org.giot.core.network.SourceProcessor;
 
 /**
- * @author Created by gerry
- * @date 2021-03-06-10:11 PM
+ * @author yuanguohua on 2021/3/22 15:46
  */
-public class DefaultAnnotationScanner extends AnnotationScanner {
+public class MqttProcessor implements SourceProcessor {
+    @Override
+    public <T extends Source> void invoke(final T source) {
 
-    private ContainerManager containerManager;
-
-    public DefaultAnnotationScanner(final ContainerManager containerManager,
-                                    final CoreContainerConfig coreContainerConfig) {
-        super(Lists.newArrayList(
-            new SteamScannerListener(containerManager, coreContainerConfig),
-            new ProcessorScannerListener()
-        ));
-        this.containerManager = containerManager;
     }
-
 }

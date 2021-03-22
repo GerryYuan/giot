@@ -16,46 +16,19 @@
  *
  */
 
-package org.giot.core.network.annotation;
+package org.giot.network.mqtt.dispatcher;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import org.giot.core.network.ProcessorMapping;
-import org.giot.core.network.MsgVersion;
+import org.giot.core.network.SourceDispatcher;
+import org.giot.core.network.Source;
 
 /**
- * Dispatcher注解 具体的消息分发器
- * <p>
- * See {@link ProcessorMapping}
- * </p>
- *
- * @author yuanguohua
+ * @author yuanguohua on 2021/3/22 13:04
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Dispatcher {
+public class MqttDispatcher implements SourceDispatcher {
 
-    /**
-     * processor名字
-     *
-     * @return
-     */
-    String procName();
+    @Override
+    public <T extends Source> void dispatch(final T source) {
 
-    /**
-     * 当前分发器可以分发的版本
-     *
-     * @return
-     */
-    MsgVersion version();
-
-    /**
-     * 对应的下游处理器
-     *
-     * @return
-     */
-    Class<? extends ProcessorMapping> processor();
-
+        //get processorMapping，然后processorMapping get Processor,
+    }
 }

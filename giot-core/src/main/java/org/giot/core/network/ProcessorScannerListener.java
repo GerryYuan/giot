@@ -23,24 +23,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.giot.core.network.annotation.Dispatcher;
+import org.giot.core.network.annotation.Processor;
 import org.giot.core.scanner.AnnotationScannerListener;
 import org.giot.core.utils.EmptyUtils;
 
 /**
- * Dispatcher注解监听者，一些添加了该注解的类，就可以实现通过DispatcherManager知道该数据往哪个processor进行发送。比如：直连device属性消息、gateway属性消息，子设备属性消息
+ * Processor注解监听者，一些添加了该注解的类，就可以实现通过DispatcherManager知道该数据往哪个processor进行发送。比如：直连device属性消息、gateway属性消息，子设备属性消息
  * <p>
- * See {@link Dispatcher}
+ * See {@link Processor}
  * </p>
  *
  * @author Created by gerry
  * @date 2021-03-18-10:18 PM
  */
-public class DispatcherScannerListener implements AnnotationScannerListener {
+public class ProcessorScannerListener implements AnnotationScannerListener {
 
     private List<Class<? extends ProcessorMapping>> classes;
 
-    private Map<String, ProcessorMapping> processorMap = new ConcurrentHashMap<>();
+    private Map<ProcessorInfo, ProcessorMapping> processorMap = new ConcurrentHashMap<>();
 
     @Override
     public void addClass(final Class<?> clazz) {
@@ -52,14 +52,18 @@ public class DispatcherScannerListener implements AnnotationScannerListener {
 
     @Override
     public Class<? extends Annotation> match() {
-        return Dispatcher.class;
+        return Processor.class;
     }
 
     @Override
     public void listener() throws Exception {
         //初始化ProcessorMapping，ProcessorAdapter
-        classes.forEach(aClass -> {
-
-        });
+        for (Class<? extends ProcessorMapping> clazz : classes) {
+            Processor stream = (Processor) clazz.getAnnotation(match());
+            processorMap.put(
+                ProcessorInfo.builder().procName(stream.procName()).version(stream.version()).build(),
+                clazz.newInstance()
+            );
+        }
     }
 }

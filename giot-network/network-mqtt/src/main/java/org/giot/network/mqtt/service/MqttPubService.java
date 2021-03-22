@@ -28,7 +28,11 @@ import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import java.nio.charset.Charset;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.MsgVersion;
+import org.giot.core.network.NetworkModule;
+import org.giot.network.mqtt.MqttContainer;
 import org.giot.network.mqtt.exception.MqttStartException;
 
 /**
@@ -37,12 +41,23 @@ import org.giot.network.mqtt.exception.MqttStartException;
 @Slf4j
 public class MqttPubService implements IMqttPubService {
 
+    private ContainerManager containerManager;
+
+    private SourceDispatcher sourceDispatcher;
+
+    public MqttPubService(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+        this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                                     .getService(SourceDispatcher.class);
+    }
+
     @Override
     public void pub(final Channel channel, final MqttPublishMessage msg) throws MqttStartException {
         switch (msg.fixedHeader().qosLevel()) {
             case AT_MOST_ONCE:
                 //TODO 解析消息，然后消息格式化，丢给dispatcher
                 //TODO 根据不同的topic进行数据的分发
+                sourceDispatcher.dispatch(null);
                 String topicName = msg.variableHeader().topicName();
                 MsgVersion.supports(topicName);
                 System.out.println(msg.payload().toString(Charset.defaultCharset()));

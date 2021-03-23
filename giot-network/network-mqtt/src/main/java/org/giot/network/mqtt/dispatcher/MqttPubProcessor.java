@@ -26,9 +26,10 @@ import org.giot.core.network.annotation.Processor;
  * @author yuanguohua on 2021/3/22 15:46
  */
 @Processor(procName = "default", version = MsgVersion.V1)
-public class MqttPubProcessor implements MqttProcessor {
+public class MqttPubProcessor implements MqttProcessor<Source> {
+
     @Override
-    public <T extends Source> void invoke(final T source) {
+    public void invoke(final Source source) {
 
     }
 }

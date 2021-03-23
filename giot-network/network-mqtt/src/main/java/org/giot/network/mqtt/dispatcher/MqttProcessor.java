@@ -18,10 +18,11 @@
 
 package org.giot.network.mqtt.dispatcher;
 
+import org.giot.core.network.Source;
 import org.giot.core.network.SourceProcessor;
 
 /**
  * @author yuanguohua on 2021/3/22 19:50
  */
-public interface MqttProcessor extends SourceProcessor {
+public interface MqttProcessor<S extends Source> extends SourceProcessor<S> {
 }

@@ -21,8 +21,8 @@ package org.giot.core.network;
 /**
  * @author yuanguohua on 2021/3/22 13:43
  */
-public interface SourceProcessor {
+public interface SourceProcessor<S extends Source> {
 
-    <T extends Source> void invoke(T source);
+    void invoke(S source);
 
 }

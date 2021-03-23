@@ -38,5 +38,4 @@ public class MqttDispatcher extends AbstractDispatcher {
         SourceProcessor processor = processorAdapter.supports(source);
         processor.invoke(source);
     }
-
 }

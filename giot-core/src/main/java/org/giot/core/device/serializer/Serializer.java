@@ -16,20 +16,12 @@
  *
  */
 
-package org.giot.network.mqtt.dispatcher;
+package org.giot.core.device.serializer;
 
-import org.giot.core.network.MsgVersion;
-import org.giot.core.network.Source;
-import org.giot.core.network.annotation.Processor;
+public interface Serializer {
 
-/**
- * @author yuanguohua on 2021/3/22 15:46
- */
-@Processor(procName = "/report-property", version = MsgVersion.V1)
-public class MqttPubProcessor implements MqttProcessor<Source> {
+    byte[] serialize(Object object);
 
-    @Override
-    public void invoke(final Source source) {
-        System.out.println(source);
-    }
+    <T> T deserialize(String content, Class<T> targetClass);
+
 }

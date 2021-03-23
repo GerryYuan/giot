@@ -16,20 +16,24 @@
  *
  */
 
-package org.giot.network.mqtt.dispatcher;
+package org.giot.core.exception;
 
-import org.giot.core.network.MsgVersion;
-import org.giot.core.network.Source;
-import org.giot.core.network.annotation.Processor;
+import java.util.function.Supplier;
 
 /**
- * @author yuanguohua on 2021/3/22 15:46
+ * @author yuanguohua on 2021/3/22 17:37
  */
-@Processor(procName = "/report-property", version = MsgVersion.V1)
-public class MqttPubProcessor implements MqttProcessor<Source> {
+public class NetworkSerializerException extends RuntimeException implements Supplier<NetworkSerializerException> {
+    public NetworkSerializerException(final String s) {
+        super(s);
+    }
+
+    public NetworkSerializerException(final String s, final Exception ex) {
+        super(s, ex);
+    }
 
     @Override
-    public void invoke(final Source source) {
-        System.out.println(source);
+    public NetworkSerializerException get() {
+        return this;
     }
 }

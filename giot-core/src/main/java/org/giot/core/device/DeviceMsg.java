@@ -16,20 +16,37 @@
  *
  */
 
-package org.giot.network.mqtt.dispatcher;
+package org.giot.core.device;
 
+import java.util.Map;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.giot.core.network.MsgVersion;
 import org.giot.core.network.Source;
-import org.giot.core.network.annotation.Processor;
 
 /**
- * @author yuanguohua on 2021/3/22 15:46
+ * @author yuanguohua on 2021/3/23 13:45
  */
-@Processor(procName = "/report-property", version = MsgVersion.V1)
-public class MqttPubProcessor implements MqttProcessor<Source> {
+@Data
+@EqualsAndHashCode
+public class DeviceMsg extends Source {
+
+    private DeviceHeaderMsg header;
+
+    private String deviceId;
+
+    private Map<String, Object> properties;
+
+    private Map<String, Object> events;
 
     @Override
-    public void invoke(final Source source) {
-        System.out.println(source);
+    public String name() {
+        return header.getTopic();
     }
+
+    @Override
+    public MsgVersion version() {
+        return MsgVersion.V1;
+    }
+
 }

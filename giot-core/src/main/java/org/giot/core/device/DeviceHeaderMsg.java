@@ -16,20 +16,23 @@
  *
  */
 
-package org.giot.network.mqtt.dispatcher;
+package org.giot.core.device;
 
-import org.giot.core.network.MsgVersion;
-import org.giot.core.network.Source;
-import org.giot.core.network.annotation.Processor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
- * @author yuanguohua on 2021/3/22 15:46
+ * @author yuanguohua on 2021/3/23 17:28
  */
-@Processor(procName = "/report-property", version = MsgVersion.V1)
-public class MqttPubProcessor implements MqttProcessor<Source> {
+@ToString
+@Getter
+@Builder
+public class DeviceHeaderMsg {
 
-    @Override
-    public void invoke(final Source source) {
-        System.out.println(source);
-    }
+    private String topic;
+
+    private int msgId;
+
+    private long time;
 }

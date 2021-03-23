@@ -29,7 +29,10 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import java.nio.charset.Charset;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
-import org.giot.core.network.MsgVersion;
+import org.giot.core.device.DeviceHeaderMsg;
+import org.giot.core.device.DeviceMsg;
+import org.giot.core.device.serializer.GsonSerializer;
+import org.giot.core.device.serializer.Serializer;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.network.mqtt.MqttContainer;
@@ -45,8 +48,11 @@ public class MqttPubService implements IMqttPubService {
 
     private SourceDispatcher sourceDispatcher;
 
+    private Serializer serializer;
+
     public MqttPubService(final ContainerManager containerManager) {
         this.containerManager = containerManager;
+        this.serializer = new GsonSerializer();
     }
 
     @Override
@@ -55,13 +61,16 @@ public class MqttPubService implements IMqttPubService {
             this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
                                                          .getService(SourceDispatcher.class);
         }
+        DeviceHeaderMsg headerMsg = DeviceHeaderMsg.builder()
+                                                   .topic(msg.variableHeader().topicName())
+                                                   .msgId(msg.variableHeader().packetId())
+                                                   .time(System.currentTimeMillis()).build();
         switch (msg.fixedHeader().qosLevel()) {
             case AT_MOST_ONCE:
-                sourceDispatcher.dispatch(null);
-                String topicName = msg.variableHeader().topicName();
-                MsgVersion.supports(topicName);
-                System.out.println(msg.payload().toString(Charset.defaultCharset()));
-                //                invokeHandlersForIncomingPublish(message);
+                DeviceMsg deviceMsg = serializer.deserialize(
+                    msg.payload().toString(Charset.defaultCharset()), DeviceMsg.class);
+                deviceMsg.setHeader(headerMsg);
+                sourceDispatcher.dispatch(deviceMsg);
                 break;
             case AT_LEAST_ONCE:
                 //                invokeHandlersForIncomingPublish(message);

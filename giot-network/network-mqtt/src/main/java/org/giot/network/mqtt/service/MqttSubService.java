@@ -18,6 +18,8 @@
 
 package org.giot.network.mqtt.service;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttFixedHeader;
 import io.netty.handler.codec.mqtt.MqttMessageFactory;
@@ -30,8 +32,15 @@ import io.netty.handler.codec.mqtt.MqttTopicSubscription;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.giot.core.CoreModule;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.network.DispatcherManager;
+import org.giot.core.network.SourceDispatcher;
+import org.giot.core.utils.EmptyUtils;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.exception.MqttStartException;
 
@@ -43,16 +52,33 @@ public class MqttSubService implements IMqttSubService {
 
     private MqttConfig mqttConfig;
 
+    private ContainerManager containerManager;
+
+    private DispatcherManager dispatcherManager;
+
     @Override
     public void sub(final Channel channel) throws MqttStartException {
-        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.SUBSCRIBE, false, MqttQoS.AT_LEAST_ONCE, false, 0);
-        MqttSubscribePayload payload = new MqttSubscribePayload(mqttConfig.getSubTopics()
-                                                                          .stream()
-                                                                          .map(topic -> new MqttTopicSubscription(
-                                                                              topic,
-                                                                              MqttQoS.AT_MOST_ONCE
-                                                                          ))
-                                                                          .collect(Collectors.toList()));
+        if (dispatcherManager == null) {
+            dispatcherManager = (DispatcherManager) containerManager.find(CoreModule.NAME)
+                                                                    .getService(SourceDispatcher.class);
+        }
+        List<String> inTopics = dispatcherManager.processorInfos()
+                                                  .stream()
+                                                  .map(processorInfo -> processorInfo.getProcName())
+                                                  .collect(
+                                                      Collectors.toList());
+        List<String> topics = Lists.newArrayList(Iterables.concat(
+            inTopics,
+            EmptyUtils.isEmpty(mqttConfig.getSubTopics()) ? Collections.emptyList() : mqttConfig.getSubTopics()
+        ));
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(
+            MqttMessageType.SUBSCRIBE, false, MqttQoS.AT_LEAST_ONCE, false, 0);
+        MqttSubscribePayload payload = new MqttSubscribePayload(topics.stream()
+                                                                      .map(topic -> new MqttTopicSubscription(
+                                                                          topic,
+                                                                          MqttQoS.AT_MOST_ONCE
+                                                                      ))
+                                                                      .collect(Collectors.toList()));
         try {
             ByteArrayInputStream bais = new ByteArrayInputStream(payload.toString().getBytes());
             DataInputStream dis = new DataInputStream(bais);

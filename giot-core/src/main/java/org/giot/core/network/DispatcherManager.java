@@ -20,6 +20,7 @@ package org.giot.core.network;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import org.giot.core.exception.NetworkProcessorNotfoundException;
 
 /**
@@ -45,5 +46,10 @@ public class DispatcherManager extends AbstractManagerDispatcher {
             }
         }
         throw new NetworkProcessorNotfoundException(processor + " processor not exists.");
+    }
+
+    @Override
+    public Set<ProcessorInfo> processorInfos() {
+        return getProcessorMap().keySet();
     }
 }

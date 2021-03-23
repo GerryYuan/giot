@@ -23,7 +23,7 @@ network:
     password: public
     clientId: test-clientId
     subTopics:
-      - /report-property
+      - test-2
       - test-2
       - test-3
 storage:

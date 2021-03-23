@@ -20,6 +20,7 @@ package org.giot.core.network;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import org.giot.core.exception.NetworkProcessorException;
@@ -42,5 +43,7 @@ public abstract class AbstractManagerDispatcher implements SourceDispatcher {
     public abstract Collection<SourceProcessor> processors();
 
     public abstract ProcessorInfo getProcessorInfo(SourceProcessor processor);
+
+    public abstract Set<ProcessorInfo> processorInfos();
 
 }

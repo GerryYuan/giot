@@ -47,12 +47,16 @@ import org.giot.network.mqtt.exception.MqttStartException;
 /**
  * @author yuanguohua on 2021/3/15 18:50
  */
-@AllArgsConstructor
 public class MqttSubService implements IMqttSubService {
 
     private MqttConfig mqttConfig;
 
     private ContainerManager containerManager;
+
+    public MqttSubService(final MqttConfig mqttConfig, final ContainerManager containerManager) {
+        this.mqttConfig = mqttConfig;
+        this.containerManager = containerManager;
+    }
 
     private DispatcherManager dispatcherManager;
 
@@ -63,10 +67,10 @@ public class MqttSubService implements IMqttSubService {
                                                                     .getService(SourceDispatcher.class);
         }
         List<String> inTopics = dispatcherManager.processorInfos()
-                                                  .stream()
-                                                  .map(processorInfo -> processorInfo.getProcName())
-                                                  .collect(
-                                                      Collectors.toList());
+                                                 .stream()
+                                                 .map(processorInfo -> processorInfo.getProcName())
+                                                 .collect(
+                                                     Collectors.toList());
         List<String> topics = Lists.newArrayList(Iterables.concat(
             inTopics,
             EmptyUtils.isEmpty(mqttConfig.getSubTopics()) ? Collections.emptyList() : mqttConfig.getSubTopics()

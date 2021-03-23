@@ -71,7 +71,7 @@ public class MqttContainer extends AbstractContainer {
         super.register(IMqttOpsService.class, new MqttOpsService(config, getContainerManager()));
         super.register(IMqttConnectService.class, new MqttConnectService(config, getContainerManager()));
         super.register(IMqttPingService.class, new MqttPingService());
-        super.register(IMqttSubService.class, new MqttSubService(config));
+        super.register(IMqttSubService.class, new MqttSubService(config, getContainerManager()));
         super.register(IMqttPubService.class, new MqttPubService(getContainerManager()));
         super.register(SourceDispatcher.class, new MqttDispatcher(new MqttProcessorAdapter(getContainerManager())));
     }

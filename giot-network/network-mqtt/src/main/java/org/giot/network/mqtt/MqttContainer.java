@@ -18,15 +18,21 @@
 
 package org.giot.network.mqtt;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import org.giot.core.CoreModule;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.exception.ContainerAfterException;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.exception.ContainerStopException;
+import org.giot.core.network.DispatcherManager;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.dispatcher.MqttDispatcher;
 import org.giot.network.mqtt.dispatcher.MqttProcessorAdapter;
+import org.giot.network.mqtt.exception.MqttSubException;
 import org.giot.network.mqtt.service.IMqttConnectService;
 import org.giot.network.mqtt.service.IMqttOpsService;
 import org.giot.network.mqtt.service.IMqttPingService;
@@ -49,6 +55,8 @@ public class MqttContainer extends AbstractContainer {
 
     private MqttConfig config;
 
+    private IMqttOpsService mqttOpsService;
+
     @Override
     public String name() {
         return NAME;
@@ -69,18 +77,18 @@ public class MqttContainer extends AbstractContainer {
     public void prepare() {
         super.register(MqttClientHandler.class, new MqttClientHandler(getContainerManager()));
         super.register(IMqttOpsService.class, new MqttOpsService(config, getContainerManager()));
-        super.register(IMqttConnectService.class, new MqttConnectService(config, getContainerManager()));
+        super.register(IMqttConnectService.class, new MqttConnectService(config));
         super.register(IMqttPingService.class, new MqttPingService());
-        super.register(IMqttSubService.class, new MqttSubService(config, getContainerManager()));
+        super.register(IMqttSubService.class, new MqttSubService());
         super.register(IMqttPubService.class, new MqttPubService(getContainerManager()));
         super.register(SourceDispatcher.class, new MqttDispatcher(new MqttProcessorAdapter(getContainerManager())));
     }
 
     @Override
     public void start() throws ContainerStartException {
-        IMqttOpsService mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
         try {
-            mqttOpsService.start();
+            this.mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
+            this.mqttOpsService.start();
         } catch (InterruptedException e) {
             throw new ContainerStartException("Container [" + name() + "] start failure.", e);
         }
@@ -88,7 +96,20 @@ public class MqttContainer extends AbstractContainer {
 
     @Override
     public void after() {
-
+        try {
+            if (find(NetworkModule.NAME, MqttContainer.NAME).getService(IMqttConnectService.class).isConnect()) {
+                DispatcherManager dispatcherManager = (DispatcherManager) find(CoreModule.NAME).getService(
+                    SourceDispatcher.class);
+                List<String> topics = dispatcherManager.processorInfos()
+                                                       .stream()
+                                                       .map(processorInfo -> processorInfo.getProcName())
+                                                       .collect(Collectors.toList());
+                find(NetworkModule.NAME, MqttContainer.NAME).getService(IMqttSubService.class)
+                                                            .sub(this.mqttOpsService.channel(), topics);
+            }
+        } catch (MqttSubException e) {
+            throw new ContainerAfterException("Container [" + name() + "] after operator failure.", e);
+        }
     }
 
     @Override

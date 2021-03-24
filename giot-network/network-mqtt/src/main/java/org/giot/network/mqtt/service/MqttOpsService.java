@@ -82,6 +82,11 @@ public class MqttOpsService implements IMqttOpsService {
     }
 
     @Override
+    public Channel channel() {
+        return this.channel;
+    }
+
+    @Override
     public void shutdown() throws InterruptedException {
         try {
             channel.close().sync();

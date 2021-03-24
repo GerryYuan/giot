@@ -16,28 +16,14 @@
  *
  */
 
-package org.giot.network.mqtt.service;
+package org.giot.network.mqtt.exception;
 
-import io.netty.channel.Channel;
-import io.netty.handler.codec.mqtt.MqttConnAckMessage;
-import org.giot.core.service.Service;
-import org.giot.network.mqtt.exception.MqttStartException;
+public class MqttSubException extends Exception {
+    public MqttSubException(String message) {
+        super(message);
+    }
 
-/**
- * @author Created by gerry
- * @date 2021-03-14-9:25 PM
- */
-public interface IMqttConnectService extends Service {
-
-    /**
-     * 是否连接
-     * @return
-     */
-    boolean isConnect();
-
-    void disConnect(Channel channel);
-
-    void connect(Channel channel);
-
-    void ack(Channel channel, MqttConnAckMessage msg) throws MqttStartException;
+    public MqttSubException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -31,12 +31,13 @@ import org.giot.network.mqtt.exception.MqttStartException;
 public class MqttPingService implements IMqttPingService {
     @Override
     public void ping(final Channel channel) {
-        MqttFixedHeader fixedHeader = new MqttFixedHeader(MqttMessageType.PINGREQ, false, MqttQoS.AT_MOST_ONCE, false, 0);
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(
+            MqttMessageType.PINGREQ, false, MqttQoS.AT_MOST_ONCE, false, 0);
         channel.writeAndFlush(new MqttMessage(fixedHeader));
     }
 
     @Override
     public void ack(final Channel channel, final MqttMessage msg) throws MqttStartException {
-        System.out.println(msg);
+        return;
     }
 }

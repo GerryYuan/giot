@@ -20,9 +20,9 @@ package org.giot.network.mqtt.service;
 
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttSubAckMessage;
-import java.io.IOException;
+import java.util.List;
 import org.giot.core.service.Service;
-import org.giot.network.mqtt.exception.MqttStartException;
+import org.giot.network.mqtt.exception.MqttSubException;
 
 /**
  * @author yuanguohua on 2021/3/15 18:44
@@ -31,9 +31,10 @@ public interface IMqttSubService extends Service {
 
     /**
      * 定于topic
+     *
      * @param channel
      */
-    void sub(Channel channel) throws MqttStartException;
+    void sub(Channel channel, List<String> topics) throws MqttSubException;
 
-    void ack(Channel channel, MqttSubAckMessage msg) throws MqttStartException;
+    void ack(Channel channel, MqttSubAckMessage msg);
 }

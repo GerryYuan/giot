@@ -1,5 +1,6 @@
 package org.giot.network.mqtt.service;
 
+import io.netty.channel.Channel;
 import org.giot.core.service.Service;
 
 /**
@@ -11,6 +12,12 @@ public interface IMqttOpsService extends Service {
      * 启动mqttops，负责跟mqtt broker链接
      */
     void start() throws InterruptedException;
+
+    /**
+     * 获取channel
+     * @return
+     */
+    Channel channel();
 
     /**
      * 关闭处理

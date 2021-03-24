@@ -19,7 +19,6 @@
 package org.giot.network.mqtt.config;
 
 import io.netty.handler.codec.mqtt.MqttVersion;
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -59,7 +58,5 @@ public class MqttConfig extends ContainerConfig {
     private String password;
 
     private String clientId;
-
-    private List<String> subTopics;
 
 }

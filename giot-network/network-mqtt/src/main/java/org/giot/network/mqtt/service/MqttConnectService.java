@@ -28,10 +28,7 @@ import io.netty.handler.codec.mqtt.MqttMessageFactory;
 import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import java.nio.charset.Charset;
-import lombok.AllArgsConstructor;
-import org.giot.core.container.ContainerManager;
-import org.giot.core.network.NetworkModule;
-import org.giot.network.mqtt.MqttContainer;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.exception.MqttStartException;
 
@@ -39,17 +36,26 @@ import org.giot.network.mqtt.exception.MqttStartException;
  * @author Created by gerry
  * @date 2021-03-14-9:28 PM
  */
-@AllArgsConstructor
 public class MqttConnectService implements IMqttConnectService {
 
     private MqttConfig config;
 
-    private ContainerManager containerManager;
+    public MqttConnectService(final MqttConfig config) {
+        this.config = config;
+    }
+
+    private AtomicBoolean isConnected = new AtomicBoolean(false);
+
+    @Override
+    public boolean isConnect() {
+        return isConnected.get();
+    }
 
     @Override
     public void disConnect(final Channel channel) {
         //重连
         channel.close();
+        isConnected.set(false);
         //todo 负责通知下游
     }
 
@@ -79,9 +85,7 @@ public class MqttConnectService implements IMqttConnectService {
     @Override
     public void ack(final Channel channel, final MqttConnAckMessage msg) throws MqttStartException {
         if (msg.variableHeader().connectReturnCode().equals(MqttConnectReturnCode.CONNECTION_ACCEPTED)) {
-            IMqttSubService subService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
-                                                         .getService(IMqttSubService.class);
-            subService.sub(channel);
+            isConnected.set(true);
             return;
         } else {
             channel.close();

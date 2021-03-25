@@ -16,39 +16,23 @@
  *
  */
 
-package org.giot.core.device;
+package org.giot.core.network;
 
-import java.util.Map;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.giot.core.network.MsgVersion;
-import org.giot.core.network.Source;
+import org.giot.core.service.Service;
 
 /**
- * @author yuanguohua on 2021/3/23 13:45
+ * @author yuanguohua on 2021/3/24 18:01
  */
-@Data
-@EqualsAndHashCode
-public class DeviceMsg extends Source {
+public interface ProcessorCreator extends Service {
 
-    private DeviceHeaderMsg header;
+    void create(RouteUrl routeUrl,
+                MsgVersion version,
+                Class<? extends SourceProcessor> clazz) throws IllegalAccessException, InstantiationException;
 
-    private String deviceId;
-
-    private MsgVersion version = MsgVersion.V1;
-
-    private Map<String, Object> properties;
-
-    private Map<String, Object> events;
-
-    @Override
-    public String name() {
-        return header.getTopic();
+    interface WhenCompleteListener {
+        /**
+         * processorInfo被创建完成后，调用Listener
+         */
+        void listener(ProcessorDef processorDef) throws InstantiationException, IllegalAccessException;
     }
-
-    @Override
-    public String version() {
-        return version.name();
-    }
-
 }

@@ -28,7 +28,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @Builder
-public class ProcessorInfo {
+public class ProcessorDef {
 
     private String procName;
 

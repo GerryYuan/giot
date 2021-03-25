@@ -19,28 +19,32 @@
 package org.giot.core.network;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import org.giot.core.exception.NetworkProcessorNotfoundException;
 
 /**
- * @author yuanguohua on 2021/3/22 16:51
+ * @author yuanguohua on 2021/3/25 10:38
  */
-public class DispatcherManager extends AbstractManagerDispatcher {
+public class SourceProcessorInstaller extends ProcessorInstaller implements ProcessorManager {
+
+    private Map<ProcessorDef, SourceProcessor> processorMap = new ConcurrentHashMap<>();
 
     @Override
-    public <T extends Source> void dispatch(final T source) {
-        return;
+    public void createProcessor(final ProcessorDef processorDef) throws IllegalAccessException, InstantiationException {
+        processorMap.put(processorDef, processorDef.getProcessor().newInstance());
     }
 
     @Override
     public Collection<SourceProcessor> processors() {
-        return getProcessorMap().values();
+        return processorMap.values();
     }
 
     @Override
-    public ProcessorInfo getProcessorInfo(final SourceProcessor processor) {
-        for (Map.Entry<ProcessorInfo, SourceProcessor> entrySet : getProcessorMap().entrySet()) {
+    public ProcessorDef getProcessorDef(final SourceProcessor processor) {
+        for (Map.Entry<ProcessorDef, SourceProcessor> entrySet : processorMap.entrySet()) {
             if (entrySet.getValue() == processor) {
                 return entrySet.getKey();
             }
@@ -49,7 +53,7 @@ public class DispatcherManager extends AbstractManagerDispatcher {
     }
 
     @Override
-    public Set<ProcessorInfo> processorInfos() {
-        return getProcessorMap().keySet();
+    public List<ProcessorDef> processorDefs() {
+        return processorMap.keySet().stream().collect(Collectors.toList());
     }
 }

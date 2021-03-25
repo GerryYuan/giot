@@ -18,7 +18,10 @@
 
 package org.giot.starter;
 
+import com.google.common.base.Stopwatch;
 import java.io.FileNotFoundException;
+import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.loader.ModuleResourceLoader;
@@ -29,12 +32,16 @@ import org.giot.core.module.ModuleManager;
 /**
  * @author yuanguohua on 2021/2/26 16:11
  */
+@Slf4j
 public class GiotStarter {
 
     public static void main(String[] args) throws FileNotFoundException, ContainerConfigException, ContainerStartException {
+        Stopwatch sp = Stopwatch.createStarted();
         ResourceLoader resourceLoader = new ModuleResourceLoader("application.yml");
         ModuleConfiguration moduleConfiguration = resourceLoader.load();
         ModuleManager moduleManager = new ModuleManager();
         moduleManager.init(moduleConfiguration);
+        log.info("GIoT server start success, cost time [{}] ms ", sp.elapsed(TimeUnit.MILLISECONDS));
+
     }
 }

@@ -16,39 +16,38 @@
  *
  */
 
-package org.giot.core.device;
+package org.giot.network.mqtt.service;
 
-import java.util.Map;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.giot.core.network.MsgVersion;
-import org.giot.core.network.Source;
+import org.giot.core.network.RouteUrl;
+import org.giot.core.network.URLMappings;
 
 /**
- * @author yuanguohua on 2021/3/23 13:45
+ * @author yuanguohua on 2021/3/25 11:03
  */
-@Data
-@EqualsAndHashCode
-public class DeviceMsg extends Source {
-
-    private DeviceHeaderMsg header;
-
-    private String deviceId;
-
-    private MsgVersion version = MsgVersion.V1;
-
-    private Map<String, Object> properties;
-
-    private Map<String, Object> events;
+public class TopicMappings implements URLMappings {
 
     @Override
-    public String name() {
-        return header.getTopic();
+    public MsgVersion version() {
+        return MsgVersion.V1;
     }
 
     @Override
-    public String version() {
-        return version.name();
+    public List<String> urls() {
+        return Arrays.stream(RouteUrl.values()).map(RouteUrl::getRoute).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> mappings() {
+        return urls().stream().map(s -> version().toString().toLowerCase().concat(s)).collect(Collectors.toList());
+    }
+
+    @Override
+    public String mapping(final MsgVersion version, final String url) {
+        return version().toString().toLowerCase().concat(url);
     }
 
 }

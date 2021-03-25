@@ -16,39 +16,21 @@
  *
  */
 
-package org.giot.core.device;
+package org.giot.core.network;
 
-import java.util.Map;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.giot.core.network.MsgVersion;
-import org.giot.core.network.Source;
+import lombok.Getter;
 
 /**
- * @author yuanguohua on 2021/3/23 13:45
+ * @author yuanguohua on 2021/3/25 11:05
  */
-@Data
-@EqualsAndHashCode
-public class DeviceMsg extends Source {
+public enum RouteUrl {
 
-    private DeviceHeaderMsg header;
+    REPORT_PROPERTIES("/report-properties");
 
-    private String deviceId;
+    @Getter
+    private String route;
 
-    private MsgVersion version = MsgVersion.V1;
-
-    private Map<String, Object> properties;
-
-    private Map<String, Object> events;
-
-    @Override
-    public String name() {
-        return header.getTopic();
+    RouteUrl(final String route) {
+        this.route = route;
     }
-
-    @Override
-    public String version() {
-        return version.name();
-    }
-
 }

@@ -28,34 +28,36 @@ import io.netty.handler.codec.mqtt.MqttMessageFactory;
 import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import java.nio.charset.Charset;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.network.NetworkModule;
+import org.giot.core.network.URLMappings;
+import org.giot.core.service.ServiceHandler;
+import org.giot.network.mqtt.MqttContainer;
 import org.giot.network.mqtt.config.MqttConfig;
-import org.giot.network.mqtt.exception.MqttStartException;
+import org.giot.network.mqtt.exception.MqttSubException;
 
 /**
  * @author Created by gerry
  * @date 2021-03-14-9:28 PM
  */
+@Slf4j
 public class MqttConnectService implements IMqttConnectService {
+
+    private ContainerManager containerManager;
 
     private MqttConfig config;
 
-    public MqttConnectService(final MqttConfig config) {
+    public MqttConnectService(final MqttConfig config, final ContainerManager containerManager) {
         this.config = config;
-    }
-
-    private AtomicBoolean isConnected = new AtomicBoolean(false);
-
-    @Override
-    public boolean isConnect() {
-        return isConnected.get();
+        this.containerManager = containerManager;
     }
 
     @Override
     public void disConnect(final Channel channel) {
         //重连
         channel.close();
-        isConnected.set(false);
         //todo 负责通知下游
     }
 
@@ -83,13 +85,16 @@ public class MqttConnectService implements IMqttConnectService {
     }
 
     @Override
-    public void ack(final Channel channel, final MqttConnAckMessage msg) throws MqttStartException {
+    public void ack(final Channel channel, final MqttConnAckMessage msg) throws MqttSubException {
         if (msg.variableHeader().connectReturnCode().equals(MqttConnectReturnCode.CONNECTION_ACCEPTED)) {
-            isConnected.set(true);
-            return;
+            ServiceHandler serviceHandler = containerManager.find(NetworkModule.NAME, MqttContainer.NAME);
+            IMqttSubService mqttSubService = serviceHandler.getService(IMqttSubService.class);
+            List<String> topics = serviceHandler.getService(URLMappings.class).mappings();
+            mqttSubService.sub(channel, topics);
+            log.info("Mqtt broker [{}:{}] connect success & sub topic {}.", config.getHost(), config.getPort(), topics);
         } else {
             channel.close();
-            throw new MqttStartException("mqtt connect ack error: " + msg.variableHeader().connectReturnCode());
+            throw new MqttSubException("mqtt connect ack error: " + msg.variableHeader().connectReturnCode());
         }
 
     }

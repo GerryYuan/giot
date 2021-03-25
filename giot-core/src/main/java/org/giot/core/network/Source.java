@@ -25,6 +25,5 @@ public abstract class Source {
 
     public abstract String name();
 
-    public abstract MsgVersion version();
-
+    public abstract String version();
 }

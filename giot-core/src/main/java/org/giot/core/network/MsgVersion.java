@@ -26,22 +26,4 @@ public enum MsgVersion {
     V1,
     ;
 
-    public static boolean supports(MsgVersion version) {
-        for (MsgVersion v : MsgVersion.values()) {
-            if (version.equals(v)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean supports(String version) {
-        for (MsgVersion v : MsgVersion.values()) {
-            if (v.name().startsWith(version)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

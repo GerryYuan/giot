@@ -21,12 +21,14 @@ package org.giot.network.mqtt.dispatcher;
 import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.exception.NetworkProcessorNotfoundException;
-import org.giot.core.network.DispatcherManager;
+import org.giot.core.network.NetworkModule;
 import org.giot.core.network.ProcessorAdapter;
-import org.giot.core.network.ProcessorInfo;
+import org.giot.core.network.ProcessorDef;
+import org.giot.core.network.ProcessorManager;
 import org.giot.core.network.Source;
-import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.SourceProcessor;
+import org.giot.core.network.URLMappings;
+import org.giot.network.mqtt.MqttContainer;
 
 /**
  * @author yuanguohua on 2021/3/22 19:47
@@ -35,7 +37,9 @@ public class MqttProcessorAdapter implements ProcessorAdapter {
 
     private ContainerManager containerManager;
 
-    private DispatcherManager dispatcherManager;
+    private ProcessorManager processorManager;
+
+    private URLMappings urlMappings;
 
     public MqttProcessorAdapter(final ContainerManager containerManager) {
         this.containerManager = containerManager;
@@ -43,20 +47,21 @@ public class MqttProcessorAdapter implements ProcessorAdapter {
 
     @Override
     public <T extends Source> SourceProcessor supports(final T source) {
-        if (dispatcherManager == null) {
-            this.dispatcherManager = (DispatcherManager) containerManager.find(CoreModule.NAME)
-                                                                         .getService(SourceDispatcher.class);
+        if (processorManager == null) {
+            this.processorManager = containerManager.find(CoreModule.NAME).getService(ProcessorManager.class);
+            this.urlMappings = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                                               .getService(URLMappings.class);
         }
-        for (SourceProcessor sourceProcessor : dispatcherManager.processors()) {
+        for (SourceProcessor sourceProcessor : processorManager.processors()) {
             if (sourceProcessor instanceof MqttProcessor) {
-                ProcessorInfo processorInfo = dispatcherManager.getProcessorInfo(sourceProcessor);
-                if (processorInfo.getProcName().equals(source.name()) && processorInfo.getVersion()
-                                                                                      .equals(source.version())) {
+                ProcessorDef processorDef = processorManager.getProcessorDef(sourceProcessor);
+                String url = urlMappings.mapping(processorDef.getVersion(), processorDef.getProcName());
+                if (url.equals(source.name())) {
                     return sourceProcessor;
                 }
             }
         }
-        throw new NetworkProcessorNotfoundException(source + " processor not exists.");
+        throw new NetworkProcessorNotfoundException(source + " adapter processor not support.");
     }
 
 }

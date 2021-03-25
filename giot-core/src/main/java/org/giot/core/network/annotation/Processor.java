@@ -24,6 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.giot.core.network.MsgVersion;
 import org.giot.core.network.SourceProcessor;
+import org.giot.core.network.RouteUrl;
 
 /**
  * Processor注解 具体的消息分发器
@@ -42,7 +43,7 @@ public @interface Processor {
      *
      * @return
      */
-    String procName();
+    RouteUrl route();
 
     /**
      * 处理的版本

@@ -42,8 +42,6 @@ public class ProcessorScannerListener implements AnnotationScannerListener {
 
     private ContainerManager containerManager;
 
-    private DispatcherManager dispatcherManager;
-
     public ProcessorScannerListener(final ContainerManager containerManager) {
         this.containerManager = containerManager;
     }
@@ -63,20 +61,11 @@ public class ProcessorScannerListener implements AnnotationScannerListener {
 
     @Override
     public void listener() throws Exception {
-        if (EmptyUtils.isEmpty(dispatcherManager)) {
-            this.dispatcherManager = (DispatcherManager) containerManager.find(CoreModule.NAME)
-                                                                         .getService(SourceDispatcher.class);
-        }
+        ProcessorCreator processorCreator = containerManager.find(CoreModule.NAME)
+                                                            .getService(ProcessorCreator.class);
         for (Class<? extends SourceProcessor> clazz : classes) {
             Processor processor = (Processor) clazz.getAnnotation(match());
-            dispatcherManager.initProcessor(
-                ProcessorInfo.builder()
-                             .procName(processor.procName())
-                             .version(processor.version())
-                             .processor(clazz)
-                             .build(),
-                clazz.newInstance()
-            );
+            processorCreator.create(processor.route(), processor.version(), clazz);
         }
     }
 }

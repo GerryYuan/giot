@@ -65,15 +65,15 @@ public class MqttPubService implements IMqttPubService {
                                                    .topic(msg.variableHeader().topicName())
                                                    .msgId(msg.variableHeader().packetId())
                                                    .time(System.currentTimeMillis()).build();
+        DeviceMsg deviceMsg = serializer.deserialize(
+            msg.payload().toString(Charset.defaultCharset()), DeviceMsg.class);
+        deviceMsg.setHeader(headerMsg);
         switch (msg.fixedHeader().qosLevel()) {
             case AT_MOST_ONCE:
-                DeviceMsg deviceMsg = serializer.deserialize(
-                    msg.payload().toString(Charset.defaultCharset()), DeviceMsg.class);
-                deviceMsg.setHeader(headerMsg);
                 sourceDispatcher.dispatch(deviceMsg);
                 break;
             case AT_LEAST_ONCE:
-                //                invokeHandlersForIncomingPublish(message);
+                sourceDispatcher.dispatch(deviceMsg);
                 if (msg.variableHeader().packetId() != -1) {
                     ack(channel, msg.variableHeader().packetId());
                 }
@@ -81,7 +81,7 @@ public class MqttPubService implements IMqttPubService {
 
             case EXACTLY_ONCE:
                 if (msg.variableHeader().packetId() != -1) {
-                    pubrec(channel, msg.variableHeader().packetId());
+                    pubrec(channel, MqttMessageIdVariableHeader.from(msg.variableHeader().packetId()));
                 }
                 break;
         }
@@ -96,11 +96,17 @@ public class MqttPubService implements IMqttPubService {
     }
 
     @Override
-    public void pubrec(final Channel channel, final int msgId) {
+    public void pubrec(final Channel channel, final MqttMessageIdVariableHeader variableHeader) {
         MqttFixedHeader fixedHeader = new MqttFixedHeader(
             MqttMessageType.PUBREC, false, MqttQoS.AT_MOST_ONCE, false, 0);
-        MqttMessageIdVariableHeader variableHeader = MqttMessageIdVariableHeader.from(msgId);
         MqttMessage pubrecMessage = new MqttMessage(fixedHeader, variableHeader);
         channel.writeAndFlush(pubrecMessage);
+    }
+
+    @Override
+    public void pubrel(final Channel channel, final MqttMessageIdVariableHeader variableHeader) {
+        MqttFixedHeader fixedHeader = new MqttFixedHeader(
+            MqttMessageType.PUBCOMP, false, MqttQoS.AT_MOST_ONCE, false, 0);
+        channel.writeAndFlush(new MqttMessage(fixedHeader, variableHeader));
     }
 }

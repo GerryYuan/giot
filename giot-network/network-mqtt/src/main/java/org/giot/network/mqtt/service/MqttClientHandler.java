@@ -23,6 +23,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.mqtt.MqttConnAckMessage;
 import io.netty.handler.codec.mqtt.MqttMessage;
+import io.netty.handler.codec.mqtt.MqttMessageIdVariableHeader;
 import io.netty.handler.codec.mqtt.MqttPublishMessage;
 import io.netty.handler.codec.mqtt.MqttSubAckMessage;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -79,16 +80,14 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
                 pubService.pub(channelHandlerContext.channel(), (MqttPublishMessage) msg);
                 break;
             case UNSUBACK:
-                //                handleUnsuback((MqttUnsubAckMessage) msg);
                 break;
             case PUBACK:
-                //                handlePuback((MqttPubAckMessage) msg);
                 break;
             case PUBREC:
-                //                handlePubrec(ctx.channel(), msg);
+                pubService.pubrec(channelHandlerContext.channel(), (MqttMessageIdVariableHeader) msg.variableHeader());
                 break;
             case PUBREL:
-                //                handlePubrel(ctx.channel(), msg);
+                pubService.pubrel(channelHandlerContext.channel(), (MqttMessageIdVariableHeader) msg.variableHeader());
                 break;
             case PUBCOMP:
                 //                handlePubcomp(msg);

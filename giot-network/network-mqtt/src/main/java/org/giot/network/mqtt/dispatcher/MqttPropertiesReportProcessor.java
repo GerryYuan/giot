@@ -27,7 +27,7 @@ import org.giot.core.network.annotation.Processor;
  * @author yuanguohua on 2021/3/22 15:46
  */
 @Processor(route = RouteUrl.REPORT_PROPERTIES, version = MsgVersion.v1)
-public class MqttPubProcessor implements MqttProcessor<DevicePropertiesMsg> {
+public class MqttPropertiesReportProcessor implements MqttProcessor<DevicePropertiesMsg> {
 
     @Override
     public void invoke(final DevicePropertiesMsg deviceMsg) {

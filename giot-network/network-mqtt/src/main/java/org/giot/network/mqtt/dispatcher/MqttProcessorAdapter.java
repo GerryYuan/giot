@@ -20,15 +20,13 @@ package org.giot.network.mqtt.dispatcher;
 
 import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
+import org.giot.core.device.DeviceContext;
 import org.giot.core.exception.NetworkProcessorNotfoundException;
-import org.giot.core.network.NetworkModule;
 import org.giot.core.network.ProcessorAdapter;
 import org.giot.core.network.ProcessorDef;
 import org.giot.core.network.ProcessorManager;
-import org.giot.core.network.Source;
 import org.giot.core.network.SourceProcessor;
 import org.giot.core.network.URLMappings;
-import org.giot.network.mqtt.MqttContainer;
 
 /**
  * @author yuanguohua on 2021/3/22 19:47
@@ -41,27 +39,26 @@ public class MqttProcessorAdapter implements ProcessorAdapter {
 
     private URLMappings urlMappings;
 
-    public MqttProcessorAdapter(final ContainerManager containerManager) {
+    public MqttProcessorAdapter(final ContainerManager containerManager, final URLMappings urlMappings) {
         this.containerManager = containerManager;
+        this.urlMappings = urlMappings;
     }
 
     @Override
-    public <T extends Source> SourceProcessor supports(final T source) {
+    public SourceProcessor supports(final DeviceContext context) {
         if (processorManager == null) {
             this.processorManager = containerManager.find(CoreModule.NAME).getService(ProcessorManager.class);
-            this.urlMappings = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
-                                               .getService(URLMappings.class);
         }
         for (SourceProcessor sourceProcessor : processorManager.processors()) {
             if (sourceProcessor instanceof MqttProcessor) {
                 ProcessorDef processorDef = processorManager.getProcessorDef(sourceProcessor);
                 String url = urlMappings.mapping(processorDef.getVersion(), processorDef.getProcName());
-                if (url.equals(source.name())) {
+                if (url.equalsIgnoreCase(context.getHeader().getTopic())) {
                     return sourceProcessor;
                 }
             }
         }
-        throw new NetworkProcessorNotfoundException(source + " adapter processor not support.");
+        throw new NetworkProcessorNotfoundException(context.getHeader() + " adapter processor not support.");
     }
 
 }

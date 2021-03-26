@@ -18,19 +18,19 @@
 
 package org.giot.network.mqtt.dispatcher;
 
+import org.giot.core.device.DevicePropertiesMsg;
 import org.giot.core.network.MsgVersion;
-import org.giot.core.network.Source;
-import org.giot.core.network.annotation.Processor;
 import org.giot.core.network.RouteUrl;
+import org.giot.core.network.annotation.Processor;
 
 /**
  * @author yuanguohua on 2021/3/22 15:46
  */
-@Processor(route = RouteUrl.REPORT_PROPERTIES, version = MsgVersion.V1)
-public class MqttPubProcessor implements MqttProcessor<Source> {
+@Processor(route = RouteUrl.REPORT_PROPERTIES, version = MsgVersion.v1)
+public class MqttPubProcessor implements MqttProcessor<DevicePropertiesMsg> {
 
     @Override
-    public void invoke(final Source source) {
-        System.out.println(source);
+    public void invoke(final DevicePropertiesMsg deviceMsg) {
+        System.out.println(deviceMsg);
     }
 }

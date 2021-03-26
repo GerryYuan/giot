@@ -18,11 +18,13 @@
 
 package org.giot.core.network;
 
+import org.giot.core.device.DeviceContext;
+
 /**
  * @author yuanguohua on 2021/3/22 19:46
  */
 public interface ProcessorAdapter {
 
-    <T extends Source> SourceProcessor supports(T source);
+    SourceProcessor supports(DeviceContext context);
 
 }

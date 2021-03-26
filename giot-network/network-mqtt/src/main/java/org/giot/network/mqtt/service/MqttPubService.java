@@ -29,10 +29,9 @@ import io.netty.handler.codec.mqtt.MqttQoS;
 import java.nio.charset.Charset;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
-import org.giot.core.device.DeviceHeaderMsg;
-import org.giot.core.device.DeviceMsg;
-import org.giot.core.device.serializer.GsonSerializer;
-import org.giot.core.device.serializer.Serializer;
+import org.giot.core.device.DeviceContext;
+import org.giot.core.device.DeviceHeader;
+import org.giot.core.network.MsgVersion;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.network.mqtt.MqttContainer;
@@ -48,32 +47,30 @@ public class MqttPubService implements IMqttPubService {
 
     private SourceDispatcher sourceDispatcher;
 
-    private Serializer serializer;
-
     public MqttPubService(final ContainerManager containerManager) {
         this.containerManager = containerManager;
-        this.serializer = new GsonSerializer();
     }
 
     @Override
-    public void pub(final Channel channel, final MqttPublishMessage msg) throws MqttStartException {
+    public void pub(final Channel channel, final MqttPublishMessage msg) throws Exception {
         if (sourceDispatcher == null) {
             this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
                                                          .getService(SourceDispatcher.class);
         }
-        DeviceHeaderMsg headerMsg = DeviceHeaderMsg.builder()
-                                                   .topic(msg.variableHeader().topicName())
-                                                   .msgId(msg.variableHeader().packetId())
-                                                   .time(System.currentTimeMillis()).build();
-        DeviceMsg deviceMsg = serializer.deserialize(
-            msg.payload().toString(Charset.defaultCharset()), DeviceMsg.class);
-        deviceMsg.setHeader(headerMsg);
+        DeviceContext context = DeviceContext.builder()
+                                             .header(DeviceHeader.builder()
+                                                                 .topic(msg.variableHeader().topicName())
+                                                                 .msgId(msg.variableHeader().packetId())
+                                                                 .version(MsgVersion.v1)
+                                                                 .time(System.currentTimeMillis()).build())
+                                             .payload(msg.payload().toString(Charset.defaultCharset()))
+                                             .build();
         switch (msg.fixedHeader().qosLevel()) {
             case AT_MOST_ONCE:
-                sourceDispatcher.dispatch(deviceMsg);
+                sourceDispatcher.dispatch(context);
                 break;
             case AT_LEAST_ONCE:
-                sourceDispatcher.dispatch(deviceMsg);
+                sourceDispatcher.dispatch(context);
                 if (msg.variableHeader().packetId() != -1) {
                     ack(channel, msg.variableHeader().packetId());
                 }

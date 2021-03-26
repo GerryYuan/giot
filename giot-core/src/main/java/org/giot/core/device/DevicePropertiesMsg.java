@@ -16,14 +16,22 @@
  *
  */
 
-package org.giot.core.network;
+package org.giot.core.device;
+
+import java.util.Map;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.giot.core.network.Source;
 
 /**
- * @author Created by gerry
- * @date 2021-03-18-9:56 PM
+ * @author yuanguohua on 2021/3/26 11:11
  */
-public enum MsgVersion {
-    v1,
-    ;
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class DevicePropertiesMsg extends Source {
+
+    private String deviceId;
+
+    private Map<String, Object> properties;
 
 }

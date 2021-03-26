@@ -16,14 +16,18 @@
  *
  */
 
-package org.giot.core.network;
+package org.giot.core.device.payload;
+
+import org.giot.core.device.DeviceContext;
+import org.giot.core.device.DeviceHeader;
+import org.giot.core.network.Source;
 
 /**
- * @author Created by gerry
- * @date 2021-03-18-9:56 PM
+ * @author yuanguohua on 2021/3/26 11:08
  */
-public enum MsgVersion {
-    v1,
-    ;
+public interface PayloadConverter {
 
+    boolean supports(DeviceHeader header);
+
+    <T extends Source> T converter(DeviceContext context);
 }

@@ -16,14 +16,18 @@
  *
  */
 
-package org.giot.core.network;
+package org.giot.network.mqtt.exception;
 
 /**
- * @author Created by gerry
- * @date 2021-03-18-9:56 PM
+ * @author yuanguohua on 2021/3/26 14:29
  */
-public enum MsgVersion {
-    v1,
-    ;
+public class MqttMsgConverterException extends Exception {
+    public MqttMsgConverterException(String message) {
+        super(message);
+    }
+
+    public MqttMsgConverterException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

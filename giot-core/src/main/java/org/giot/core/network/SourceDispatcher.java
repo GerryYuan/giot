@@ -18,6 +18,7 @@
 
 package org.giot.core.network;
 
+import org.giot.core.device.DeviceContext;
 import org.giot.core.service.Service;
 
 /**
@@ -25,6 +26,6 @@ import org.giot.core.service.Service;
  */
 public interface SourceDispatcher extends Service {
 
-    <T extends Source> void dispatch(T source);
+    void dispatch(DeviceContext context) throws Exception;
 
 }

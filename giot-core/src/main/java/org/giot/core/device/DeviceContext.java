@@ -18,37 +18,20 @@
 
 package org.giot.core.device;
 
-import java.util.Map;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.giot.core.network.MsgVersion;
-import org.giot.core.network.Source;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
- * @author yuanguohua on 2021/3/23 13:45
+ * @author yuanguohua on 2021/3/26 12:10
  */
-@Data
-@EqualsAndHashCode
-public class DeviceMsg extends Source {
+@Getter
+@Builder
+public class DeviceContext {
 
-    private DeviceHeaderMsg header;
+    private DeviceHeader header;
+
+    private String payload;
 
     private String deviceId;
-
-    private MsgVersion version = MsgVersion.V1;
-
-    private Map<String, Object> properties;
-
-    private Map<String, Object> events;
-
-    @Override
-    public String name() {
-        return header.getTopic();
-    }
-
-    @Override
-    public String version() {
-        return version.name();
-    }
 
 }

@@ -32,7 +32,7 @@ public class TopicMappings implements URLMappings {
 
     @Override
     public MsgVersion version() {
-        return MsgVersion.V1;
+        return MsgVersion.v1;
     }
 
     @Override

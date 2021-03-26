@@ -21,6 +21,7 @@ package org.giot.core.device;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.giot.core.network.MsgVersion;
 
 /**
  * @author yuanguohua on 2021/3/23 17:28
@@ -28,11 +29,14 @@ import lombok.ToString;
 @ToString
 @Getter
 @Builder
-public class DeviceHeaderMsg {
+public class DeviceHeader {
 
     private String topic;
 
     private int msgId;
 
     private long time;
+
+    private MsgVersion version;
+
 }

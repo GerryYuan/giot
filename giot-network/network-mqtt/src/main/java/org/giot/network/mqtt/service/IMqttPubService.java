@@ -29,7 +29,7 @@ import org.giot.network.mqtt.exception.MqttStartException;
  */
 public interface IMqttPubService extends Service {
 
-    void pub(Channel channel, MqttPublishMessage msg) throws MqttStartException;
+    void pub(Channel channel, MqttPublishMessage msg) throws Exception;
 
     void ack(Channel channel, int msgId) throws MqttStartException;
 

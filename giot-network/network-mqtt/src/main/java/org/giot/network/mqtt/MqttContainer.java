@@ -18,11 +18,15 @@
 
 package org.giot.network.mqtt;
 
+import com.google.common.collect.Lists;
+import java.util.List;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.device.payload.PayloadConverter;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.exception.ContainerStopException;
 import org.giot.core.network.NetworkModule;
+import org.giot.core.network.ProcessorAdapter;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.URLMappings;
 import org.giot.network.mqtt.config.MqttConfig;
@@ -71,14 +75,16 @@ public class MqttContainer extends AbstractContainer {
 
     @Override
     public void prepare() {
-        super.register(URLMappings.class, new TopicMappings());
         super.register(MqttClientHandler.class, new MqttClientHandler(getContainerManager()));
         super.register(IMqttOpsService.class, new MqttOpsService(config, getContainerManager()));
         super.register(IMqttConnectService.class, new MqttConnectService(config, getContainerManager()));
         super.register(IMqttPingService.class, new MqttPingService());
         super.register(IMqttSubService.class, new MqttSubService());
         super.register(IMqttPubService.class, new MqttPubService(getContainerManager()));
-        super.register(SourceDispatcher.class, new MqttDispatcher(new MqttProcessorAdapter(getContainerManager())));
+        URLMappings urlMappings = new TopicMappings();
+        super.register(URLMappings.class, urlMappings);
+        ProcessorAdapter processorAdapter = new MqttProcessorAdapter(getContainerManager(), urlMappings);
+        super.register(SourceDispatcher.class, new MqttDispatcher(getContainerManager(), processorAdapter));
     }
 
     @Override

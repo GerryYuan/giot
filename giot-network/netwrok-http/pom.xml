@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http</artifactId>
+            <version>4.1.32.Final</version>
+        </dependency>
+        <dependency>
             <groupId>org.giot</groupId>
             <artifactId>giot-core</artifactId>
             <version>${project.version}</version>

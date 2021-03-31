@@ -23,6 +23,8 @@ import org.giot.core.container.ContainerConfig;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.NetworkModule;
 import org.giot.network.http.config.HttpConfig;
+import org.giot.network.http.service.HttpOpsService;
+import org.giot.network.http.service.IHttpOpsService;
 
 /**
  * @author Created by gerry
@@ -52,12 +54,17 @@ public class HttpContainer extends AbstractContainer {
 
     @Override
     public void prepare() {
-
+        super.register(IHttpOpsService.class, new HttpOpsService(config));
     }
 
     @Override
     public void start() throws ContainerStartException {
-
+        IHttpOpsService httpOpsService = find(NetworkModule.NAME, HttpContainer.NAME).getService(IHttpOpsService.class);
+        try {
+            httpOpsService.start();
+        } catch (InterruptedException e) {
+            throw new ContainerStartException(e.getMessage(), e);
+        }
     }
 
     @Override

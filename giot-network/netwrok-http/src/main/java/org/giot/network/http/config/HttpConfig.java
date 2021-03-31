@@ -34,4 +34,7 @@ public class HttpConfig extends ContainerConfig {
 
     private int port;
 
+    private int bossThreadCounts = 1;
+
+    private int maxContentLength = 1024 * 1024;
 }

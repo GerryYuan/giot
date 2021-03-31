@@ -23,6 +23,7 @@ network:
     clientId: test-clientId
   http:
     port: 18080
+    bossThreadCounts: 1
 storage:
   which: postgresql,elasticsearch7,mysql
   postgresql:

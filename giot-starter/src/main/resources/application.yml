@@ -8,20 +8,21 @@ core:
   default:
     metaDataStorage: mysql
     deviceDataStorage: postgresql
-    c: 1.6
     ## 物模型、传输协议（gateway）插件、消息协议插件
 device:
   which: default
   default:
   ##
 network:
-  which: mqtt
+  which: mqtt,http
   mqtt:
     host: localhost
     port: 1883
     userName: admin
     password: public
     clientId: test-clientId
+  http:
+    port: 18080
 storage:
   which: postgresql,elasticsearch7,mysql
   postgresql:

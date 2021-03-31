@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>network-mqtt</module>
+        <module>netwrok-http</module>
     </modules>
 
     <dependencies>

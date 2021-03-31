@@ -47,7 +47,11 @@
             <artifactId>network-mqtt</artifactId>
             <version>${project.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.giot</groupId>
+            <artifactId>netwrok-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 

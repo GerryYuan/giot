@@ -68,14 +68,15 @@ public class MqttPubService implements IMqttPubService {
         switch (msg.fixedHeader().qosLevel()) {
             case AT_MOST_ONCE:
                 sourceDispatcher.dispatch(context);
+                msg.release();
                 break;
             case AT_LEAST_ONCE:
                 sourceDispatcher.dispatch(context);
                 if (msg.variableHeader().packetId() != -1) {
                     ack(channel, msg.variableHeader().packetId());
                 }
+                msg.release();
                 break;
-
             case EXACTLY_ONCE:
                 if (msg.variableHeader().packetId() != -1) {
                     pubrec(channel, MqttMessageIdVariableHeader.from(msg.variableHeader().packetId()));

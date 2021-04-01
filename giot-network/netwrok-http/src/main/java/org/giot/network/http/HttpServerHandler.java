@@ -18,6 +18,7 @@
 
 package org.giot.network.http;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -29,14 +30,17 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.device.DeviceContext;
+import org.giot.core.device.DeviceHeader;
+import org.giot.core.network.MsgVersion;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
@@ -55,31 +59,22 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
     protected void channelRead0(final ChannelHandlerContext ctx, final HttpObject msg) throws Exception {
         if (msg instanceof HttpRequest) {
             HttpRequest request = (HttpRequest) msg;
-            HttpHeaders headers = request.headers();
-            String uri = request.uri();
-            log.info("http uri: " + uri);
-            //            if (uri.equals(FAVICON_ICO)) {
-            //                return;
-            //            }
             HttpMethod method = request.method();
-            if (method.equals(HttpMethod.GET)) {
-                QueryStringDecoder queryDecoder = new QueryStringDecoder(uri, StandardCharsets.UTF_8);
-                Map<String, List<String>> uriAttributes = queryDecoder.parameters();
-                //此处仅打印请求参数（你可以根据业务需求自定义处理）
-                for (Map.Entry<String, List<String>> attr : uriAttributes.entrySet()) {
-                    for (String attrVal : attr.getValue()) {
-                        log.info(attr.getKey() + "=" + attrVal);
-                    }
-                }
-            } else if (method.equals(HttpMethod.POST)) {
-                //POST请求,由于你需要从消息体中获取数据,因此有必要把msg转换成FullHttpRequest
-                FullHttpRequest fullRequest = (FullHttpRequest) msg;
-                //根据不同的Content_Type处理body数据
-                //                dealWithContentType();
+            HttpHeaders headers = request.headers();
+            if (!method.equals(HttpMethod.POST)) {
+                ctx.writeAndFlush(
+                    response(HttpResponseStatus.METHOD_NOT_ALLOWED, null, headers, HttpUtil.isKeepAlive(request)));
+                return;
             }
 
-            //            JSONSerializer jsonSerializer = new JSONSerializer();
-            //            byte[] content = jsonSerializer.serialize(user);
+            FullHttpRequest fullRequest = (FullHttpRequest) msg;
+            DeviceContext context = DeviceContext.builder()
+                                                 .header(DeviceHeader.builder()
+                                                                     .topic(request.uri())
+                                                                     .version(MsgVersion.v1)
+                                                                     .time(System.currentTimeMillis()).build())
+                                                 .payload(fullRequest.content().toString(Charset.defaultCharset()))
+                                                 .build();
 
             FullHttpResponse response = new DefaultFullHttpResponse(
                 HTTP_1_1, OK, Unpooled.wrappedBuffer("content".getBytes(
@@ -95,5 +90,21 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
                 ctx.write(response);
             }
         }
+    }
+
+    private FullHttpResponse response(HttpResponseStatus status,
+                                      ByteBuf content,
+                                      HttpHeaders headers,
+                                      boolean isKeeplive) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, status, content);
+        if (content != null) {
+            response.headers().add(headers);
+            response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
+        }
+        if (isKeeplive) {
+            response.headers().set(CONNECTION, KEEP_ALIVE);
+        } else {
+        }
+        return response;
     }
 }

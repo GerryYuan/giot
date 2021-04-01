@@ -22,8 +22,14 @@ import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.NetworkModule;
+import org.giot.core.network.ProcessorAdapter;
+import org.giot.core.network.SourceDispatcher;
+import org.giot.core.network.URLMappings;
 import org.giot.network.http.config.HttpConfig;
+import org.giot.network.http.dispatcher.HttpDispatcher;
+import org.giot.network.http.dispatcher.HttpProcessorAdapter;
 import org.giot.network.http.service.HttpOpsService;
+import org.giot.network.http.service.HttpURLMappings;
 import org.giot.network.http.service.IHttpOpsService;
 
 /**
@@ -54,7 +60,14 @@ public class HttpContainer extends AbstractContainer {
 
     @Override
     public void prepare() {
-        super.register(IHttpOpsService.class, new HttpOpsService(config));
+        super.register(IHttpOpsService.class, new HttpOpsService(getContainerManager(), config));
+        URLMappings urlMappings = new HttpURLMappings();
+        super.register(URLMappings.class, urlMappings);
+        super.register(
+            SourceDispatcher.class, new HttpDispatcher(
+                getContainerManager(),
+                new HttpProcessorAdapter(getContainerManager(), urlMappings)
+            ));
     }
 
     @Override

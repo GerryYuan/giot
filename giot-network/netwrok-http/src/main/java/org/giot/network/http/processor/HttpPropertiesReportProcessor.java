@@ -16,18 +16,22 @@
  *
  */
 
-package org.giot.network.mqtt.exception;
+package org.giot.network.http.processor;
+
+import org.giot.core.device.DevicePropertiesMsg;
+import org.giot.core.network.MsgVersion;
+import org.giot.core.network.RouteUrl;
+import org.giot.core.network.annotation.Processor;
+import org.giot.network.http.dispatcher.HttpProcessor;
 
 /**
- * @author yuanguohua on 2021/3/26 14:29
+ * @author yuanguohua on 2021/3/22 15:46
  */
-public class MqttMsgConverterException extends Exception {
-    public MqttMsgConverterException(String message) {
-        super(message);
-    }
+@Processor(route = RouteUrl.REPORT_PROPERTIES, version = MsgVersion.v1)
+public class HttpPropertiesReportProcessor implements HttpProcessor<DevicePropertiesMsg> {
 
-    public MqttMsgConverterException(String message, Throwable cause) {
-        super(message, cause);
+    @Override
+    public void invoke(final DevicePropertiesMsg deviceMsg) {
+        System.out.println(deviceMsg);
     }
-
 }

@@ -24,6 +24,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.HttpServerExpectContinueHandler;
+import org.giot.core.container.ContainerManager;
 import org.giot.network.http.config.HttpConfig;
 
 /**
@@ -34,7 +35,10 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
 
     private HttpConfig config;
 
-    public HttpServerInitializer(final HttpConfig config) {
+    private ContainerManager containerManager;
+
+    public HttpServerInitializer(final ContainerManager containerManager, final HttpConfig config) {
+        this.containerManager = containerManager;
         this.config = config;
     }
 
@@ -43,6 +47,6 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
         ch.pipeline()
           .addLast(new HttpServerCodec())
           .addLast(new HttpObjectAggregator(config.getMaxContentLength()))
-          .addLast(new HttpServerExpectContinueHandler()).addLast(new HttpServerHandler());
+          .addLast(new HttpServerExpectContinueHandler()).addLast(new HttpServerHandler(containerManager));
     }
 }

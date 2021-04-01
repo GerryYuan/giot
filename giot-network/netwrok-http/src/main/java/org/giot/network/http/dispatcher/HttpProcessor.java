@@ -16,26 +16,13 @@
  *
  */
 
-package org.giot.core.network;
+package org.giot.network.http.dispatcher;
 
-import java.util.List;
-import org.giot.core.device.DeviceHeader;
-import org.giot.core.device.payload.PayloadConverter;
+import org.giot.core.network.Source;
+import org.giot.core.network.SourceProcessor;
 
 /**
- * @author yuanguohua on 2021/3/22 17:18
+ * @author yuanguohua on 2021/3/22 19:50
  */
-public abstract class AbstractDispatcher implements SourceDispatcher {
-
-    public PayloadConverter getPayloadConvert(DeviceHeader header) throws MsgConverterException {
-        for (PayloadConverter converter : converters()) {
-            if (converter.supports(header)) {
-                return converter;
-            }
-        }
-        throw new MsgConverterException(
-            "No adapter for Converter [" + header + "]: The device msg needs to include a PayloadConverter that supports this converter");
-    }
-
-    public abstract List<PayloadConverter> converters();
+public interface HttpProcessor<S extends Source> extends SourceProcessor<S> {
 }

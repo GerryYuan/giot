@@ -16,21 +16,18 @@
  *
  */
 
-package org.giot.network.mqtt.dispatcher;
-
-import org.giot.core.device.DevicePropertiesMsg;
-import org.giot.core.network.MsgVersion;
-import org.giot.core.network.RouteUrl;
-import org.giot.core.network.annotation.Processor;
+package org.giot.core.network;
 
 /**
- * @author yuanguohua on 2021/3/22 15:46
+ * @author yuanguohua on 2021/3/26 14:29
  */
-@Processor(route = RouteUrl.REPORT_PROPERTIES, version = MsgVersion.v1)
-public class MqttPropertiesReportProcessor implements MqttProcessor<DevicePropertiesMsg> {
-
-    @Override
-    public void invoke(final DevicePropertiesMsg deviceMsg) {
-        System.out.println(deviceMsg);
+public class MsgConverterException extends Exception {
+    public MsgConverterException(String message) {
+        super(message);
     }
+
+    public MsgConverterException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

@@ -20,7 +20,6 @@ package org.giot.network.http;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -32,20 +31,20 @@ import io.netty.handler.codec.http.HttpObject;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
-import io.netty.handler.codec.http.QueryStringDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceContext;
 import org.giot.core.device.DeviceHeader;
 import org.giot.core.network.MsgVersion;
+import org.giot.core.network.NetworkModule;
+import org.giot.core.network.SourceDispatcher;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
-import static io.netty.handler.codec.http.HttpHeaders.Values.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpHeaderNames.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpResponseStatus.METHOD_NOT_ALLOWED;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
@@ -55,6 +54,14 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  */
 @Slf4j
 public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
+    private ContainerManager containerManager;
+
+    private SourceDispatcher sourceDispatcher;
+
+    public HttpServerHandler(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
+
     @Override
     protected void channelRead0(final ChannelHandlerContext ctx, final HttpObject msg) throws Exception {
         if (msg instanceof HttpRequest) {
@@ -62,11 +69,15 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
             HttpMethod method = request.method();
             HttpHeaders headers = request.headers();
             if (!method.equals(HttpMethod.POST)) {
-                ctx.writeAndFlush(
-                    response(HttpResponseStatus.METHOD_NOT_ALLOWED, null, headers, HttpUtil.isKeepAlive(request)));
+                ctx.writeAndFlush(response(METHOD_NOT_ALLOWED, METHOD_NOT_ALLOWED.toString(), headers,
+                                           HttpUtil.isKeepAlive(request)
+                ));
                 return;
             }
-
+            if (sourceDispatcher == null) {
+                this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, HttpContainer.NAME)
+                                                             .getService(SourceDispatcher.class);
+            }
             FullHttpRequest fullRequest = (FullHttpRequest) msg;
             DeviceContext context = DeviceContext.builder()
                                                  .header(DeviceHeader.builder()
@@ -75,35 +86,28 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
                                                                      .time(System.currentTimeMillis()).build())
                                                  .payload(fullRequest.content().toString(Charset.defaultCharset()))
                                                  .build();
-
-            FullHttpResponse response = new DefaultFullHttpResponse(
-                HTTP_1_1, OK, Unpooled.wrappedBuffer("content".getBytes(
-                StandardCharsets.UTF_8)));
-            response.headers().set(CONTENT_TYPE, "text/plain");
-            response.headers().setInt(CONTENT_LENGTH, response.content().readableBytes());
-
-            boolean keepAlive = HttpUtil.isKeepAlive(request);
-            if (!keepAlive) {
-                ctx.write(response).addListener(ChannelFutureListener.CLOSE);
-            } else {
-                response.headers().set(CONNECTION, KEEP_ALIVE);
-                ctx.write(response);
-            }
+            sourceDispatcher.dispatch(context);
+            ctx.writeAndFlush(response(OK, OK.toString(), headers, HttpUtil.isKeepAlive(request)));
         }
     }
 
+    @Override
+    public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+        log.error(cause.toString(), cause);
+        ctx.close();
+    }
+
     private FullHttpResponse response(HttpResponseStatus status,
-                                      ByteBuf content,
+                                      String content,
                                       HttpHeaders headers,
                                       boolean isKeeplive) {
-        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, status, content);
-        if (content != null) {
-            response.headers().add(headers);
-            response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
-        }
+        FullHttpResponse response = new DefaultFullHttpResponse(
+            HTTP_1_1, status, Unpooled.wrappedBuffer(content.getBytes(
+            StandardCharsets.UTF_8)));
+        response.headers().add(headers);
+        response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
         if (isKeeplive) {
             response.headers().set(CONNECTION, KEEP_ALIVE);
-        } else {
         }
         return response;
     }

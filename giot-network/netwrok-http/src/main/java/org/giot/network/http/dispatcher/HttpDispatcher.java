@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.network.mqtt.dispatcher;
+package org.giot.network.http.dispatcher;
 
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -26,31 +26,32 @@ import org.giot.core.device.DeviceHeader;
 import org.giot.core.device.payload.PayloadConverter;
 import org.giot.core.device.serializer.GsonSerializer;
 import org.giot.core.network.AbstractDispatcher;
+import org.giot.core.network.MsgConverterException;
 import org.giot.core.network.ProcessorAdapter;
 import org.giot.core.network.SourceProcessor;
-import org.giot.core.network.MsgConverterException;
 
 /**
- * @author yuanguohua on 2021/3/22 13:04
+ * @author Created by gerry
+ * @date 2021-04-01-21:35
  */
-public class MqttDispatcher extends AbstractDispatcher {
-
-    private ProcessorAdapter processorAdapter;
+public class HttpDispatcher extends AbstractDispatcher {
 
     private List<PayloadConverter> converters;
 
-    public MqttDispatcher(final ContainerManager containerManager, final ProcessorAdapter processorAdapter) {
+    private ProcessorAdapter processorAdapter;
+
+    public HttpDispatcher(final ContainerManager containerManager, final ProcessorAdapter processorAdapter) {
+        this.converters = Lists.newArrayList(new HttpPropertiesMsgConverter(containerManager, new GsonSerializer()));
         this.processorAdapter = processorAdapter;
-        this.converters = Lists.newArrayList(new MqttPropertiesMsgConverter(containerManager, new GsonSerializer()));
     }
 
     @Override
-    public void dispatch(final DeviceContext context) throws MsgConverterException {
+    public void dispatch(final DeviceContext context) throws Exception {
+        //header topic is http uri(/v1/report-properties)
         PayloadConverter converter = getPayloadConvert(context.getHeader());
         SourceProcessor processor = processorAdapter.supports(context);
         processor.invoke(converter.converter(context));
     }
-
 
     @Override
     public List<PayloadConverter> converters() {

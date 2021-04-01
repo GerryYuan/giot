@@ -83,8 +83,11 @@ public class MqttContainer extends AbstractContainer {
         super.register(IMqttPubService.class, new MqttPubService(getContainerManager()));
         URLMappings urlMappings = new TopicMappings();
         super.register(URLMappings.class, urlMappings);
-        ProcessorAdapter processorAdapter = new MqttProcessorAdapter(getContainerManager(), urlMappings);
-        super.register(SourceDispatcher.class, new MqttDispatcher(getContainerManager(), processorAdapter));
+        super.register(
+            SourceDispatcher.class, new MqttDispatcher(
+                getContainerManager(),
+                new MqttProcessorAdapter(getContainerManager(), urlMappings)
+            ));
     }
 
     @Override

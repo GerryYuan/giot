@@ -27,6 +27,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.container.ContainerManager;
 import org.giot.network.http.HttpServerInitializer;
 import org.giot.network.http.config.HttpConfig;
 
@@ -45,7 +46,10 @@ public class HttpOpsService implements IHttpOpsService {
 
     private EventLoopGroup workerGroup;
 
-    public HttpOpsService(final HttpConfig config) {
+    private ContainerManager containerManager;
+
+    public HttpOpsService(final ContainerManager containerManager, final HttpConfig config) {
+        this.containerManager = containerManager;
         this.config = config;
     }
 
@@ -59,7 +63,7 @@ public class HttpOpsService implements IHttpOpsService {
                                                  .group(bossGroup, workerGroup)
                                                  .channel(NioServerSocketChannel.class)
                                                  .handler(new LoggingHandler(LogLevel.INFO))
-                                                 .childHandler(new HttpServerInitializer(config));
+                                                 .childHandler(new HttpServerInitializer(containerManager, config));
 
         this.channel = b.bind(config.getPort()).sync().channel();
         log.info("Netty http server listening on port " + config.getPort());

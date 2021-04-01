@@ -16,26 +16,22 @@
  *
  */
 
-package org.giot.core.network;
+package org.giot.network.mqtt.processor;
 
-import java.util.List;
-import org.giot.core.device.DeviceHeader;
-import org.giot.core.device.payload.PayloadConverter;
+import org.giot.core.device.DevicePropertiesMsg;
+import org.giot.core.network.MsgVersion;
+import org.giot.core.network.RouteUrl;
+import org.giot.core.network.annotation.Processor;
+import org.giot.network.mqtt.dispatcher.MqttProcessor;
 
 /**
- * @author yuanguohua on 2021/3/22 17:18
+ * @author yuanguohua on 2021/3/22 15:46
  */
-public abstract class AbstractDispatcher implements SourceDispatcher {
+@Processor(route = RouteUrl.REPORT_PROPERTIES, version = MsgVersion.v1)
+public class MqttPropertiesReportProcessor implements MqttProcessor<DevicePropertiesMsg> {
 
-    public PayloadConverter getPayloadConvert(DeviceHeader header) throws MsgConverterException {
-        for (PayloadConverter converter : converters()) {
-            if (converter.supports(header)) {
-                return converter;
-            }
-        }
-        throw new MsgConverterException(
-            "No adapter for Converter [" + header + "]: The device msg needs to include a PayloadConverter that supports this converter");
+    @Override
+    public void invoke(final DevicePropertiesMsg deviceMsg) {
+        System.out.println(deviceMsg);
     }
-
-    public abstract List<PayloadConverter> converters();
 }

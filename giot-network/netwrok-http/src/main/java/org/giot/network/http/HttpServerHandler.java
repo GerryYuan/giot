@@ -42,6 +42,7 @@ import org.giot.core.network.SourceDispatcher;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
 import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR;
 import static io.netty.handler.codec.http.HttpResponseStatus.METHOD_NOT_ALLOWED;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -67,9 +68,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
             HttpMethod method = request.method();
             HttpHeaders headers = request.headers();
             if (!method.equals(HttpMethod.POST)) {
-                ctx.writeAndFlush(response(METHOD_NOT_ALLOWED, headers,
-                                           HttpUtil.isKeepAlive(request)
-                ));
+                ctx.writeAndFlush(response(METHOD_NOT_ALLOWED, headers, HttpUtil.isKeepAlive(request)));
                 return;
             }
             if (sourceDispatcher == null) {
@@ -83,8 +82,14 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
                                                                      .time(System.currentTimeMillis()).build())
                                                  .payload(request.content().toString(Charset.defaultCharset()))
                                                  .build();
-            sourceDispatcher.dispatch(context);
-            ctx.writeAndFlush(response(OK, headers, HttpUtil.isKeepAlive(request)));
+            try {
+                sourceDispatcher.dispatch(context);
+                ctx.writeAndFlush(response(OK, headers, HttpUtil.isKeepAlive(request)));
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                ctx.writeAndFlush(response(INTERNAL_SERVER_ERROR, headers, HttpUtil.isKeepAlive(request)));
+            }
+
         }
     }
 

@@ -40,7 +40,7 @@ public class GiotStarter {
         ResourceLoader resourceLoader = new ModuleResourceLoader("application.yml");
         ModuleConfiguration moduleConfiguration = resourceLoader.load();
         ModuleManager moduleManager = new ModuleManager();
-        moduleManager.init(moduleConfiguration);
+        moduleManager.start(moduleConfiguration);
         log.info("GIoT server start success, cost time [{}] ms ", sp.elapsed(TimeUnit.MILLISECONDS));
 
     }

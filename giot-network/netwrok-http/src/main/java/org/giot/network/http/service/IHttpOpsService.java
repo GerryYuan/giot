@@ -7,7 +7,7 @@ import org.giot.core.service.Service;
  * @date 2021-03-31-21:31
  */
 public interface IHttpOpsService extends Service {
-    void start() throws InterruptedException;
+    void start();
 
-    void stop() throws InterruptedException;
+    void shutdown();
 }

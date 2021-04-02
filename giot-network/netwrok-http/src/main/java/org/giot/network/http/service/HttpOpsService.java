@@ -24,8 +24,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.network.http.HttpServerInitializer;
@@ -54,29 +52,25 @@ public class HttpOpsService implements IHttpOpsService {
     }
 
     @Override
-    public void start() throws InterruptedException {
-        bossGroup = new NioEventLoopGroup(config.getBossThreadCounts());
-        workerGroup = new NioEventLoopGroup();
+    public void start() {
+        bossGroup = new NioEventLoopGroup();
+        workerGroup = new NioEventLoopGroup(config.getWorkThreads());
         ServerBootstrap b = new ServerBootstrap().option(ChannelOption.SO_BACKLOG, 1024)
                                                  .childOption(ChannelOption.TCP_NODELAY, true)
                                                  .childOption(ChannelOption.SO_KEEPALIVE, true)
                                                  .group(bossGroup, workerGroup)
                                                  .channel(NioServerSocketChannel.class)
-                                                 .handler(new LoggingHandler(LogLevel.INFO))
                                                  .childHandler(new HttpServerInitializer(containerManager, config));
 
-        this.channel = b.bind(config.getPort()).sync().channel();
+        this.channel = b.bind(config.getPort()).channel();
         log.info("Netty http server listening on port " + config.getPort());
     }
 
     @Override
-    public void stop() throws InterruptedException {
-        try {
-            channel.closeFuture().sync();
-        } finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-        }
+    public void shutdown() {
+        channel.close();
+        bossGroup.shutdownGracefully();
+        workerGroup.shutdownGracefully();
         log.info("HTTP Channel closed!");
     }
 }

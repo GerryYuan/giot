@@ -13,10 +13,13 @@ GIoT
 public class GiotStarter {
 
     public static void main(String[] args) throws FileNotFoundException, ContainerConfigException, ContainerStartException {
+        Stopwatch sp = Stopwatch.createStarted();
         ResourceLoader resourceLoader = new ModuleResourceLoader("application.yml");
         ModuleConfiguration moduleConfiguration = resourceLoader.load();
         ModuleManager moduleManager = new ModuleManager();
-        moduleManager.init(moduleConfiguration);
+        moduleManager.start(moduleConfiguration);
+        log.info("GIoT server start success, cost time [{}] ms ", sp.elapsed(TimeUnit.MILLISECONDS));
+
     }
 }
 ```

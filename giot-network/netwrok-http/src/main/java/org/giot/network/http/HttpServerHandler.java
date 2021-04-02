@@ -18,7 +18,6 @@
 
 package org.giot.network.http;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -28,7 +27,6 @@ import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObject;
-import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
 import java.nio.charset.Charset;
@@ -43,7 +41,7 @@ import org.giot.core.network.SourceDispatcher;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
-import static io.netty.handler.codec.http.HttpHeaderNames.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
 import static io.netty.handler.codec.http.HttpResponseStatus.METHOD_NOT_ALLOWED;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -64,12 +62,12 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     @Override
     protected void channelRead0(final ChannelHandlerContext ctx, final HttpObject msg) throws Exception {
-        if (msg instanceof HttpRequest) {
-            HttpRequest request = (HttpRequest) msg;
+        if (msg instanceof FullHttpRequest) {
+            FullHttpRequest request = (FullHttpRequest) msg;
             HttpMethod method = request.method();
             HttpHeaders headers = request.headers();
             if (!method.equals(HttpMethod.POST)) {
-                ctx.writeAndFlush(response(METHOD_NOT_ALLOWED, METHOD_NOT_ALLOWED.toString(), headers,
+                ctx.writeAndFlush(response(METHOD_NOT_ALLOWED, headers,
                                            HttpUtil.isKeepAlive(request)
                 ));
                 return;
@@ -78,16 +76,15 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
                 this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, HttpContainer.NAME)
                                                              .getService(SourceDispatcher.class);
             }
-            FullHttpRequest fullRequest = (FullHttpRequest) msg;
             DeviceContext context = DeviceContext.builder()
                                                  .header(DeviceHeader.builder()
                                                                      .topic(request.uri())
                                                                      .version(MsgVersion.v1)
                                                                      .time(System.currentTimeMillis()).build())
-                                                 .payload(fullRequest.content().toString(Charset.defaultCharset()))
+                                                 .payload(request.content().toString(Charset.defaultCharset()))
                                                  .build();
             sourceDispatcher.dispatch(context);
-            ctx.writeAndFlush(response(OK, OK.toString(), headers, HttpUtil.isKeepAlive(request)));
+            ctx.writeAndFlush(response(OK, headers, HttpUtil.isKeepAlive(request)));
         }
     }
 
@@ -97,12 +94,9 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
         ctx.close();
     }
 
-    private FullHttpResponse response(HttpResponseStatus status,
-                                      String content,
-                                      HttpHeaders headers,
-                                      boolean isKeeplive) {
+    private FullHttpResponse response(HttpResponseStatus status, HttpHeaders headers, boolean isKeeplive) {
         FullHttpResponse response = new DefaultFullHttpResponse(
-            HTTP_1_1, status, Unpooled.wrappedBuffer(content.getBytes(
+            HTTP_1_1, status, Unpooled.wrappedBuffer(status.toString().getBytes(
             StandardCharsets.UTF_8)));
         response.headers().add(headers);
         response.headers().set(CONTENT_LENGTH, response.content().readableBytes());

@@ -56,7 +56,7 @@ public class MqttOpsService implements IMqttOpsService {
     private EventLoopGroup group;
 
     @Override
-    public void start() throws InterruptedException {
+    public void start() {
         group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
         MqttClientHandler handler = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
@@ -82,17 +82,9 @@ public class MqttOpsService implements IMqttOpsService {
     }
 
     @Override
-    public Channel channel() {
-        return this.channel;
-    }
-
-    @Override
-    public void shutdown() throws InterruptedException {
-        try {
-            channel.close().sync();
-        } finally {
-            group.shutdownGracefully();
-        }
+    public void shutdown() {
+        channel.close();
+        group.shutdownGracefully();
         log.info("MQTT Channel closed!");
     }
 }

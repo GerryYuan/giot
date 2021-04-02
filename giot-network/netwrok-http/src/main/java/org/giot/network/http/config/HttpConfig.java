@@ -34,7 +34,7 @@ public class HttpConfig extends ContainerConfig {
 
     private int port;
 
-    private int bossThreadCounts = Runtime.getRuntime().availableProcessors();
+    private int workThreads = Runtime.getRuntime().availableProcessors();
 
     private int maxContentLength = 1024 * 1024;
 }

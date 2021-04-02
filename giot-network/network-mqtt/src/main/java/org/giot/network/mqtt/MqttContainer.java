@@ -18,15 +18,10 @@
 
 package org.giot.network.mqtt;
 
-import com.google.common.collect.Lists;
-import java.util.List;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
-import org.giot.core.device.payload.PayloadConverter;
 import org.giot.core.exception.ContainerStartException;
-import org.giot.core.exception.ContainerStopException;
 import org.giot.core.network.NetworkModule;
-import org.giot.core.network.ProcessorAdapter;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.URLMappings;
 import org.giot.network.mqtt.config.MqttConfig;
@@ -92,12 +87,8 @@ public class MqttContainer extends AbstractContainer {
 
     @Override
     public void start() throws ContainerStartException {
-        try {
-            this.mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
-            this.mqttOpsService.start();
-        } catch (InterruptedException e) {
-            throw new ContainerStartException("Container [" + name() + "] start failure.", e);
-        }
+        this.mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
+        this.mqttOpsService.start();
     }
 
     @Override
@@ -105,11 +96,7 @@ public class MqttContainer extends AbstractContainer {
     }
 
     @Override
-    public void stop() throws ContainerStopException {
-        try {
-            this.mqttOpsService.shutdown();
-        } catch (InterruptedException e) {
-            throw new ContainerStopException("Container [" + name() + "] stop failure.", e);
-        }
+    public void stop() {
+        this.mqttOpsService.shutdown();
     }
 }

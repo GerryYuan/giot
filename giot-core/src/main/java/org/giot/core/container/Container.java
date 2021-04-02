@@ -1,7 +1,6 @@
 package org.giot.core.container;
 
 import org.giot.core.exception.ContainerStartException;
-import org.giot.core.exception.ContainerStopException;
 
 /**
  * 容器，提供生命周期的管理：准备、启动、后置等
@@ -31,5 +30,5 @@ public interface Container {
     /**
      * 停止容器
      */
-    void stop() throws ContainerStopException;
+    void stop();
 }

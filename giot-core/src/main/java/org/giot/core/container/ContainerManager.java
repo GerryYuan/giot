@@ -89,7 +89,7 @@ public class ContainerManager implements ContainerHandler {
         return container;
     }
 
-    public void init() throws ContainerConfigException, ContainerStartException {
+    public void load() throws ContainerConfigException, ContainerStartException {
         ServiceLoader<AbstractContainer> containerServiceLoader = ServiceLoader.load(AbstractContainer.class);
         for (AbstractContainer container : containerServiceLoader) {
             initialize(container);
@@ -101,6 +101,7 @@ public class ContainerManager implements ContainerHandler {
         }
         start();
         after();
+        stop();
     }
 
     private void initialize(AbstractContainer container) {
@@ -146,6 +147,15 @@ public class ContainerManager implements ContainerHandler {
             log.info(
                 "The container [" + container.name() + "] provided by the module [" + container.module() + "] is initialized");
         }
+    }
+
+    private void stop() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            for (AbstractContainer container : containers.values()) {
+                container.stop();
+            }
+        }));
+
     }
 
     private void addContainer(AbstractContainer container) {

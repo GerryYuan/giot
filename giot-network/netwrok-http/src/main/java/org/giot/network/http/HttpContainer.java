@@ -22,7 +22,6 @@ import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.NetworkModule;
-import org.giot.core.network.ProcessorAdapter;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.URLMappings;
 import org.giot.network.http.config.HttpConfig;
@@ -41,6 +40,8 @@ public class HttpContainer extends AbstractContainer {
     public static final String NAME = "http";
 
     private HttpConfig config;
+
+    private IHttpOpsService httpOpsService;
 
     @Override
     public String name() {
@@ -72,16 +73,17 @@ public class HttpContainer extends AbstractContainer {
 
     @Override
     public void start() throws ContainerStartException {
-        IHttpOpsService httpOpsService = find(NetworkModule.NAME, HttpContainer.NAME).getService(IHttpOpsService.class);
-        try {
-            httpOpsService.start();
-        } catch (InterruptedException e) {
-            throw new ContainerStartException(e.getMessage(), e);
-        }
+        httpOpsService = find(NetworkModule.NAME, HttpContainer.NAME).getService(IHttpOpsService.class);
+        httpOpsService.start();
     }
 
     @Override
     public void after() {
 
+    }
+
+    @Override
+    public void stop() {
+        httpOpsService.shutdown();
     }
 }

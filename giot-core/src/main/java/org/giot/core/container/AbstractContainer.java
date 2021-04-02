@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.Setter;
-import org.giot.core.exception.ContainerStopException;
 import org.giot.core.exception.ServiceNotFoundException;
 import org.giot.core.service.Service;
 import org.giot.core.service.ServiceHandler;
@@ -55,7 +54,7 @@ public abstract class AbstractContainer implements Container, ServiceHandler {
     }
 
     @Override
-    public void stop() throws ContainerStopException {
+    public void stop() {
 
     }
 

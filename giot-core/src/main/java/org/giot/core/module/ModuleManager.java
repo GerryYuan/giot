@@ -19,7 +19,6 @@
 package org.giot.core.module;
 
 import java.util.Collection;
-import java.util.List;
 import lombok.Getter;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.exception.ContainerConfigException;
@@ -66,9 +65,9 @@ public class ModuleManager implements ModuleHandler {
         return containerDefinition;
     }
 
-    public void init(ModuleConfiguration moduleConfiguration) throws ContainerConfigException, ContainerStartException {
+    public void start(ModuleConfiguration moduleConfiguration) throws ContainerConfigException, ContainerStartException {
         this.moduleConfiguration = moduleConfiguration;
         this.containerManager = new ContainerManager(this);
-        containerManager.init();
+        containerManager.load();
     }
 }

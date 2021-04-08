@@ -18,17 +18,14 @@
 
 package org.giot.core.network.eventbus;
 
-import com.google.common.eventbus.EventBus;
-
 /**
- * @author yuanguohua on 2021/4/7 10:36
+ * @author Created by gerry
+ * @date 2021-04-08-21:14
  */
-public class BusDefination {
+public class DefaultEventBusFactory implements EventBusFactory {
 
-    private EventBus eventBus;
-
-    private String name;
-
-    private boolean isAsync;
-
+    @Override
+    public Bus openBus() {
+        return new GuavaBus();
+    }
 }

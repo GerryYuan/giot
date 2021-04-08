@@ -24,6 +24,6 @@ package org.giot.core.network.eventbus;
 public class EventBusFactoryBuilder {
 
     public EventBusFactory build() {
-        return null;
+        return new DefaultEventBusFactory();
     }
 }

@@ -18,11 +18,14 @@
 
 package org.giot.core.network.eventbus;
 
-import org.giot.core.network.annotation.Processor;
+import com.google.common.eventbus.EventBus;
 
 /**
- * @author yuanguohua on 2021/4/7 10:39
+ * @author Created by gerry
+ * @date 2021-04-08-21:16
  */
-public interface Bus {
-    <T> void post(T value);
+public class BusDefinition {
+    private EventBus eventBus;
+
+    private String name;
 }

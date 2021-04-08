@@ -18,11 +18,16 @@
 
 package org.giot.core.network.eventbus;
 
-import org.giot.core.network.annotation.Processor;
-
 /**
- * @author yuanguohua on 2021/4/7 10:39
+ * @author Created by gerry
+ * @date 2021-04-08-21:15
  */
-public interface Bus {
-    <T> void post(T value);
+public class GuavaBus implements Bus {
+
+    private BusDefinition busDefinition;
+
+    @Override
+    public <T> void post(final T value) {
+
+    }
 }

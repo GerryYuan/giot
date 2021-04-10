@@ -19,13 +19,11 @@
 package org.giot.core.network.eventbus;
 
 /**
- * @author Created by gerry
- * @date 2021-04-08-21:14
+ * @author yuanguohua on 2021/4/7 10:35
  */
-public class DefaultEventBusFactory implements EventBusFactory {
+public class BusFactoryBuilder {
 
-    @Override
-    public Bus openBus() {
-        return new GuavaBus();
+    public BusFactory build() {
+        return new DefaultBusFactory();
     }
 }

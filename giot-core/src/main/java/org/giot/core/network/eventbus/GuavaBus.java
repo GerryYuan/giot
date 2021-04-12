@@ -18,16 +18,22 @@
 
 package org.giot.core.network.eventbus;
 
+import com.google.common.eventbus.EventBus;
+
 /**
  * @author Created by gerry
  * @date 2021-04-08-21:15
  */
 public class GuavaBus implements Bus {
 
-    private BusDefinition busDefinition;
+    private EventBus eventBus;
+
+    public GuavaBus(final EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
 
     @Override
     public <T> void post(final T value) {
-
+        eventBus.post(value);
     }
 }

@@ -23,7 +23,7 @@ package org.giot.core.network.eventbus;
  */
 public class BusFactoryBuilder {
 
-    public BusFactory build() {
+    public static BusFactory build() {
         return new DefaultBusFactory();
     }
 }

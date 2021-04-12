@@ -18,6 +18,8 @@
 
 package org.giot.core.network.eventbus;
 
+import com.google.common.eventbus.EventBus;
+
 /**
  * @author Created by gerry
  * @date 2021-04-08-21:14
@@ -26,6 +28,11 @@ public class DefaultBusFactory implements BusFactory {
 
     @Override
     public Bus openBus() {
-        return new GuavaBus();
+        return new GuavaBus(new EventBus());
+    }
+
+    @Override
+    public Bus openBus(final String id) {
+        return new GuavaBus(new EventBus(id));
     }
 }

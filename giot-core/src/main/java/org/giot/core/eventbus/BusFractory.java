@@ -16,13 +16,17 @@
  *
  */
 
-package org.giot.core.network.eventbus;
+package org.giot.core.eventbus;
 
-import org.giot.core.network.annotation.Processor;
+import org.giot.core.service.Service;
 
 /**
- * @author yuanguohua on 2021/4/7 10:39
+ * Build EventBus By Factory
+ *
+ * @author yuanguohua on 2021/4/7 10:30
  */
-public interface Bus {
-    <T> void post(T value);
+public interface BusFractory extends Service {
+
+    Bus openBus();
+
 }

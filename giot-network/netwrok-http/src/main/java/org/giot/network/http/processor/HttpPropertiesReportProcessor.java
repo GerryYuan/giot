@@ -25,7 +25,7 @@ import org.giot.core.network.MsgVersion;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.RouteUrl;
 import org.giot.core.network.annotation.Processor;
-import org.giot.core.network.eventbus.BusFractory;
+import org.giot.core.eventbus.BusFractory;
 import org.giot.network.http.HttpContainer;
 import org.giot.network.http.dispatcher.HttpProcessor;
 

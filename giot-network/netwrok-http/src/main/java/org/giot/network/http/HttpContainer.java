@@ -24,7 +24,7 @@ import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.URLMappings;
-import org.giot.core.network.eventbus.BusFractory;
+import org.giot.core.eventbus.BusFractory;
 import org.giot.network.http.config.HttpConfig;
 import org.giot.network.http.dispatcher.HttpDispatcher;
 import org.giot.network.http.dispatcher.HttpProcessorAdapter;

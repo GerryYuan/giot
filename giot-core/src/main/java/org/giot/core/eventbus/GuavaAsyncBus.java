@@ -16,19 +16,18 @@
  *
  */
 
-package org.giot.core.network.eventbus;
+package org.giot.core.eventbus;
 
-import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.AsyncEventBus;
 
 /**
- * @author Created by gerry
- * @date 2021-04-08-21:15
+ * @author yuanguohua on 2021/4/13 17:03
  */
-public class GuavaBus implements Bus {
+public class GuavaAsyncBus implements Bus {
 
-    private EventBus eventBus;
+    private AsyncEventBus eventBus;
 
-    public GuavaBus(final EventBus eventBus) {
+    public GuavaAsyncBus(final AsyncEventBus eventBus) {
         this.eventBus = eventBus;
     }
 

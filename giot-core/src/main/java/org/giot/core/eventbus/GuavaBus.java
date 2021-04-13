@@ -16,17 +16,24 @@
  *
  */
 
-package org.giot.core.network.eventbus;
+package org.giot.core.eventbus;
 
-import org.giot.core.service.Service;
+import com.google.common.eventbus.EventBus;
 
 /**
- * Build EventBus By Factory
- *
- * @author yuanguohua on 2021/4/7 10:30
+ * @author Created by gerry
+ * @date 2021-04-08-21:15
  */
-public interface BusFractory extends Service {
+public class GuavaBus implements Bus {
 
-    Bus openBus();
+    private EventBus eventBus;
 
+    public GuavaBus(final EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+
+    @Override
+    public <T> void post(final T value) {
+        eventBus.post(value);
+    }
 }

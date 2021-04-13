@@ -16,26 +16,11 @@
  *
  */
 
-package org.giot.network.mqtt.eventbus;
-
-import com.google.common.eventbus.EventBus;
-import org.giot.core.eventbus.Bus;
-import org.giot.core.eventbus.BusFractory;
-import org.giot.core.eventbus.GuavaBus;
-import org.giot.network.mqtt.MqttContainer;
+package org.giot.core.eventbus;
 
 /**
- * @author yuanguohua on 2021/4/13 15:41
+ * @author yuanguohua on 2021/4/7 10:39
  */
-public class MqttBusFractory implements BusFractory {
-
-    private Bus bus;
-
-    @Override
-    public Bus openBus() {
-        if (bus == null) {
-            this.bus = new GuavaBus(new EventBus(MqttContainer.NAME));
-        }
-        return this.bus;
-    }
+public interface Bus {
+    <T> void post(T value);
 }

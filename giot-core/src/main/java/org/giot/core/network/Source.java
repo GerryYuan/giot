@@ -18,17 +18,9 @@
 
 package org.giot.core.network;
 
-import lombok.Data;
-import lombok.ToString;
-import org.giot.core.device.DeviceHeader;
-
 /**
  * @author yuanguohua on 2021/3/22 13:03
  */
-@ToString
-@Data
 public class Source {
-
-    private DeviceHeader header;
 
 }

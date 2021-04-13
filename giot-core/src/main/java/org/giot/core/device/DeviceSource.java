@@ -18,19 +18,17 @@
 
 package org.giot.core.device;
 
-import java.util.Map;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.giot.core.network.Source;
 
 /**
- * @author yuanguohua on 2021/3/26 11:11
+ * @author yuanguohua on 2021/4/13 17:23
  */
-@EqualsAndHashCode(callSuper = true)
+@ToString
 @Data
-public class DevicePropertiesMsg extends DeviceSource {
+public class DeviceSource extends Source {
 
-    private String deviceId;
-
-    private Map<String, Object> properties;
+    private DeviceHeader header;
 
 }

@@ -18,6 +18,7 @@
 
 package org.giot.core.network;
 
+import java.lang.reflect.InvocationTargetException;
 import org.giot.core.service.Service;
 
 /**
@@ -27,12 +28,12 @@ public interface ProcessorCreator extends Service {
 
     void create(RouteUrl routeUrl,
                 MsgVersion version,
-                Class<? extends SourceProcessor> clazz) throws IllegalAccessException, InstantiationException;
+                Class<? extends AbstractSourceProcessor> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException;
 
     interface WhenCompleteListener {
         /**
          * processorInfo被创建完成后，调用Listener
          */
-        void listener(ProcessorDef processorDef) throws InstantiationException, IllegalAccessException;
+        void listener(ProcessorDef processorDef) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException;
     }
 }

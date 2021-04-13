@@ -18,14 +18,15 @@
 
 package org.giot.core.network.eventbus;
 
+import org.giot.core.service.Service;
+
 /**
  * Build EventBus By Factory
  *
  * @author yuanguohua on 2021/4/7 10:30
  */
-public interface BusFactory {
+public interface BusFractory extends Service {
 
     Bus openBus();
 
-    Bus openBus(String id);
 }

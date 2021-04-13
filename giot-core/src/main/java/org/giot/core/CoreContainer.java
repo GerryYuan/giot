@@ -61,7 +61,7 @@ public class CoreContainer extends AbstractContainer {
         //获取容器管理者，然后获取容器，再根据容器获取服务
         super.register(ModelCreator.class, new StorageModelCreator());
         super.register(ProcessorCreator.class, new ProcessorDefCreator(getContainerManager()));
-        super.register(ProcessorManager.class, new SourceProcessorInstaller());
+        super.register(ProcessorManager.class, new SourceProcessorInstaller(getContainerManager()));
         super.register(
             AnnotationScanner.class, new DefaultAnnotationScanner(getContainerManager(), coreContainerConfig));
     }

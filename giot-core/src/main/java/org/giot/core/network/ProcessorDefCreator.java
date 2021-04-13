@@ -18,6 +18,7 @@
 
 package org.giot.core.network;
 
+import java.lang.reflect.InvocationTargetException;
 import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
 
@@ -35,7 +36,7 @@ public class ProcessorDefCreator implements ProcessorCreator {
     @Override
     public void create(final RouteUrl routeUrl,
                        final MsgVersion version,
-                       final Class<? extends SourceProcessor> clazz) throws IllegalAccessException, InstantiationException {
+                       final Class<? extends AbstractSourceProcessor> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         ProcessorDef processorDef = ProcessorDef.builder()
                                                 .procName(routeUrl.getRoute())
                                                 .version(version)

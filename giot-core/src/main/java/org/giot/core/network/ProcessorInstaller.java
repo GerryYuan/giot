@@ -18,14 +18,16 @@
 
 package org.giot.core.network;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * @author yuanguohua on 2021/3/25 10:16
  */
 public abstract class ProcessorInstaller implements ProcessorCreator.WhenCompleteListener {
     @Override
-    public void listener(final ProcessorDef processorDef) throws InstantiationException, IllegalAccessException {
+    public void listener(final ProcessorDef processorDef) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         createProcessor(processorDef);
     }
 
-    public abstract void createProcessor(ProcessorDef processorDef) throws IllegalAccessException, InstantiationException;
+    public abstract void createProcessor(ProcessorDef processorDef) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException;
 }

@@ -24,9 +24,11 @@ import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.URLMappings;
+import org.giot.core.network.eventbus.BusFractory;
 import org.giot.network.http.config.HttpConfig;
 import org.giot.network.http.dispatcher.HttpDispatcher;
 import org.giot.network.http.dispatcher.HttpProcessorAdapter;
+import org.giot.network.http.eventbus.HttpBusFractory;
 import org.giot.network.http.service.HttpOpsService;
 import org.giot.network.http.service.HttpURLMappings;
 import org.giot.network.http.service.IHttpOpsService;
@@ -69,6 +71,7 @@ public class HttpContainer extends AbstractContainer {
                 getContainerManager(),
                 new HttpProcessorAdapter(getContainerManager(), urlMappings)
             ));
+        super.register(BusFractory.class, new HttpBusFractory());
     }
 
     @Override

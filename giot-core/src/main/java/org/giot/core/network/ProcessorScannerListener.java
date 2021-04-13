@@ -38,7 +38,7 @@ import org.giot.core.utils.EmptyUtils;
  */
 public class ProcessorScannerListener implements AnnotationScannerListener {
 
-    private List<Class<? extends SourceProcessor>> classes;
+    private List<Class<? extends AbstractSourceProcessor>> classes;
 
     private ContainerManager containerManager;
 
@@ -51,7 +51,7 @@ public class ProcessorScannerListener implements AnnotationScannerListener {
         if (EmptyUtils.isEmpty(classes)) {
             classes = new LinkedList<>();
         }
-        classes.add((Class<? extends SourceProcessor>) clazz);
+        classes.add((Class<? extends AbstractSourceProcessor>) clazz);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ProcessorScannerListener implements AnnotationScannerListener {
     public void listener() throws Exception {
         ProcessorCreator processorCreator = containerManager.find(CoreModule.NAME)
                                                             .getService(ProcessorCreator.class);
-        for (Class<? extends SourceProcessor> clazz : classes) {
+        for (Class<? extends AbstractSourceProcessor> clazz : classes) {
             Processor processor = (Processor) clazz.getAnnotation(match());
             processorCreator.create(processor.route(), processor.version(), clazz);
         }

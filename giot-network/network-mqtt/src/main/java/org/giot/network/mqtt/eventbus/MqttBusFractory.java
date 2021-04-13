@@ -16,14 +16,26 @@
  *
  */
 
-package org.giot.core.network.eventbus;
+package org.giot.network.mqtt.eventbus;
+
+import com.google.common.eventbus.EventBus;
+import org.giot.core.network.eventbus.Bus;
+import org.giot.core.network.eventbus.BusFractory;
+import org.giot.core.network.eventbus.GuavaBus;
+import org.giot.network.mqtt.MqttContainer;
 
 /**
- * @author yuanguohua on 2021/4/7 10:35
+ * @author yuanguohua on 2021/4/13 15:41
  */
-public class BusFactoryBuilder {
+public class MqttBusFractory implements BusFractory {
 
-    public static BusFactory build() {
-        return new DefaultBusFactory();
+    private Bus bus;
+
+    @Override
+    public Bus openBus() {
+        if (bus == null) {
+            this.bus = new GuavaBus(new EventBus(MqttContainer.NAME));
+        }
+        return this.bus;
     }
 }

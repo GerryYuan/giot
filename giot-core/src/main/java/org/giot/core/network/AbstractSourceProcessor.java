@@ -16,23 +16,21 @@
  *
  */
 
-package org.giot.core.network.eventbus;
+package org.giot.core.network;
 
-import com.google.common.eventbus.EventBus;
+import lombok.Getter;
+import org.giot.core.container.ContainerManager;
 
 /**
- * @author Created by gerry
- * @date 2021-04-08-21:14
+ * @author yuanguohua on 2021/4/13 15:51
  */
-public class DefaultBusFactory implements BusFactory {
+public abstract class AbstractSourceProcessor<S extends Source> implements SourceProcessor<S> {
 
-    @Override
-    public Bus openBus() {
-        return new GuavaBus(new EventBus());
+    @Getter
+    private ContainerManager containerManager;
+
+    public AbstractSourceProcessor(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
     }
 
-    @Override
-    public Bus openBus(final String id) {
-        return new GuavaBus(new EventBus(id));
-    }
 }

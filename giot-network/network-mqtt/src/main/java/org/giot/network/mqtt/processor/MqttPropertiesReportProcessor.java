@@ -18,7 +18,9 @@
 
 package org.giot.network.mqtt.processor;
 
+import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DevicePropertiesMsg;
+import org.giot.core.network.AbstractSourceProcessor;
 import org.giot.core.network.MsgVersion;
 import org.giot.core.network.RouteUrl;
 import org.giot.core.network.annotation.Processor;
@@ -28,7 +30,11 @@ import org.giot.network.mqtt.dispatcher.MqttProcessor;
  * @author yuanguohua on 2021/3/22 15:46
  */
 @Processor(route = RouteUrl.REPORT_PROPERTIES, version = MsgVersion.v1)
-public class MqttPropertiesReportProcessor implements MqttProcessor<DevicePropertiesMsg> {
+public class MqttPropertiesReportProcessor extends AbstractSourceProcessor<DevicePropertiesMsg> implements MqttProcessor<DevicePropertiesMsg> {
+
+    public MqttPropertiesReportProcessor(final ContainerManager containerManager) {
+        super(containerManager);
+    }
 
     @Override
     public void invoke(final DevicePropertiesMsg deviceMsg) {

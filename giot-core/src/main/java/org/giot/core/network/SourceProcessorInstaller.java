@@ -18,11 +18,14 @@
 
 package org.giot.core.network;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import org.giot.core.container.ContainerManager;
 import org.giot.core.exception.NetworkProcessorNotfoundException;
 
 /**
@@ -30,11 +33,20 @@ import org.giot.core.exception.NetworkProcessorNotfoundException;
  */
 public class SourceProcessorInstaller extends ProcessorInstaller implements ProcessorManager {
 
+    private ContainerManager containerManager;
+
+    public SourceProcessorInstaller(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
+
     private Map<ProcessorDef, SourceProcessor> processorMap = new ConcurrentHashMap<>();
 
     @Override
-    public void createProcessor(final ProcessorDef processorDef) throws IllegalAccessException, InstantiationException {
-        processorMap.put(processorDef, processorDef.getProcessor().newInstance());
+    public void createProcessor(final ProcessorDef processorDef) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        Constructor<? extends AbstractSourceProcessor> constructor = processorDef.getProcessor()
+                                                                                 .getConstructor(
+                                                                                     ContainerManager.class);
+        processorMap.put(processorDef, constructor.newInstance(containerManager));
     }
 
     @Override

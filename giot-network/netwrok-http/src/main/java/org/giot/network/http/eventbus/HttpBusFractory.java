@@ -16,24 +16,26 @@
  *
  */
 
-package org.giot.core.network;
+package org.giot.network.http.eventbus;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import com.google.common.eventbus.EventBus;
+import org.giot.core.network.eventbus.Bus;
+import org.giot.core.network.eventbus.BusFractory;
+import org.giot.core.network.eventbus.GuavaBus;
+import org.giot.network.http.HttpContainer;
 
 /**
- * @author yuanguohua on 2021/3/22 13:51
+ * @author yuanguohua on 2021/4/13 15:41
  */
-@ToString
-@Getter
-@Builder
-public class ProcessorDef {
+public class HttpBusFractory implements BusFractory {
 
-    private String procName;
+    private Bus bus;
 
-    private MsgVersion version;
-
-    private Class<? extends AbstractSourceProcessor> processor;
-
+    @Override
+    public Bus openBus() {
+        if (bus == null) {
+            this.bus = new GuavaBus(new EventBus(HttpContainer.NAME));
+        }
+        return this.bus;
+    }
 }

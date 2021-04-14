@@ -20,10 +20,13 @@ package org.giot.network.mqtt.processor;
 
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DevicePropertiesMsg;
+import org.giot.core.eventbus.BusFractory;
 import org.giot.core.network.AbstractSourceProcessor;
 import org.giot.core.network.MsgVersion;
+import org.giot.core.network.NetworkModule;
 import org.giot.core.network.RouteUrl;
 import org.giot.core.network.annotation.Processor;
+import org.giot.network.mqtt.MqttContainer;
 import org.giot.network.mqtt.dispatcher.MqttProcessor;
 
 /**
@@ -38,6 +41,8 @@ public class MqttPropertiesReportProcessor extends AbstractSourceProcessor<Devic
 
     @Override
     public void invoke(final DevicePropertiesMsg deviceMsg) {
-        System.out.println(deviceMsg);
+        BusFractory busFractory = getContainerManager().find(NetworkModule.NAME, MqttContainer.NAME)
+                                                       .getService(BusFractory.class);
+        busFractory.openBus().post(deviceMsg);
     }
 }

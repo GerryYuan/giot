@@ -18,26 +18,16 @@
 
 package org.giot.core.eventbus;
 
-import com.google.common.eventbus.AsyncEventBus;
-
 /**
- * @author yuanguohua on 2021/4/13 17:03
+ * @author yuanguohua on 2021/4/16 17:28
  */
-public class GuavaAsyncBus implements Bus {
-
-    private AsyncEventBus eventBus;
-
-    public GuavaAsyncBus(final AsyncEventBus eventBus) {
-        this.eventBus = eventBus;
-    }
+public abstract class InvokerInstaller implements InvokerCreator.WhenCompleteListener {
 
     @Override
-    public <T extends BusInvoker> void register(final T value) {
-        eventBus.register(value);
+    public void listener(final Class<? extends BusInvoker> clazz) throws InstantiationException, IllegalAccessException {
+        createInvoker(clazz);
     }
 
-    @Override
-    public <T> void post(final T value) {
-        eventBus.post(value);
-    }
+    public abstract void createInvoker(Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException;
+
 }

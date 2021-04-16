@@ -22,5 +22,8 @@ package org.giot.core.eventbus;
  * @author yuanguohua on 2021/4/7 10:39
  */
 public interface Bus {
+
+    <T extends BusInvoker> void register(T value);
+
     <T> void post(T value);
 }

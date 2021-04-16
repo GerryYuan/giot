@@ -18,26 +18,10 @@
 
 package org.giot.core.eventbus;
 
-import com.google.common.eventbus.AsyncEventBus;
+import org.giot.core.service.Service;
 
 /**
- * @author yuanguohua on 2021/4/13 17:03
+ * @author yuanguohua on 2021/4/16 17:37
  */
-public class GuavaAsyncBus implements Bus {
-
-    private AsyncEventBus eventBus;
-
-    public GuavaAsyncBus(final AsyncEventBus eventBus) {
-        this.eventBus = eventBus;
-    }
-
-    @Override
-    public <T extends BusInvoker> void register(final T value) {
-        eventBus.register(value);
-    }
-
-    @Override
-    public <T> void post(final T value) {
-        eventBus.post(value);
-    }
+public interface InvokerManager extends Service {
 }

@@ -21,6 +21,10 @@ package org.giot.core;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.eventbus.BusInvokerCreator;
+import org.giot.core.eventbus.BusInvokerInstaller;
+import org.giot.core.eventbus.InvokerCreator;
+import org.giot.core.eventbus.InvokerManager;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.ProcessorCreator;
 import org.giot.core.network.ProcessorDefCreator;
@@ -57,11 +61,11 @@ public class CoreContainer extends AbstractContainer {
 
     @Override
     public void prepare() {
-        //控制是否加载eg: es7、mysql、pgsql等容器
-        //获取容器管理者，然后获取容器，再根据容器获取服务
         super.register(ModelCreator.class, new StorageModelCreator());
         super.register(ProcessorCreator.class, new ProcessorDefCreator(getContainerManager()));
         super.register(ProcessorManager.class, new SourceProcessorInstaller(getContainerManager()));
+        super.register(InvokerCreator.class, new BusInvokerCreator(getContainerManager()));
+        super.register(InvokerManager.class, new BusInvokerInstaller(getContainerManager()));
         super.register(
             AnnotationScanner.class, new DefaultAnnotationScanner(getContainerManager(), coreContainerConfig));
     }

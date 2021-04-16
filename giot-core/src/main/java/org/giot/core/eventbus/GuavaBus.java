@@ -33,6 +33,11 @@ public class GuavaBus implements Bus {
     }
 
     @Override
+    public <T extends BusInvoker> void register(final T value) {
+        eventBus.register(value);
+    }
+
+    @Override
     public <T> void post(final T value) {
         eventBus.post(value);
     }

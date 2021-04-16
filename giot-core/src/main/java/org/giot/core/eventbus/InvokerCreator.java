@@ -25,11 +25,11 @@ import org.giot.core.service.Service;
  */
 public interface InvokerCreator extends Service {
 
-    void create(Class<? extends BusInvoker> clazz);
+    void create(Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException;
 
     interface WhenCompleteListener {
 
-        void listener(Class<? extends BusInvoker> clazz);
+        void listener(Class<? extends BusInvoker> clazz) throws InstantiationException, IllegalAccessException;
 
     }
 }

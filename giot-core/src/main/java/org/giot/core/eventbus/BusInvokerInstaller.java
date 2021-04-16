@@ -18,29 +18,21 @@
 
 package org.giot.core.eventbus;
 
-import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
 
 /**
- * @author yuanguohua on 2021/4/16 17:10
+ * @author yuanguohua on 2021/4/16 17:34
  */
-public class BusInvokerCreator implements InvokerCreator {
+public class BusInvokerInstaller extends InvokerInstaller implements InvokerManager {
 
     private ContainerManager containerManager;
 
-    private InvokerInstaller invokerInstaller;
-
-    public BusInvokerCreator(final ContainerManager containerManager) {
+    public BusInvokerInstaller(final ContainerManager containerManager) {
         this.containerManager = containerManager;
     }
 
     @Override
-    public void create(final Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException {
-        if (invokerInstaller == null) {
-            this.invokerInstaller = (InvokerInstaller) containerManager.find(CoreModule.NAME)
-                                                                       .getService(InvokerManager.class);
-        }
-        BusInvoker busInvoker = clazz.newInstance();
-        invokerInstaller.listener(clazz);
+    public void createInvoker(final Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException {
+
     }
 }

@@ -16,28 +16,22 @@
  *
  */
 
-package org.giot.core.scanner;
+package org.giot.core.eventbus;
 
-import com.google.common.collect.Lists;
-import org.giot.core.CoreContainerConfig;
 import org.giot.core.container.ContainerManager;
-import org.giot.core.eventbus.InvokerScannerListener;
-import org.giot.core.network.ProcessorScannerListener;
-import org.giot.core.storage.SteamScannerListener;
 
 /**
- * @author Created by gerry
- * @date 2021-03-06-10:11 PM
+ * @author yuanguohua on 2021/4/16 17:10
  */
-public class DefaultAnnotationScanner extends AnnotationScanner {
+public class BusInvokerCreator implements InvokerCreator {
 
-    public DefaultAnnotationScanner(final ContainerManager containerManager,
-                                    final CoreContainerConfig coreContainerConfig) {
-        super(Lists.newArrayList(
-            new SteamScannerListener(containerManager, coreContainerConfig),
-            new ProcessorScannerListener(containerManager),
-            new InvokerScannerListener(containerManager)
-        ));
+    private ContainerManager containerManager;
+
+    public BusInvokerCreator(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
     }
 
+    @Override
+    public void create(final Class<? extends BusInvoker> clazz) {
+    }
 }

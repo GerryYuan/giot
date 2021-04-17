@@ -21,6 +21,7 @@ package org.giot.network.mqtt;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.eventbus.BusFractory;
+import org.giot.core.eventbus.InvokerAdapter;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
@@ -29,6 +30,7 @@ import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.dispatcher.MqttDispatcher;
 import org.giot.network.mqtt.dispatcher.MqttProcessorAdapter;
 import org.giot.network.mqtt.eventbus.MqttBusFractory;
+import org.giot.network.mqtt.eventbus.MqttInvokerAdapter;
 import org.giot.network.mqtt.service.IMqttConnectService;
 import org.giot.network.mqtt.service.IMqttOpsService;
 import org.giot.network.mqtt.service.IMqttPingService;
@@ -86,6 +88,7 @@ public class MqttContainer extends AbstractContainer {
                 new MqttProcessorAdapter(getContainerManager(), urlMappings)
             ));
         super.register(BusFractory.class, new MqttBusFractory());
+        super.register(InvokerAdapter.class, new MqttInvokerAdapter(getContainerManager()));
     }
 
     @Override

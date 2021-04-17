@@ -40,7 +40,6 @@ public class BusInvokerCreator implements InvokerCreator {
             this.invokerInstaller = (InvokerInstaller) containerManager.find(CoreModule.NAME)
                                                                        .getService(InvokerManager.class);
         }
-        BusInvoker busInvoker = clazz.newInstance();
         invokerInstaller.listener(clazz);
     }
 }

@@ -18,6 +18,8 @@
 
 package org.giot.core.eventbus;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.giot.core.container.ContainerManager;
 
 /**
@@ -25,14 +27,16 @@ import org.giot.core.container.ContainerManager;
  */
 public class BusInvokerInstaller extends InvokerInstaller implements InvokerManager {
 
-    private ContainerManager containerManager;
-
-    public BusInvokerInstaller(final ContainerManager containerManager) {
-        this.containerManager = containerManager;
-    }
+    private List<BusInvoker> invokers = new ArrayList<>(10);
 
     @Override
     public void createInvoker(final Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException {
-
+        invokers.add(clazz.newInstance());
     }
+
+    @Override
+    public List<BusInvoker> allInvokers() {
+        return this.invokers;
+    }
+
 }

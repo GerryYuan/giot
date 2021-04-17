@@ -18,10 +18,14 @@
 
 package org.giot.core.eventbus;
 
+import java.util.List;
 import org.giot.core.service.Service;
 
 /**
  * @author yuanguohua on 2021/4/16 17:37
  */
 public interface InvokerManager extends Service {
+
+    List<BusInvoker> allInvokers();
+
 }

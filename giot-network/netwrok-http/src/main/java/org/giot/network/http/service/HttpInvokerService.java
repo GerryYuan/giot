@@ -16,41 +16,35 @@
  *
  */
 
-package org.giot.network.mqtt.eventbus;
+package org.giot.network.http.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
+import org.giot.core.eventbus.BusFractory;
 import org.giot.core.eventbus.BusInvoker;
+import org.giot.core.eventbus.IInvokerService;
 import org.giot.core.eventbus.InvokerAdapter;
-import org.giot.core.eventbus.InvokerManager;
+import org.giot.core.network.NetworkModule;
+import org.giot.network.http.HttpContainer;
 
 /**
  * @author Created by gerry
- * @date 2021-04-17-21:49
+ * @date 2021-04-17-22:09
  */
-public class MqttInvokerAdapter implements InvokerAdapter {
-
+public class HttpInvokerService implements IInvokerService {
     private ContainerManager containerManager;
 
-    private InvokerManager invokerManager;
-
-    public MqttInvokerAdapter(final ContainerManager containerManager) {
+    public HttpInvokerService(final ContainerManager containerManager) {
         this.containerManager = containerManager;
     }
 
     @Override
-    public List<BusInvoker> adapters() {
-        if (invokerManager == null) {
-            this.invokerManager = containerManager.find(CoreModule.NAME).getService(InvokerManager.class);
+    public void register() {
+        InvokerAdapter invokerAdapter = containerManager.find(NetworkModule.NAME, HttpContainer.NAME)
+                                                        .getService(InvokerAdapter.class);
+        BusFractory busFractory = containerManager.find(NetworkModule.NAME, HttpContainer.NAME)
+                                                  .getService(BusFractory.class);
+        for (BusInvoker busInvoker : invokerAdapter.adapters()) {
+            busFractory.openBus().register(busInvoker);
         }
-        return invokerManager.allInvokers().stream().filter(busInvoker -> supports(busInvoker)).collect(
-            Collectors.toList());
-    }
-
-    @Override
-    public boolean supports(final BusInvoker busInvoker) {
-        return busInvoker instanceof MqttBusInvoker;
     }
 }

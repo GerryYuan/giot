@@ -21,6 +21,7 @@ package org.giot.network.mqtt;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.eventbus.BusFractory;
+import org.giot.core.eventbus.IInvokerService;
 import org.giot.core.eventbus.InvokerAdapter;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.NetworkModule;
@@ -38,6 +39,7 @@ import org.giot.network.mqtt.service.IMqttPubService;
 import org.giot.network.mqtt.service.IMqttSubService;
 import org.giot.network.mqtt.service.MqttClientHandler;
 import org.giot.network.mqtt.service.MqttConnectService;
+import org.giot.network.mqtt.service.MqttInvokerService;
 import org.giot.network.mqtt.service.MqttOpsService;
 import org.giot.network.mqtt.service.MqttPingService;
 import org.giot.network.mqtt.service.MqttPubService;
@@ -89,12 +91,14 @@ public class MqttContainer extends AbstractContainer {
             ));
         super.register(BusFractory.class, new MqttBusFractory());
         super.register(InvokerAdapter.class, new MqttInvokerAdapter(getContainerManager()));
+        super.register(IInvokerService.class, new MqttInvokerService(getContainerManager()));
     }
 
     @Override
     public void start() throws ContainerStartException {
         this.mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
         this.mqttOpsService.start();
+        find(NetworkModule.NAME, NAME).getService(IInvokerService.class).register();
     }
 
     @Override

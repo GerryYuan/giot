@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.network.mqtt.eventbus;
+package org.giot.network.http.eventbus;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,13 +30,13 @@ import org.giot.core.eventbus.InvokerManager;
  * @author Created by gerry
  * @date 2021-04-17-21:49
  */
-public class MqttInvokerAdapter implements InvokerAdapter {
+public class HttpInvokerAdapter implements InvokerAdapter {
 
     private ContainerManager containerManager;
 
     private InvokerManager invokerManager;
 
-    public MqttInvokerAdapter(final ContainerManager containerManager) {
+    public HttpInvokerAdapter(final ContainerManager containerManager) {
         this.containerManager = containerManager;
     }
 
@@ -51,6 +51,6 @@ public class MqttInvokerAdapter implements InvokerAdapter {
 
     @Override
     public boolean supports(final BusInvoker busInvoker) {
-        return busInvoker instanceof MqttBusInvoker;
+        return busInvoker instanceof HttpBusInvoker;
     }
 }

@@ -1,4 +1,6 @@
-package org.giot.core.eventbus;
+package org.giot.network.mqtt.eventbus;
+
+import org.giot.core.eventbus.BusInvoker;
 
 /**
  * @author Created by gerry

@@ -9,5 +9,7 @@ import org.giot.core.service.Service;
  */
 public interface InvokerAdapter extends Service {
 
-    List<BusInvoker> adapter();
+    List<BusInvoker> adapters();
+
+    boolean supports(BusInvoker busInvoker);
 }

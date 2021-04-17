@@ -20,7 +20,6 @@ package org.giot.core.eventbus;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.giot.core.container.ContainerManager;
 
 /**
  * @author yuanguohua on 2021/4/16 17:34

@@ -98,11 +98,11 @@ public class MqttContainer extends AbstractContainer {
     public void start() throws ContainerStartException {
         this.mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
         this.mqttOpsService.start();
-        find(NetworkModule.NAME, NAME).getService(IInvokerService.class).register();
     }
 
     @Override
     public void after() {
+        find(NetworkModule.NAME, NAME).getService(IInvokerService.class).register();
     }
 
     @Override

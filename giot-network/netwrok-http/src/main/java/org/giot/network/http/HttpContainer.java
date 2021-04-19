@@ -84,12 +84,11 @@ public class HttpContainer extends AbstractContainer {
     public void start() throws ContainerStartException {
         httpOpsService = find(NetworkModule.NAME, HttpContainer.NAME).getService(IHttpOpsService.class);
         httpOpsService.start();
-        find(NetworkModule.NAME, HttpContainer.NAME).getService(IInvokerService.class).register();
     }
 
     @Override
     public void after() {
-
+        find(NetworkModule.NAME, HttpContainer.NAME).getService(IInvokerService.class).register();
     }
 
     @Override

@@ -20,13 +20,13 @@ package org.giot.network.http;
 
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.eventbus.BusFractory;
 import org.giot.core.eventbus.IInvokerService;
 import org.giot.core.eventbus.InvokerAdapter;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
 import org.giot.core.network.URLMappings;
-import org.giot.core.eventbus.BusFractory;
 import org.giot.network.http.config.HttpConfig;
 import org.giot.network.http.dispatcher.HttpDispatcher;
 import org.giot.network.http.dispatcher.HttpProcessorAdapter;
@@ -88,7 +88,6 @@ public class HttpContainer extends AbstractContainer {
 
     @Override
     public void after() {
-        find(NetworkModule.NAME, HttpContainer.NAME).getService(IInvokerService.class).register();
     }
 
     @Override

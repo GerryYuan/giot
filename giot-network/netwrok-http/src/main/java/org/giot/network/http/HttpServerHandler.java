@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceContext;
 import org.giot.core.device.DeviceHeader;
+import org.giot.core.eventbus.IInvokerService;
 import org.giot.core.network.MsgVersion;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.SourceDispatcher;
@@ -59,6 +60,12 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     public HttpServerHandler(final ContainerManager containerManager) {
         this.containerManager = containerManager;
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        containerManager.find(NetworkModule.NAME, HttpContainer.NAME).getService(IInvokerService.class).register();
     }
 
     @Override

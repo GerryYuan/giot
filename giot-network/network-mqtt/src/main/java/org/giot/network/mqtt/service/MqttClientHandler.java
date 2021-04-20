@@ -29,9 +29,11 @@ import io.netty.handler.codec.mqtt.MqttSubAckMessage;
 import io.netty.handler.timeout.IdleStateEvent;
 import java.io.IOException;
 import org.giot.core.container.ContainerManager;
+import org.giot.core.eventbus.IInvokerService;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.service.Service;
-import org.giot.network.mqtt.MqttContainer;
+
+import static org.giot.network.mqtt.MqttContainer.NAME;
 
 /**
  * @author Created by gerry
@@ -53,23 +55,24 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        connectService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+        connectService = containerManager.find(NetworkModule.NAME, NAME)
                                          .getService(IMqttConnectService.class);
-        pubService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME).getService(IMqttPubService.class);
+        pubService = containerManager.find(NetworkModule.NAME, NAME).getService(IMqttPubService.class);
         connectService.connect(ctx.channel());
+        containerManager.find(NetworkModule.NAME, NAME).getService(IInvokerService.class).register();
     }
 
     @Override
     protected void channelRead0(final ChannelHandlerContext channelHandlerContext,
                                 final MqttMessage msg) throws Exception {
-        IMqttPingService pingService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+        IMqttPingService pingService = containerManager.find(NetworkModule.NAME, NAME)
                                                        .getService(IMqttPingService.class);
         switch (msg.fixedHeader().messageType()) {
             case CONNACK:
                 connectService.ack(channelHandlerContext.channel(), (MqttConnAckMessage) msg);
                 break;
             case SUBACK:
-                IMqttSubService subService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                IMqttSubService subService = containerManager.find(NetworkModule.NAME, NAME)
                                                              .getService(IMqttSubService.class);
                 subService.ack(channelHandlerContext.channel(), (MqttSubAckMessage) msg);
                 break;
@@ -114,7 +117,7 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
                 case READER_IDLE:
                     break;
                 case WRITER_IDLE:
-                    IMqttPingService pingService = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+                    IMqttPingService pingService = containerManager.find(NetworkModule.NAME, NAME)
                                                                    .getService(IMqttPingService.class);
                     pingService.ping(ctx.channel());
                     break;

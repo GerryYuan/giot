@@ -19,11 +19,13 @@
 package org.giot.core.eventbus;
 
 import com.google.common.eventbus.EventBus;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Created by gerry
  * @date 2021-04-08-21:15
  */
+@Slf4j
 public class GuavaBus implements Bus {
 
     private EventBus eventBus;
@@ -35,6 +37,7 @@ public class GuavaBus implements Bus {
     @Override
     public <T extends BusInvoker> void register(final T value) {
         eventBus.register(value);
+        log.info("Register eventbus invoker [{}]" + value);
     }
 
     @Override

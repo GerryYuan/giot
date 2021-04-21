@@ -22,13 +22,13 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceContext;
-import org.giot.core.device.DeviceHeader;
 import org.giot.core.device.payload.PayloadConverter;
 import org.giot.core.device.serializer.GsonSerializer;
+import org.giot.core.device.serializer.Serializer;
 import org.giot.core.network.AbstractDispatcher;
+import org.giot.core.network.MsgConverterException;
 import org.giot.core.network.ProcessorAdapter;
 import org.giot.core.network.SourceProcessor;
-import org.giot.core.network.MsgConverterException;
 
 /**
  * @author yuanguohua on 2021/3/22 13:04
@@ -41,7 +41,11 @@ public class MqttDispatcher extends AbstractDispatcher {
 
     public MqttDispatcher(final ContainerManager containerManager, final ProcessorAdapter processorAdapter) {
         this.processorAdapter = processorAdapter;
-        this.converters = Lists.newArrayList(new MqttPropertiesMsgConverter(containerManager, new GsonSerializer()));
+        Serializer serializer = new GsonSerializer();
+        this.converters = Lists.newArrayList(
+            new MqttPropertiesMsgConverter(containerManager, serializer),
+            new MqttConnectedConverter(containerManager, serializer)
+        );
     }
 
     @Override
@@ -50,7 +54,6 @@ public class MqttDispatcher extends AbstractDispatcher {
         SourceProcessor processor = processorAdapter.supports(context);
         processor.invoke(converter.converter(context));
     }
-
 
     @Override
     public List<PayloadConverter> converters() {

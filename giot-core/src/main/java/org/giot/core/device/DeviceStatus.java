@@ -16,31 +16,19 @@
  *
  */
 
-package org.giot.core.eventbus;
+package org.giot.core.device;
 
-import com.google.common.eventbus.AsyncEventBus;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
- * @author yuanguohua on 2021/4/13 17:03
+ * @author yuanguohua on 2021/3/26 11:11
  */
-@Slf4j
-public class GuavaAsyncBus implements Bus {
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class DeviceStatus extends DeviceSource {
 
-    private AsyncEventBus eventBus;
+    private String deviceId;
 
-    public GuavaAsyncBus(final AsyncEventBus eventBus) {
-        this.eventBus = eventBus;
-    }
-
-    @Override
-    public <T extends BusInvoker> void register(final T value) {
-        eventBus.register(value);
-        log.info("Register eventbus invoker [{}]" + value);
-    }
-
-    @Override
-    public <T> void post(final T value) {
-        eventBus.post(value);
-    }
+    private boolean isConnected;
 }

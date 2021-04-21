@@ -16,31 +16,21 @@
  *
  */
 
-package org.giot.core.eventbus;
+package org.giot.network.mqtt.eventbus;
 
-import com.google.common.eventbus.AsyncEventBus;
-import lombok.extern.slf4j.Slf4j;
+import com.google.common.eventbus.Subscribe;
+import org.giot.core.device.DeviceStatus;
+import org.giot.core.eventbus.annotation.Invoker;
 
 /**
- * @author yuanguohua on 2021/4/13 17:03
+ * @author Created by gerry
+ * @date 2021-04-17-22:26
  */
-@Slf4j
-public class GuavaAsyncBus implements Bus {
+@Invoker
+public class MqttConnectedInvoker implements MqttBusInvoker {
 
-    private AsyncEventBus eventBus;
-
-    public GuavaAsyncBus(final AsyncEventBus eventBus) {
-        this.eventBus = eventBus;
-    }
-
-    @Override
-    public <T extends BusInvoker> void register(final T value) {
-        eventBus.register(value);
-        log.info("Register eventbus invoker [{}]" + value);
-    }
-
-    @Override
-    public <T> void post(final T value) {
-        eventBus.post(value);
+    @Subscribe
+    public void connected(DeviceStatus deviceStatus) {
+        System.out.println("class[MqttConnectedInvoker], " + deviceStatus);
     }
 }

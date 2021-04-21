@@ -25,7 +25,8 @@ import lombok.Getter;
  */
 public enum RouteUrl {
 
-    REPORT_PROPERTIES("/report-properties");
+    REPORT_PROPERTIES("/report-properties"),
+    CONNECTED("/connected");
 
     @Getter
     private String route;

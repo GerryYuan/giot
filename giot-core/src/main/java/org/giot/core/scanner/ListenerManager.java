@@ -16,29 +16,15 @@
  *
  */
 
-package org.giot.core.eventbus;
+package org.giot.core.scanner;
 
 import java.util.List;
-import org.giot.core.scanner.ListenerManager;
+import org.giot.core.service.Service;
 
 /**
- * @author yuanguohua on 2021/4/16 17:34
+ * @author yuanguohua on 2021/4/23 10:37
  */
-public class BusInvokerInstaller extends InvokerInstaller implements ListenerManager<BusInvoker> {
+public interface ListenerManager<T> extends Service {
 
-    private volatile BusInvokerContext context = new BusInvokerContext();
-
-    @Override
-    public void createInvoker(final Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException {
-        synchronized (context) {
-            context.addInvoker(clazz.newInstance());
-        }
-    }
-
-    @Override
-    public List<BusInvoker> all() {
-        synchronized (context) {
-            return context.invokers();
-        }
-    }
+   List<T> all();
 }

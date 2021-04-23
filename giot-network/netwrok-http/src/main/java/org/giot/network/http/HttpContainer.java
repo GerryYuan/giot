@@ -88,6 +88,7 @@ public class HttpContainer extends AbstractContainer {
 
     @Override
     public void after() {
+        getContainerManager().find(NetworkModule.NAME, HttpContainer.NAME).getService(IInvokerService.class).register();
     }
 
     @Override

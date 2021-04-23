@@ -18,14 +18,24 @@
 
 package org.giot.core.eventbus;
 
+import java.util.ArrayList;
 import java.util.List;
-import org.giot.core.service.Service;
 
 /**
- * @author yuanguohua on 2021/4/16 17:37
+ * @author yuanguohua on 2021/4/23 11:02
  */
-public interface InvokerManager extends Service {
+class BusInvokerContext {
 
-    List<BusInvoker> allInvokers();
+    /**
+     * invokers need impl cas, because 'create' and 'all' method is async
+     */
+    private List<BusInvoker> invokers = new ArrayList<>(5);
 
+    public void addInvoker(BusInvoker busInvoker) {
+        invokers.add(busInvoker);
+    }
+
+    public List<BusInvoker> invokers() {
+        return this.invokers;
+    }
 }

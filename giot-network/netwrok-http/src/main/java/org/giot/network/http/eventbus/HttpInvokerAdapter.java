@@ -24,7 +24,7 @@ import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.eventbus.BusInvoker;
 import org.giot.core.eventbus.InvokerAdapter;
-import org.giot.core.eventbus.InvokerManager;
+import org.giot.core.scanner.ListenerManager;
 
 /**
  * @author Created by gerry
@@ -34,7 +34,7 @@ public class HttpInvokerAdapter implements InvokerAdapter {
 
     private ContainerManager containerManager;
 
-    private InvokerManager invokerManager;
+    private ListenerManager<BusInvoker> listenerManager;
 
     public HttpInvokerAdapter(final ContainerManager containerManager) {
         this.containerManager = containerManager;
@@ -42,10 +42,10 @@ public class HttpInvokerAdapter implements InvokerAdapter {
 
     @Override
     public List<BusInvoker> adapters() {
-        if (invokerManager == null) {
-            this.invokerManager = containerManager.find(CoreModule.NAME).getService(InvokerManager.class);
+        if (listenerManager == null) {
+            this.listenerManager = containerManager.find(CoreModule.NAME).getService(ListenerManager.class);
         }
-        return invokerManager.allInvokers().stream().filter(busInvoker -> supports(busInvoker)).collect(
+        return listenerManager.all().stream().filter(busInvoker -> supports(busInvoker)).collect(
             Collectors.toList());
     }
 

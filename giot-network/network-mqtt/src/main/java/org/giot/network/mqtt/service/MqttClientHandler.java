@@ -29,7 +29,6 @@ import io.netty.handler.codec.mqtt.MqttSubAckMessage;
 import io.netty.handler.timeout.IdleStateEvent;
 import java.io.IOException;
 import org.giot.core.container.ContainerManager;
-import org.giot.core.eventbus.IInvokerService;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.service.Service;
 
@@ -59,7 +58,6 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
                                          .getService(IMqttConnectService.class);
         pubService = containerManager.find(NetworkModule.NAME, NAME).getService(IMqttPubService.class);
         connectService.connect(ctx.channel());
-        containerManager.find(NetworkModule.NAME, NAME).getService(IInvokerService.class).register();
     }
 
     @Override

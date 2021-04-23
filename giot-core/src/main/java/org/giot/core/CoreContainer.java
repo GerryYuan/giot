@@ -24,7 +24,6 @@ import org.giot.core.container.ContainerConfig;
 import org.giot.core.eventbus.BusInvokerCreator;
 import org.giot.core.eventbus.BusInvokerInstaller;
 import org.giot.core.eventbus.InvokerCreator;
-import org.giot.core.eventbus.InvokerManager;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.network.ProcessorCreator;
 import org.giot.core.network.ProcessorDefCreator;
@@ -32,6 +31,7 @@ import org.giot.core.network.ProcessorManager;
 import org.giot.core.network.SourceProcessorInstaller;
 import org.giot.core.scanner.AnnotationScanner;
 import org.giot.core.scanner.DefaultAnnotationScanner;
+import org.giot.core.scanner.ListenerManager;
 import org.giot.core.storage.model.ModelCreator;
 import org.giot.core.storage.model.StorageModelCreator;
 
@@ -65,7 +65,7 @@ public class CoreContainer extends AbstractContainer {
         super.register(ProcessorCreator.class, new ProcessorDefCreator(getContainerManager()));
         super.register(ProcessorManager.class, new SourceProcessorInstaller(getContainerManager()));
         super.register(InvokerCreator.class, new BusInvokerCreator(getContainerManager()));
-        super.register(InvokerManager.class, new BusInvokerInstaller());
+        super.register(ListenerManager.class, new BusInvokerInstaller());
         super.register(
             AnnotationScanner.class, new DefaultAnnotationScanner(getContainerManager(), coreContainerConfig));
     }

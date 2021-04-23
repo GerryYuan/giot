@@ -36,7 +36,7 @@ public abstract class AnnotationScanner implements Service {
         this.listeners = listeners;
     }
 
-    public synchronized void scanner() throws Exception {
+    public void scanner() throws Exception {
         ClassPath classpath = ClassPath.from(this.getClass().getClassLoader());
         ImmutableSet<ClassPath.ClassInfo> classes = classpath.getTopLevelClassesRecursive(packageName);
         for (ClassPath.ClassInfo classInfo : classes) {

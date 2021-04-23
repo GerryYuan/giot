@@ -102,7 +102,7 @@ public class MqttContainer extends AbstractContainer {
 
     @Override
     public void after() {
-        
+        getContainerManager().find(NetworkModule.NAME, NAME).getService(IInvokerService.class).register();
     }
 
     @Override

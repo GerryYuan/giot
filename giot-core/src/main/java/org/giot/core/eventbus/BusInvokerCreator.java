@@ -20,6 +20,7 @@ package org.giot.core.eventbus;
 
 import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
+import org.giot.core.scanner.ListenerManager;
 
 /**
  * @author yuanguohua on 2021/4/16 17:10
@@ -38,7 +39,7 @@ public class BusInvokerCreator implements InvokerCreator {
     public void create(final Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException {
         if (invokerInstaller == null) {
             this.invokerInstaller = (InvokerInstaller) containerManager.find(CoreModule.NAME)
-                                                                       .getService(InvokerManager.class);
+                                                                       .getService(ListenerManager.class);
         }
         invokerInstaller.listener(clazz);
     }

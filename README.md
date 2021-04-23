@@ -1,6 +1,6 @@
 GIoT
 ==========
-**GIoT**: GIoT是一个开源的IoT平台，支持设备管理、物模型，产品、设备管理、规则引擎、多种存储、多sink、多协议（http、mqtt、tcp，自定义协议）、多租户管理等等，提供插件化开发
+**GIoT**是一个开源的**IoT**平台，支持设备管理、物模型，产品、设备管理、规则引擎、多种存储、多sink、多协议（http、mqtt、tcp，自定义协议）、多租户管理等等，提供插件化开发
 
 [![GitHub stars](https://img.shields.io/github/stars/GerryYuan/giot.svg?label=Stars&logo=github)](https://github.com/GerryYuan/giot)
 [![Maven Central](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/GerryYuan/giot/blob/master/LICENSE) 

@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.core.device;
+package org.giot.core.device.metadata;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,10 +30,10 @@ import org.giot.core.storage.annotation.Stream;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Stream(name = "device_instance", processor = MetadataStreamProcessor.class)
-public class DeviceInstance extends Metadata {
+@Stream(name = "product_instance", processor = MetadataStreamProcessor.class)
+public class ProductInstance extends Metadata {
 
-    @Column(name = "name", length = 255, des = "设备名称")
+    @Column(name = "name", length = 255, des = "产品名称")
     private String name;
 
     @Override

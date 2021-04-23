@@ -21,7 +21,7 @@ package org.giot.network.mqtt.dispatcher;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceContext;
 import org.giot.core.device.DeviceHeader;
-import org.giot.core.device.DevicePropertiesMsg;
+import org.giot.core.device.source.DevicePropertiesMsg;
 import org.giot.core.device.payload.PayloadConverter;
 import org.giot.core.device.serializer.Serializer;
 import org.giot.core.network.NetworkModule;

@@ -19,7 +19,7 @@
 package org.giot.network.mqtt.processor;
 
 import org.giot.core.container.ContainerManager;
-import org.giot.core.device.DevicePropertiesMsg;
+import org.giot.core.device.source.DevicePropertiesMsg;
 import org.giot.core.eventbus.BusFractory;
 import org.giot.core.network.AbstractSourceProcessor;
 import org.giot.core.network.MsgVersion;

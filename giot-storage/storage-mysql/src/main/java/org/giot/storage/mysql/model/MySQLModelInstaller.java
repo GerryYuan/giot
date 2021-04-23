@@ -71,6 +71,8 @@ public class MySQLModelInstaller extends ModelInstaller {
             return DSL.field(columnName, SQLDataType.TINYINT.nullable(isNull), DSL.comment(des));
         } else if (Float.class.equals(type) || float.class.equals(type)) {
             return DSL.field(columnName, SQLDataType.FLOAT.nullable(isNull), DSL.comment(des));
+        } else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
+            return DSL.field(columnName, SQLDataType.BOOLEAN.nullable(isNull), DSL.comment(des));
         } else {
             throw new IllegalArgumentException("Unsupported data type: " + type.getName());
         }

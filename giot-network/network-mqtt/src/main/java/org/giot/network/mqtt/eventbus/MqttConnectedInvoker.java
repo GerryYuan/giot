@@ -19,7 +19,7 @@
 package org.giot.network.mqtt.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.giot.core.device.DeviceStatus;
+import org.giot.core.device.source.DeviceStatus;
 import org.giot.core.eventbus.annotation.Invoker;
 
 /**

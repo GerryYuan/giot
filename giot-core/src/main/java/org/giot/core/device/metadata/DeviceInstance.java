@@ -16,19 +16,34 @@
  *
  */
 
-package org.giot.core.device;
+package org.giot.core.device.metadata;
 
 import lombok.Data;
-import lombok.ToString;
-import org.giot.core.network.Source;
+import lombok.EqualsAndHashCode;
+import org.giot.core.storage.Metadata;
+import org.giot.core.storage.MetadataStreamProcessor;
+import org.giot.core.storage.annotation.Column;
+import org.giot.core.storage.annotation.Stream;
 
 /**
- * @author yuanguohua on 2021/4/13 17:23
+ * @author yuanguohua on 2021/3/5 16:26
  */
-@ToString
 @Data
-public class DeviceSource extends Source {
+@EqualsAndHashCode(callSuper = false)
+@Stream(name = "device_instance", processor = MetadataStreamProcessor.class)
+public class DeviceInstance extends Metadata {
 
-    private DeviceHeader header;
+    @Column(name = "name", length = 255, des = "设备名称")
+    private String name;
 
+    @Column(name = "UUID", length = 255, des = "设备UUID")
+    private String UUID;
+
+    @Column(name = "online", length = 2, des = "设备在线状态")
+    private boolean online;
+
+    @Override
+    public Long id() {
+        return null;
+    }
 }

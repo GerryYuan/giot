@@ -16,28 +16,20 @@
  *
  */
 
-package org.giot.core.device;
+package org.giot.core.device.source;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.giot.core.storage.Metadata;
-import org.giot.core.storage.MetadataStreamProcessor;
-import org.giot.core.storage.annotation.Column;
-import org.giot.core.storage.annotation.Stream;
+import org.giot.core.device.source.DeviceSource;
 
 /**
- * @author yuanguohua on 2021/3/5 16:26
+ * @author yuanguohua on 2021/3/26 11:11
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Stream(name = "product_instance", processor = MetadataStreamProcessor.class)
-public class ProductInstance extends Metadata {
+public class DeviceStatus extends DeviceSource {
 
-    @Column(name = "name", length = 255, des = "产品名称")
-    private String name;
+    private String deviceId;
 
-    @Override
-    public Long id() {
-        return null;
-    }
+    private boolean isConnected;
 }

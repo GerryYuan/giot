@@ -36,7 +36,7 @@ public class GuavaAsyncBus implements Bus {
     @Override
     public <T extends BusInvoker> void register(final T value) {
         eventBus.register(value);
-        log.info("Register eventbus invoker [{}]" + value);
+        log.info("Register async eventbus invoker [{}]", value);
     }
 
     @Override

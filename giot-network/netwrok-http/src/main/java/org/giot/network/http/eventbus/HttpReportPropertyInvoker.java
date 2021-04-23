@@ -19,7 +19,7 @@
 package org.giot.network.http.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.giot.core.device.DevicePropertiesMsg;
+import org.giot.core.device.source.DevicePropertiesMsg;
 import org.giot.core.eventbus.annotation.Invoker;
 
 /**

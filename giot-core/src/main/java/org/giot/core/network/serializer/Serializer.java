@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.core.device.serializer;
+package org.giot.core.network.serializer;
 
 public interface Serializer {
 

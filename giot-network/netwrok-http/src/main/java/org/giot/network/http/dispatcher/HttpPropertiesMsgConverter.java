@@ -23,7 +23,7 @@ import org.giot.core.device.DeviceContext;
 import org.giot.core.device.DeviceHeader;
 import org.giot.core.device.source.DevicePropertiesMsg;
 import org.giot.core.device.payload.PayloadConverter;
-import org.giot.core.device.serializer.Serializer;
+import org.giot.core.network.serializer.Serializer;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.RouteUrl;
 import org.giot.core.network.URLMappings;

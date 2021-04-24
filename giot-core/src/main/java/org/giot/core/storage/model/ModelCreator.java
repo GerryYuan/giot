@@ -41,10 +41,11 @@ public interface ModelCreator extends Service {
      * 添加model
      *
      * @param name
+     * @param des
      * @param clazz
      * @return
      */
-    Model addModel(String name, Class<? extends StorageData> clazz);
+    Model addModel(String name, String des, Class<? extends StorageData> clazz);
 
     interface WhenCompleteListener extends Service {
         /**

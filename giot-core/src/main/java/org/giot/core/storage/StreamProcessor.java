@@ -27,5 +27,8 @@ import org.giot.core.container.ContainerManager;
  * @author yuanguohua on 2021/3/5 16:44
  */
 public interface StreamProcessor {
-    <T extends StorageData> void create(ContainerManager containerManager, String name, Class<T> clazz) throws SQLException;
+    <T extends StorageData> void create(ContainerManager containerManager,
+                                        String name,
+                                        String des,
+                                        Class<T> clazz) throws SQLException;
 }

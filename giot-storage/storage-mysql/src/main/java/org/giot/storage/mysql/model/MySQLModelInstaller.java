@@ -19,10 +19,10 @@
 package org.giot.storage.mysql.model;
 
 import java.sql.SQLException;
+import org.giot.core.storage.DBClient;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelColumn;
 import org.giot.core.storage.model.ModelInstaller;
-import org.giot.storage.mysql.MySQLClient;
 import org.jooq.CreateTableColumnStep;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -37,18 +37,21 @@ import static org.jooq.impl.SQLDataType.BIGINT;
  */
 public class MySQLModelInstaller extends ModelInstaller {
 
-    private MySQLClient mySQLClient;
+    private DBClient dbClient;
 
-    public MySQLModelInstaller(final MySQLClient mySQLClient) {
-        this.mySQLClient = mySQLClient;
+    public MySQLModelInstaller(final DBClient dbClient) {
+        this.dbClient = dbClient;
     }
 
     @Override
     public void createTable(final Model model) throws SQLException {
-        DSLContext dsl = mySQLClient.getDSLContext();
-        CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName()).column(Model.ID, BIGINT.length(20));
+        DSLContext dsl = dbClient.getDSLContext();
+        CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName())
+                                         .column(Model.ID, BIGINT.length(20));
+        table.comment(model.getDes());
         for (ModelColumn column : model.getColumns()) {
-            table.column(transform(column));
+            Field field = transform(column);
+            table.column(field);
         }
         table.constraints(DSL.primaryKey(Model.ID)).execute();
     }
@@ -56,23 +59,24 @@ public class MySQLModelInstaller extends ModelInstaller {
     private Field transform(ModelColumn column) {
         Class<?> type = column.getType();
         String columnName = column.getColumnName();
-        String des = column.getDes();
         int length = column.getLength();
         boolean isNull = column.isNull();
         if (Integer.class.equals(type) || int.class.equals(type)) {
-            return DSL.field(columnName, SQLDataType.INTEGER.nullable(isNull), DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.INTEGER.length(length).nullable(isNull));
         } else if (Long.class.equals(type) || long.class.equals(type)) {
-            return DSL.field(columnName, SQLDataType.BIGINT.nullable(isNull), DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.BIGINT.length(length).nullable(isNull));
         } else if (Double.class.equals(type) || double.class.equals(type)) {
-            return DSL.field(columnName, SQLDataType.DOUBLE.nullable(isNull), DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.DOUBLE.length(length).nullable(isNull));
         } else if (String.class.equals(type)) {
-            return DSL.field(columnName, SQLDataType.VARCHAR(length).nullable(isNull), DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.VARCHAR(length).nullable(isNull));
         } else if (Byte.class.equals(type)) {
-            return DSL.field(columnName, SQLDataType.TINYINT.nullable(isNull), DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.TINYINT.length(length).nullable(isNull));
         } else if (Float.class.equals(type) || float.class.equals(type)) {
-            return DSL.field(columnName, SQLDataType.FLOAT.nullable(isNull), DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.FLOAT.length(length).nullable(isNull));
         } else if (Boolean.class.equals(type) || boolean.class.equals(type)) {
-            return DSL.field(columnName, SQLDataType.BOOLEAN.nullable(isNull), DSL.comment(des));
+            return DSL.field(columnName, SQLDataType.BOOLEAN.length(length).nullable(isNull));
+        } else if (type.isEnum()) {
+            return DSL.field(columnName, SQLDataType.BIT.length(length).nullable(isNull));
         } else {
             throw new IllegalArgumentException("Unsupported data type: " + type.getName());
         }

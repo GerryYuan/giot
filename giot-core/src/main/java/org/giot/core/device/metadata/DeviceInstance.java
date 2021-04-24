@@ -20,6 +20,7 @@ package org.giot.core.device.metadata;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.giot.core.device.enums.DeviceType;
 import org.giot.core.storage.Metadata;
 import org.giot.core.storage.MetadataStreamProcessor;
 import org.giot.core.storage.annotation.Column;
@@ -30,11 +31,17 @@ import org.giot.core.storage.annotation.Stream;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Stream(name = "device_instance", processor = MetadataStreamProcessor.class)
+@Stream(name = "device_instance", des = "设备实例", processor = MetadataStreamProcessor.class)
 public class DeviceInstance extends Metadata {
 
     @Column(name = "name", length = 255, des = "设备名称")
     private String name;
+
+    @Column(name = "des", length = 255, des = "设备描述")
+    private String des;
+
+    @Column(name = "type", length = 3, des = "设备类型")
+    private DeviceType type;
 
     @Column(name = "UUID", length = 255, des = "设备UUID")
     private String UUID;

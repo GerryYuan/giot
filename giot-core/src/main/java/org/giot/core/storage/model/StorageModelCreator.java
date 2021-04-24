@@ -40,11 +40,11 @@ public class StorageModelCreator implements ModelManager, ModelCreator {
     }
 
     @Override
-    public Model addModel(final String name,
+    public Model addModel(final String name, final String des,
                           final Class<? extends StorageData> clazz) {
         List<ModelColumn> columns = new ArrayList<>();
         loadColumns(clazz, columns);
-        Model model = new Model(name, columns);
+        Model model = new Model(name, des, columns);
         models.add(model);
         return model;
     }

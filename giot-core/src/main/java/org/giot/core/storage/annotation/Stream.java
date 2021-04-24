@@ -49,4 +49,10 @@ public @interface Stream {
      */
     Class<? extends StreamProcessor> processor();
 
+    /**
+     * 表描述
+     *
+     * @return
+     */
+    String des();
 }

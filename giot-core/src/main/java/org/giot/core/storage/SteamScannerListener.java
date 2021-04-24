@@ -75,7 +75,7 @@ public class SteamScannerListener implements AnnotationScannerListener {
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
-            }).create(containerManager, stream.name(), clazz);
+            }).create(containerManager, stream.name(), stream.des(), clazz);
         }
     }
 

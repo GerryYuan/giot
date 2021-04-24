@@ -33,11 +33,12 @@ import lombok.ToString;
 public class Model {
     public final static String ID = "id";
     private final String name;
+    private final String des;
     private final List<ModelColumn> columns;
 
-    public Model(final String name,
-                 final List<ModelColumn> columns) {
+    public Model(final String name, final String des, final List<ModelColumn> columns) {
         this.name = name;
+        this.des = des;
         this.columns = columns;
     }
 }

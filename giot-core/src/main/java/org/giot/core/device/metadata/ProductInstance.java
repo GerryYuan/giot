@@ -30,7 +30,7 @@ import org.giot.core.storage.annotation.Stream;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Stream(name = "product_instance", processor = MetadataStreamProcessor.class)
+@Stream(name = "product_instance", des = "产品实例", processor = MetadataStreamProcessor.class)
 public class ProductInstance extends Metadata {
 
     @Column(name = "name", length = 255, des = "产品名称")

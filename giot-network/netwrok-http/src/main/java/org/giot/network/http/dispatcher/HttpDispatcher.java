@@ -25,6 +25,7 @@ import org.giot.core.device.DeviceContext;
 import org.giot.core.device.DeviceHeader;
 import org.giot.core.device.payload.PayloadConverter;
 import org.giot.core.device.serializer.GsonSerializer;
+import org.giot.core.device.serializer.Serializer;
 import org.giot.core.network.AbstractDispatcher;
 import org.giot.core.network.MsgConverterException;
 import org.giot.core.network.ProcessorAdapter;
@@ -41,7 +42,11 @@ public class HttpDispatcher extends AbstractDispatcher {
     private ProcessorAdapter processorAdapter;
 
     public HttpDispatcher(final ContainerManager containerManager, final ProcessorAdapter processorAdapter) {
-        this.converters = Lists.newArrayList(new HttpPropertiesMsgConverter(containerManager, new GsonSerializer()));
+        Serializer serializer = new GsonSerializer();
+        this.converters = Lists.newArrayList(
+            new HttpPropertiesMsgConverter(containerManager, serializer),
+            new HttpConnectedConverter(containerManager, serializer)
+        );
         this.processorAdapter = processorAdapter;
     }
 

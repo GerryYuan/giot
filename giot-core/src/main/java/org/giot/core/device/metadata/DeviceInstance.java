@@ -42,6 +42,15 @@ public class DeviceInstance extends Metadata {
     @Column(name = "online", length = 2, des = "设备在线状态")
     private boolean online;
 
+    @Column(name = "onlineTime", length = 20, des = "设备在线时间")
+    private long onlineTime;
+
+    @Column(name = "createTime", length = 20, des = "创建时间")
+    private long createTime;
+
+    @Column(name = "updateTime", length = 20, des = "更新时间")
+    private long updateTime;
+
     @Override
     public Long id() {
         return null;

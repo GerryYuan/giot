@@ -16,28 +16,11 @@
  *
  */
 
-package org.giot.core.device.metadata;
-
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.giot.core.storage.Metadata;
-import org.giot.core.storage.MetadataStreamProcessor;
-import org.giot.core.storage.annotation.Column;
-import org.giot.core.storage.annotation.Stream;
+package org.giot.core.device.enums;
 
 /**
- * @author yuanguohua on 2021/3/5 16:26
+ * @author yuanguohua on 2021/4/25 14:53
  */
-@Data
-@EqualsAndHashCode(callSuper = false)
-@Stream(name = "product_instance", des = "产品实例", processor = MetadataStreamProcessor.class)
-public class ProductInstance extends Metadata {
-
-    @Column(name = "name", length = 255, des = "产品名称")
-    private String name;
-
-    @Override
-    public Long id() {
-        return null;
-    }
+public enum Transport {
+    http, mqtt, coap
 }

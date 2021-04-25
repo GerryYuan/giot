@@ -19,6 +19,7 @@
 package org.giot.storage.mysql.model;
 
 import java.sql.SQLException;
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.storage.DBClient;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelColumn;
@@ -35,6 +36,7 @@ import static org.jooq.impl.SQLDataType.BIGINT;
  * @author Created by gerry
  * @date 2021-03-07-11:02 PM
  */
+@Slf4j
 public class MySQLModelInstaller extends ModelInstaller {
 
     private DBClient dbClient;
@@ -50,10 +52,13 @@ public class MySQLModelInstaller extends ModelInstaller {
                                          .column(Model.ID, BIGINT.length(20));
         table.comment(model.getDes());
         for (ModelColumn column : model.getColumns()) {
-            Field field = transform(column);
-            table.column(field);
+            table.column(transform(column));
         }
-        table.constraints(DSL.primaryKey(Model.ID)).execute();
+        table.constraints(DSL.primaryKey(Model.ID));
+        if (log.isDebugEnabled()) {
+            log.info("execute sql is -> '{}'", table.getSQL());
+        }
+        table.execute();
     }
 
     private Field transform(ModelColumn column) {
@@ -81,4 +86,5 @@ public class MySQLModelInstaller extends ModelInstaller {
             throw new IllegalArgumentException("Unsupported data type: " + type.getName());
         }
     }
+
 }

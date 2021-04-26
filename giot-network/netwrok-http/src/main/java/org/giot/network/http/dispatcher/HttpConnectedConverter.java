@@ -30,7 +30,7 @@ import org.giot.core.network.URLMappings;
 import org.giot.network.http.HttpContainer;
 
 /**
- * 属性结构转换
+ * http property connect convert
  * <p>
  * { "deviceId": "test001", "isConnected": false }
  * </p>

@@ -21,7 +21,7 @@ package org.giot.core.network;
 import org.giot.core.module.AbstractModuleDefinition;
 
 /**
- * 网络模块，负责接收客户端数据和分发
+ * network module, receive client data and dispatcher
  */
 public class NetworkModule extends AbstractModuleDefinition {
 

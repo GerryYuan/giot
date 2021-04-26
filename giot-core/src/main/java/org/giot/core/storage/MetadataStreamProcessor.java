@@ -41,7 +41,7 @@ public class MetadataStreamProcessor extends AbstractStreamProcessor {
                                                final Class<T> clazz) throws SQLException {
         ModelCreator creator = containerManager.find(CoreModule.NAME).getService(ModelCreator.class);
         Model model = creator.addModel(name, des, clazz);
-        //处理model
+        //processor model
         ModelCreator.WhenCompleteListener listener = containerManager.find(
             StorageModule.NAME, getCoreContainerConfig().getMetaDataStorage())
                                                                      .getService(

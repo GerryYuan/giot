@@ -27,7 +27,7 @@ import org.giot.core.network.SourceProcessor;
 import org.giot.core.network.RouteUrl;
 
 /**
- * Processor注解 具体的消息分发器
+ * Processor
  * <p>
  * See {@link SourceProcessor}
  * </p>
@@ -39,14 +39,14 @@ import org.giot.core.network.RouteUrl;
 public @interface Processor {
 
     /**
-     * processor名字
+     * processor route url
      *
      * @return
      */
     RouteUrl route();
 
     /**
-     * 处理的版本
+     * version
      * @return
      */
     MsgVersion version();

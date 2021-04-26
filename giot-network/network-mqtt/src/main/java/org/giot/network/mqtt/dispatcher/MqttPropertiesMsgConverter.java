@@ -21,16 +21,16 @@ package org.giot.network.mqtt.dispatcher;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceContext;
 import org.giot.core.device.DeviceHeader;
-import org.giot.core.device.source.DevicePropertiesMsg;
 import org.giot.core.device.payload.PayloadConverter;
-import org.giot.core.network.serializer.Serializer;
+import org.giot.core.device.source.DevicePropertiesMsg;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.RouteUrl;
 import org.giot.core.network.URLMappings;
+import org.giot.core.network.serializer.Serializer;
 import org.giot.network.mqtt.MqttContainer;
 
 /**
- * 属性结构转换
+ * property convert
  * <p>
  * { "deviceId": "test001", "properties": { "temperature": 36.5, "hest": "finiot" } }
  * </p>

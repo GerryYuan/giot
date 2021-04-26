@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 import org.giot.core.storage.StreamProcessor;
 
 /**
- * Stream注解 提供存储数据定义，比如创建设备的消息，比如设备上传的消息，包含Key-Values
+ * Stream, provider storage data def, eg: create device msgs
  * <p>
  * See {@link StreamProcessor}
  * </p>
@@ -36,21 +36,21 @@ import org.giot.core.storage.StreamProcessor;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Stream {
     /**
-     * 数据名称，当前数据属于哪个业务，比如设备表，或者产品表，或者用户表等等
+     * data name
      *
      * @return
      */
     String name();
 
     /**
-     * 数据处理器，比如Metadata数据处理器和消息的数据处理器不一样
+     * data processor
      *
      * @return
      */
     Class<? extends StreamProcessor> processor();
 
     /**
-     * 表描述
+     * model des
      *
      * @return
      */

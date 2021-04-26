@@ -1,0 +1,100 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:giot-core:jar:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:giot-starter:jar:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ line 78, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-resources-plugin is missing. @ line 86, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:giot-device:jar:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:storage-pgsql:jar:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:storage-es7:jar:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:storage-mysql:jar:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:giot-storage:pom:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:network-mqtt:jar:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:netwrok-http:jar:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:giot-network:pom:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ org.giot:giot:0.0.1, C:\giot\pom.xml, line 136, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for org.giot:giot:pom:0.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ line 127, column 21
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-surefire-plugin is missing. @ line 136, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] giot                                                               [pom]
+[INFO] giot-core                                                          [jar]
+[INFO] giot-device                                                        [jar]
+[INFO] giot-storage                                                       [pom]
+[INFO] storage-es7                                                        [jar]
+[INFO] storage-pgsql                                                      [jar]
+[INFO] storage-mysql                                                      [jar]
+[INFO] giot-network                                                       [pom]
+[INFO] network-mqtt                                                       [jar]
+[INFO] netwrok-http                                                       [jar]
+[INFO] giot-starter                                                       [jar]
+[INFO] 
+[INFO] ---------------------------< org.giot:giot >----------------------------
+[INFO] Building giot 0.0.1                                               [1/11]
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- maven-checkstyle-plugin:3.1.2:check (validate) @ giot ---
+[WARNING] Old version of checkstyle detected. Consider updating to >= v8.30
+[WARNING] For more information see: https://maven.apache.org/plugins/maven-checkstyle-plugin/examples/upgrading-checkstyle.html
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for giot 0.0.1:
+[INFO] 
+[INFO] giot ............................................... FAILURE [  1.538 s]
+[INFO] giot-core .......................................... SKIPPED
+[INFO] giot-device ........................................ SKIPPED
+[INFO] giot-storage ....................................... SKIPPED
+[INFO] storage-es7 ........................................ SKIPPED
+[INFO] storage-pgsql ...................................... SKIPPED
+[INFO] storage-mysql ...................................... SKIPPED
+[INFO] giot-network ....................................... SKIPPED
+[INFO] network-mqtt ....................................... SKIPPED
+[INFO] netwrok-http ....................................... SKIPPED
+[INFO] giot-starter ....................................... SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.721 s
+[INFO] Finished at: 2021-04-26T14:18:37+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-checkstyle-plugin:3.1.2:check (validate) on project giot: Execution validate of goal org.apache.maven.plugins:maven-checkstyle-plugin:3.1.2:check failed: given name COMPACT_CTOR_DEF -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginExecutionException

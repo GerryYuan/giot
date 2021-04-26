@@ -19,6 +19,7 @@
 package org.giot.network.mqtt.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.device.source.DevicePropertiesMsg;
 import org.giot.core.eventbus.annotation.Invoker;
 
@@ -26,11 +27,12 @@ import org.giot.core.eventbus.annotation.Invoker;
  * @author Created by gerry
  * @date 2021-04-17-22:26
  */
+@Slf4j
 @Invoker
 public class MqttReportPropertyInvoker implements MqttBusInvoker {
 
     @Subscribe
     public void reportProperty(DevicePropertiesMsg msg) {
-        System.out.println("class[MqttReportPropertyInvoker], " + msg);
+        log.info("class[MqttReportPropertyInvoker], " + msg);
     }
 }

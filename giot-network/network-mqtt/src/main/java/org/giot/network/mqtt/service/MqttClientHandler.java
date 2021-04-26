@@ -99,7 +99,6 @@ public class MqttClientHandler extends SimpleChannelInboundHandler<MqttMessage> 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (cause instanceof IOException) {
-            // 远程主机强迫关闭了一个现有的连接的异常
             ctx.close();
         } else {
             super.exceptionCaught(ctx, cause);

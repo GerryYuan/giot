@@ -23,7 +23,7 @@ import org.giot.core.service.Service;
 import org.giot.core.storage.StorageData;
 
 /**
- * 当存储容器启动时，通过构建自己的ModelCreator#creator，创建一些表
+ * when storage container start, build modelCreateor#creator many models.
  *
  * @author Created by gerry
  * @date 2021-03-01-10:17 PM
@@ -31,25 +31,18 @@ import org.giot.core.storage.StorageData;
 public interface ModelCreator extends Service {
 
     /**
-     * 添加model
-     *
-     * @param model
+     * add model
      */
     void addModel(Model model);
 
     /**
-     * 添加model
-     *
-     * @param name
-     * @param des
-     * @param clazz
-     * @return
+     * add model
      */
     Model addModel(String name, String des, Class<? extends StorageData> clazz);
 
     interface WhenCompleteListener extends Service {
         /**
-         * model被创建完成后，调用Listener
+         * model created after, execute Listener
          */
         void listener(Model model) throws SQLException;
     }

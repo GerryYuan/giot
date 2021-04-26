@@ -23,7 +23,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.giot.core.eventbus.BusInvoker;
-import org.giot.core.network.SourceProcessor;
 
 /**
  * Invoker for EventBus sub

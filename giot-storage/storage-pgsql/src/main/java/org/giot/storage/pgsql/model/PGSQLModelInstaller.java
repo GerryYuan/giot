@@ -18,6 +18,7 @@
 
 package org.giot.storage.pgsql.model;
 
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelInstaller;
 
@@ -25,9 +26,10 @@ import org.giot.core.storage.model.ModelInstaller;
  * @author Created by gerry
  * @date 2021-03-07-11:02 PM
  */
+@Slf4j
 public class PGSQLModelInstaller extends ModelInstaller {
     @Override
     public void createTable(final Model model) {
-        System.out.println("pgsql model " + model + " installing....");
+        log.info("pgsql model " + model + " installing....");
     }
 }

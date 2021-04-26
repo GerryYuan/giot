@@ -30,9 +30,7 @@ import org.giot.network.mqtt.exception.MqttSubException;
 public interface IMqttSubService extends Service {
 
     /**
-     * 定于topic
-     *
-     * @param channel
+     * sub topic
      */
     void sub(Channel channel, List<String> topics) throws MqttSubException;
 

@@ -30,7 +30,7 @@ import org.giot.core.network.URLMappings;
 import org.giot.network.mqtt.MqttContainer;
 
 /**
- * 属性结构转换
+ * property connect convert
  * <p>
  * { "deviceId": "test001", "isConnected": false }
  * </p>

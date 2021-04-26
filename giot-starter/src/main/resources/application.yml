@@ -1,14 +1,26 @@
-##架构设计：
-###配置文件中，第一层是数据模块，第二层是数据组件，ModuleConfiguration
-###一个模块对应对个组件(ModuleDef)，一个组件对应一个容器(ContainerDefinition)，意思就是一个模块对应多个容器
-###第一步：加载配置文件
-###第二步：初始化容器，实现依赖注入（比如postgresql实例，对应的配置）
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+###ModuleDef -> ContainerDefinition
+###step one: load configuration file
+###step two: init container
 core:
   which: default
   default:
     metaDataStorage: mysql
     deviceDataStorage: postgresql
-    ## 物模型、传输协议（gateway）插件、消息协议插件
 device:
   which: default
   default:

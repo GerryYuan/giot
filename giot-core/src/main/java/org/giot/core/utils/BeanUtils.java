@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.giot.core.utils;
 
 import java.util.ArrayList;
@@ -31,10 +49,10 @@ public class BeanUtils {
     }
 
     /**
-     * 基于cglib进行对象复制
+     * cglib copy
      *
-     * @param source 被复制的对象
-     * @param target 复制对象
+     * @param source obj
+     * @param target obj
      */
     public static void copy(Object source, Object target) {
         if (EmptyUtils.isEmpty(source) || EmptyUtils.isEmpty(target)) {
@@ -45,10 +63,10 @@ public class BeanUtils {
     }
 
     /**
-     * 基于cglib进行对象组复制
+     * cglib copy
      *
-     * @param datas 被复制的对象数组
-     * @param clazz 复制对象
+     * @param datas source
+     * @param clazz target
      */
     public static <T> List<T> copyByList(List<?> datas, Class<T> clazz) {
         if (EmptyUtils.isEmpty(datas)) {
@@ -75,7 +93,7 @@ public class BeanUtils {
     }
 
     /**
-     * 通过class实例化对象
+     * class instance
      */
     public static <T> T instantiate(Class<T> clazz) {
         Objects.requireNonNull(clazz, "The class must not be null");
@@ -110,6 +128,5 @@ public class BeanUtils {
         }
         return beans;
     }
-
 
 }

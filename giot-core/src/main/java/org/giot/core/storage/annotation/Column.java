@@ -24,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 列注解
+ * Column
  *
  * @author yuanguohua on 2021/3/5 16:26
  */

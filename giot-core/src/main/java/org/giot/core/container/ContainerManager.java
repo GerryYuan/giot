@@ -36,7 +36,7 @@ import org.giot.core.service.ServiceHandler;
 import org.giot.core.utils.EmptyUtils;
 
 /**
- * 容器管理者
+ * Container manager
  *
  * @author Created by gerry
  * @date 2021-02-27-10:55 PM
@@ -111,9 +111,9 @@ public class ContainerManager implements ContainerHandler {
     private Properties whichProperties(AbstractContainer container) {
         String moduleName = container.module();
         String containerName = container.name();
-        //获取容器def
+        //get containerDef
         ModuleConfiguration.ContainerDefinition containerDef = moduleManager.find(moduleName, containerName);
-        //如果当前代码中实现了很多容器插件，比如storage插件eg:es,es7,mysql等，但是配置文件中which中没有填写，则过滤
+        //if impl many container plugin, such as storage plugin, eg: es,es7,mysql, but yml file which keyword is not setted, ignore.
         if (EmptyUtils.isEmpty(containerDef)) {
             log.debug(
                 "Module [" + moduleName + "] should not be provided container [" + containerName + "], based on yaml file for 'which'.");
@@ -124,7 +124,7 @@ public class ContainerManager implements ContainerHandler {
 
     private void prepare(AbstractContainer container, final Properties properties) throws ContainerConfigException {
         String containerName = container.name();
-        //把配置文件的内容赋值给ContainerConfig
+        //yml file content set to ContainerConfig
         try {
             copyProperties(properties, container.createConfig(), containerName);
         } catch (IllegalAccessException e) {

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import org.giot.core.module.ModuleConfiguration;
 
 /**
- * 资源文件加载模块
+ * Resource file load module
  */
 public interface ResourceLoader {
 

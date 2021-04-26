@@ -32,7 +32,7 @@ public interface ProcessorCreator extends Service {
 
     interface WhenCompleteListener {
         /**
-         * processorInfo被创建完成后，调用Listener
+         * processorInfo created after, execute Listener
          */
         void listener(ProcessorDef processorDef) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException;
     }

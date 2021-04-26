@@ -32,7 +32,7 @@ import org.giot.storage.mysql.model.MySQLModelInstaller;
  */
 public class MySQLContainer extends AbstractContainer {
 
-    private String NAME = "mysql";
+    public final static String NAME = "mysql";
 
     private MySQLConfig mySQLConfig;
 

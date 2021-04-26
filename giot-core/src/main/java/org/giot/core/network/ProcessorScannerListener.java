@@ -28,7 +28,7 @@ import org.giot.core.scanner.AnnotationScannerListener;
 import org.giot.core.utils.EmptyUtils;
 
 /**
- * Processor注解监听者，一些添加了该注解的类，就可以实现通过DispatcherManager知道该数据往哪个processor进行发送。比如：直连device属性消息、gateway属性消息，子设备属性消息
+ * Processor listener, by {@link ProcessorAdapter} dispatcher to processor
  * <p>
  * See {@link Processor}
  * </p>

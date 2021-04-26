@@ -18,6 +18,7 @@
 
 package org.giot.storage.es7.model;
 
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelInstaller;
 import org.giot.storage.es7.ES7Client;
@@ -26,6 +27,7 @@ import org.giot.storage.es7.ES7Client;
  * @author Created by gerry
  * @date 2021-03-07-11:02 PM
  */
+@Slf4j
 public class ES7ModelInstaller extends ModelInstaller {
 
     private ES7Client es7Client;
@@ -36,6 +38,6 @@ public class ES7ModelInstaller extends ModelInstaller {
 
     @Override
     public void createTable(final Model model) {
-        System.out.println("es7 model " + model + " installing....");
+        log.info("es7 model " + model + " installing....");
     }
 }

@@ -19,12 +19,12 @@
 package org.giot.core.module;
 
 /**
- * 模块的定义
+ * ModuleDef
  */
 public interface ModuleDefinition {
 
     /**
-     * 获取指定模块名称
+     * get module name
      *
      * @return
      */

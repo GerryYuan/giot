@@ -31,31 +31,31 @@ import org.giot.core.storage.annotation.Stream;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Stream(name = "device_instance", des = "设备实例", processor = MetadataStreamProcessor.class)
+@Stream(name = "device_instance", des = "device instance", processor = MetadataStreamProcessor.class)
 public class DeviceInstance extends Metadata {
 
-    @Column(name = "name", length = 255, des = "设备名称")
+    @Column(name = "name", length = 255, des = "device name")
     private String name;
 
-    @Column(name = "des", length = 255, des = "设备描述")
+    @Column(name = "des", length = 255, des = "device des")
     private String des;
 
-    @Column(name = "type", length = 3, des = "设备类型")
+    @Column(name = "type", length = 3, des = "device type")
     private DeviceType type;
 
-    @Column(name = "UUID", length = 255, des = "设备UUID")
-    private String UUID;
+    @Column(name = "uuid", length = 255, des = "device uuid")
+    private String uuid;
 
-    @Column(name = "online", length = 2, des = "设备在线状态")
+    @Column(name = "online", length = 2, des = "device online status")
     private boolean online;
 
-    @Column(name = "onlineTime", length = 20, des = "设备在线时间")
+    @Column(name = "onlineTime", length = 20, des = "device online time")
     private long onlineTime;
 
-    @Column(name = "createTime", length = 20, des = "创建时间")
+    @Column(name = "createTime", length = 20, des = "create time")
     private long createTime;
 
-    @Column(name = "updateTime", length = 20, des = "更新时间")
+    @Column(name = "updateTime", length = 20, des = "update time")
     private long updateTime;
 
     @Override

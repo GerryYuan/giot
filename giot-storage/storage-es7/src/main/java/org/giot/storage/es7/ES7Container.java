@@ -30,7 +30,7 @@ import org.giot.storage.es7.model.ES7ModelInstaller;
  */
 public class ES7Container extends AbstractContainer {
 
-    private String NAME = "elasticsearch7";
+    public final static String NAME = "elasticsearch7";
 
     @Override
     public String name() {

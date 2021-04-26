@@ -31,16 +31,16 @@ import org.giot.core.storage.annotation.Stream;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Stream(name = "device_instance_configuration", des = "设备实例配置", processor = MetadataStreamProcessor.class)
+@Stream(name = "device_instance_configuration", des = "device instance configuration", processor = MetadataStreamProcessor.class)
 public class DevicetInstanceConfiguration extends Metadata {
 
-    @Column(name = "name", length = 255, des = "名称")
+    @Column(name = "name", length = 255, des = "name")
     private String name;
 
-    @Column(name = "transport", length = 3, des = "传输协议")
+    @Column(name = "transport", length = 3, des = "transport")
     private Transport transport;
 
-    @Column(name = "des", length = 255, des = "描述")
+    @Column(name = "des", length = 255, des = "des")
     private String des;
 
     @Override

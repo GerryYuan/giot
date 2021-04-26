@@ -26,21 +26,17 @@ import java.lang.annotation.Annotation;
 public interface AnnotationScannerListener {
 
     /**
-     * 扫描后的class进行添加
-     *
-     * @param clazz
+     * scanner after add class
      */
     void addClass(Class<?> clazz);
 
     /**
-     * 匹配该注解的所有class
-     *
-     * @return
+     * match all class
      */
     Class<? extends Annotation> match();
 
     /**
-     * 监听根据条件获取的class，然后进行处理
+     * listener by condition get class, then process
      */
     void listener() throws Exception;
 }

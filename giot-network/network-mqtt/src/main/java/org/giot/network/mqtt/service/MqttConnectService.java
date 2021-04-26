@@ -56,9 +56,9 @@ public class MqttConnectService implements IMqttConnectService {
 
     @Override
     public void disConnect(final Channel channel) {
-        //重连
+        //reconnect
         channel.close();
-        //todo 负责通知下游
+        //todo notify
     }
 
     @Override

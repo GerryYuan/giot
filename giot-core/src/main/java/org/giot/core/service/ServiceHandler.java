@@ -18,7 +18,6 @@
 
 package org.giot.core.service;
 
-import org.giot.core.container.AbstractContainer;
 import org.giot.core.exception.ServiceNotFoundException;
 
 /**
@@ -27,20 +26,20 @@ import org.giot.core.exception.ServiceNotFoundException;
 public interface ServiceHandler {
 
     /**
-     * 注册容器服务
+     * register container service
      *
-     * @param serviceType
-     * @param service
-     * @throws ServiceNotFoundException
+     * @param serviceType class
+     * @param service Service
+     * @throws ServiceNotFoundException exception
      */
     void register(Class<? extends Service> serviceType, Service service) throws ServiceNotFoundException;
 
     /**
-     * 获取容器服务实例
+     * get container service instance
      *
-     * @param clazz
-     * @param <T>
-     * @return
+     * @param clazz source
+     * @param <T> target
+     * @return T return
      */
     <T extends Service> T getService(Class<T> clazz);
 }

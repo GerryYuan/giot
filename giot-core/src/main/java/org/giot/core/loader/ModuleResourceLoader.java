@@ -22,7 +22,6 @@ import com.google.common.base.Splitter;
 import java.io.FileNotFoundException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -48,7 +47,7 @@ public class ModuleResourceLoader implements ResourceLoader {
     }
 
     /**
-     * 加载配置文件，初始化模块，每个模块有各自不通的configuration，
+     * load yml file, init module to configuration
      */
     private void loadYaml(String fileName) throws FileNotFoundException {
         Reader reader = read(fileName);
@@ -56,7 +55,7 @@ public class ModuleResourceLoader implements ResourceLoader {
     }
 
     /**
-     * { "which": "xxx", "xxx":{ "a":"aa", "b":"bb" } }
+     * { "which": "xxx","xxx":{ "a":"aa", "b":"bb" } }
      */
     @Override
     public List<ModuleConfiguration.ContainerDefinition> loadContainerDefs(final Map<String, Object> config) {
@@ -64,7 +63,7 @@ public class ModuleResourceLoader implements ResourceLoader {
         if (EmptyUtils.isEmpty(config)) {
             return containerDefinitions;
         }
-        //如果不存在which，则过滤
+        //if not exists which, ignore.
         String which = (String) config.get(ModuleConfiguration.WHICH);
         if (EmptyUtils.isEmpty(which)) {
             return containerDefinitions;
@@ -82,7 +81,7 @@ public class ModuleResourceLoader implements ResourceLoader {
         loadYaml(fileName);
         ModuleConfiguration moduleConfiguration = new ModuleConfiguration();
         moduleConfig.forEach((k, v) -> {
-            //ymal文件读取模块，根据配置文件读取的模块名称去加载模块以及容器
+            //by file read module name, then load module and container
             moduleConfiguration.addModule(k, loadContainerDefs(v));
         });
         return moduleConfiguration;

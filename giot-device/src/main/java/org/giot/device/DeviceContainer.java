@@ -18,6 +18,7 @@
 
 package org.giot.device;
 
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
@@ -29,6 +30,7 @@ import org.giot.device.service.DeviceService;
  * @author Created by gerry
  * @date 2021-03-01-9:46 PM
  */
+@Slf4j
 public class DeviceContainer extends AbstractContainer {
 
     private DeviceContainerConfig containerConfig;
@@ -56,7 +58,7 @@ public class DeviceContainer extends AbstractContainer {
 
     @Override
     public void start() {
-        System.out.println("DeviceContainer started...");
+        log.info("DeviceContainer started...");
     }
 
     @Override

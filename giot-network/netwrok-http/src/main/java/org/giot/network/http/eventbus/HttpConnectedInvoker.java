@@ -19,6 +19,7 @@
 package org.giot.network.http.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.device.source.DeviceStatus;
 import org.giot.core.eventbus.annotation.Invoker;
 
@@ -26,11 +27,12 @@ import org.giot.core.eventbus.annotation.Invoker;
  * @author Created by gerry
  * @date 2021-04-17-22:26
  */
+@Slf4j
 @Invoker
 public class HttpConnectedInvoker implements HttpBusInvoker {
 
     @Subscribe
     public void connected(DeviceStatus deviceStatus) {
-        System.out.println("class[HttpConnectedInvoker], " + deviceStatus);
+        log.info("class[HttpConnectedInvoker], " + deviceStatus);
     }
 }

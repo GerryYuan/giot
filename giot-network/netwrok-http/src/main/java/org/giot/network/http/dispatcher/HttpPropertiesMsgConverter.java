@@ -30,7 +30,7 @@ import org.giot.core.network.URLMappings;
 import org.giot.network.http.HttpContainer;
 
 /**
- * 属性结构转换
+ * http property msg convert
  * <p>
  * { "deviceId": "test001", "properties": { "temperature": 36.5, "hest": "finiot" } }
  * </p>

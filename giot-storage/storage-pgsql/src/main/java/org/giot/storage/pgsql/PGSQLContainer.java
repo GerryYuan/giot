@@ -31,7 +31,7 @@ import org.giot.storage.pgsql.model.PGSQLModelInstaller;
  */
 public class PGSQLContainer extends AbstractContainer {
 
-    private String NAME = "postgresql";
+    public final static String NAME = "postgresql";
 
     @Override
     public String name() {

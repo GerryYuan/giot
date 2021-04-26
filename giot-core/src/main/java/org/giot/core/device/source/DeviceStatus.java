@@ -20,7 +20,6 @@ package org.giot.core.device.source;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.giot.core.device.source.DeviceSource;
 
 /**
  * @author yuanguohua on 2021/3/26 11:11

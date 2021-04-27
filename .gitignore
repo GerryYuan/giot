@@ -56,7 +56,7 @@ buildNumber.properties
 .mvn/
 mvnw
 mvnw.cmd
-
+clean
 # MacOS File
 .DS_Store
 

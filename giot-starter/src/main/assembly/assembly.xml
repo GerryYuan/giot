@@ -26,10 +26,25 @@
     </formats>
     <fileSets>
         <fileSet>
+            <directory>${project.basedir}/../shell/bin</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <include>*.sh</include>
+                <include>*.bat</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/../shell</directory>
+            <outputDirectory>/config</outputDirectory>
+            <includes>
+                <include>log4j2.xml</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>src/main/resources</directory>
             <includes>
                 <include>application.yml</include>
-                <include>log4j2.xml</include>
             </includes>
             <outputDirectory>/config</outputDirectory>
         </fileSet>

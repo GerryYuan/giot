@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+<configuration status="OFF" monitorInterval="1800">
+    <properties>
+        <property name="LOG_PATH">${sys:giot.logDir}</property>
+        <property name="project_name">giot</property>
+        <property name="pattern">[%level] [%date{yyyy-MM-dd HH:mm:ss,SSS}] [%class:%line\] [%thread] [%X{requestId}]
+            [%X{serverIp}] %m%n
+        </property>
+    </properties>
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+
+        <RollingRandomAccessFile name="LogstashFile"
+                                 fileName="${LOG_PATH}/giot-server.log"
+                                 filePattern="${LOG_PATH}/giot-server-%d{yyyy-MM-dd}_logstash.log">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"
+                                           modulate="true"/>
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="debug" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="RollingInfoFile"
+                                 fileName="${LOG_PATH}/giot-server-info.log"
+                                 filePattern="${LOG_PATH}/giot-server-info_%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"
+                                           modulate="true"/>
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY"
+                                 onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="RollingErrorFile"
+                                 fileName="${LOG_PATH}/giot-server-error.log"
+                                 filePattern="${LOG_PATH}/giot-server-error_%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"
+                                           modulate="true"/>
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT"
+                                 onMismatch="DENY"/>
+            </Filters>
+        </RollingRandomAccessFile>
+
+    </appenders>
+    <loggers>
+        <!-- 3rdparty Loggers -->
+        <Logger name="com.google" level="error"/>
+        <Logger name="org.jooq" level="error"/>
+        <Logger name="org.apache" level="error"/>
+        <Logger name="org.giot" level="info"/>
+        <Root level="info">
+            <appender-ref ref="RollingInfoFile"/>
+        </Root>
+    </loggers>
+
+</configuration>

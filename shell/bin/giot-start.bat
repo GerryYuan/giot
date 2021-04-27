@@ -19,7 +19,7 @@
 setlocal
 set GIOT_PROCESS_TITLE=GIoT-Server
 set GIOT_HOME=%~dp0%..
-set GIOT_OPTS="-Xms256M -Xmx512M -Doap.logDir=%GIOT_HOME%\logs"
+set GIOT_OPTS="-Xms256M -Xmx512M -Dgiot.logDir=%GIOT_HOME%\logs"
 
 set CLASSPATH=%GIOT_HOME%\config;.;
 set CLASSPATH=%GIOT_HOME%\libs\*;%CLASSPATH%

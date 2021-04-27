@@ -79,6 +79,7 @@ public class MqttOpsService implements IMqttOpsService {
                            pipeline.addLast("handler", handler);
                        }
                    }).connect().channel();
+        log.info("Netty mqtt server listening on port " + config.getPort());
     }
 
     @Override

@@ -20,7 +20,7 @@
     <properties>
         <property name="LOG_PATH">${sys:giot.logDir}</property>
         <property name="project_name">giot</property>
-        <property name="pattern">[%level] [%date{yyyy-MM-dd HH:mm:ss,SSS}] [%class:%line\] [%thread] [%X{requestId}] [%X{serverIp}] %m%n
+        <property name="pattern">[%level] [%date{yyyy-MM-dd HH:mm:ss,SSS}] [%class:%line\] [%thread] %m%n
         </property>
     </properties>
     <appenders>

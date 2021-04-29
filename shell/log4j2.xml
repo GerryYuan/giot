@@ -80,6 +80,7 @@
         <Logger name="org.apache" level="error"/>
         <Logger name="org.giot" level="info"/>
         <Root level="info">
+            <appender-ref ref="Console"/>
             <appender-ref ref="RollingInfoFile"/>
         </Root>
     </loggers>

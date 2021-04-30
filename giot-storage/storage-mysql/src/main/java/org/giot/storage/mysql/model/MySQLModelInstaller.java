@@ -49,7 +49,7 @@ public class MySQLModelInstaller extends ModelInstaller {
     public void createTable(final Model model) throws SQLException {
         DSLContext dsl = dbClient.getDSLContext();
         CreateTableColumnStep table = dsl.createTableIfNotExists(model.getName())
-                                         .column(Model.ID, BIGINT.length(20));
+                                         .column(Model.ID, BIGINT.length(20).identity(true).nullable(false));
         table.comment(model.getDes());
         for (ModelColumn column : model.getColumns()) {
             table.column(transform(column));

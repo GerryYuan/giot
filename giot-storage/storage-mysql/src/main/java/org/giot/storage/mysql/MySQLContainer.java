@@ -25,8 +25,10 @@ import org.giot.core.exception.ContainerStartException;
 import org.giot.core.storage.DBClient;
 import org.giot.core.storage.StorageModule;
 import org.giot.core.storage.model.ModelCreator;
+import org.giot.core.storage.model.ModelOperate;
 import org.giot.storage.mysql.config.MySQLConfig;
 import org.giot.storage.mysql.model.MySQLModelInstaller;
+import org.giot.storage.mysql.model.MysqlModelOperate;
 import org.giot.storage.mysql.storage.MysqlDeviceStorageDAO;
 
 /**
@@ -62,7 +64,8 @@ public class MySQLContainer extends AbstractContainer {
         MySQLClient mySQLClient = new MySQLClient(mySQLConfig.getProperties());
         super.register(DBClient.class, mySQLClient);
         super.register(ModelCreator.WhenCompleteListener.class, new MySQLModelInstaller(mySQLClient));
-        super.register(IDeviceStorageDAO.class, new MysqlDeviceStorageDAO(mySQLClient));
+        super.register(IDeviceStorageDAO.class, new MysqlDeviceStorageDAO(getContainerManager(), mySQLClient));
+        super.register(ModelOperate.class, new MysqlModelOperate(getContainerManager()));
     }
 
     @Override

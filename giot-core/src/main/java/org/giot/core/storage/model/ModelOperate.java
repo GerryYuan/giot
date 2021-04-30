@@ -18,27 +18,13 @@
 
 package org.giot.core.storage.model;
 
-import java.sql.SQLException;
 import org.giot.core.container.Service;
 import org.giot.core.storage.StorageData;
 
 /**
- * when storage container start, build modelCreateor#creator many models.
- *
- * @author Created by gerry
- * @date 2021-03-01-10:17 PM
+ * @author yuanguohua on 2021/4/30 14:27
  */
-public interface ModelCreator extends Service {
+public interface ModelOperate extends Service {
 
-    /**
-     * add model
-     */
-    Model addModel(String name, String des, Class<? extends StorageData> clazz);
-
-    interface WhenCompleteListener extends Service {
-        /**
-         * model created after, execute Listener
-         */
-        void listener(Model model) throws SQLException;
-    }
+    <T extends StorageData, R extends TableContext> R getTable(Class<T> clazz);
 }

@@ -19,6 +19,7 @@
 package org.giot.core.storage.model;
 
 import java.util.List;
+import org.giot.core.storage.StorageData;
 
 /**
  * @author Created by gerry
@@ -28,4 +29,5 @@ public interface ModelManager {
 
     List<Model> allModels();
 
+    <T extends StorageData> Model getModel(Class<T> clazz);
 }

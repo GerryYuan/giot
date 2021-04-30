@@ -19,9 +19,12 @@
 package org.giot.core.storage.model;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import org.giot.core.storage.StorageData;
 import org.giot.core.storage.annotation.Column;
 import org.giot.core.utils.EmptyUtils;
@@ -32,29 +35,32 @@ import org.giot.core.utils.EmptyUtils;
  */
 public class StorageModelCreator implements ModelManager, ModelCreator {
 
-    private List<Model> models = new ArrayList<>();
-
-    @Override
-    public void addModel(final Model model) {
-        models.add(model);
-    }
+    private Map<Class<? extends StorageData>, Model> modelMap = new ConcurrentHashMap<>();
 
     @Override
     public Model addModel(final String name, final String des,
                           final Class<? extends StorageData> clazz) {
-        List<ModelColumn> columns = new ArrayList<>();
+        List<ModelColumn> columns = new LinkedList<>();
         loadColumns(clazz, columns);
         Model model = new Model(name, des, columns);
-        models.add(model);
+        modelMap.put(clazz, model);
         return model;
     }
 
     @Override
     public List<Model> allModels() {
-        return this.models;
+        return this.modelMap.values().stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public <T extends StorageData> Model getModel(final Class<T> clazz) {
+        return modelMap.computeIfAbsent(clazz, k -> null);
     }
 
     private void loadColumns(Class<?> clazz, List<ModelColumn> columns) {
+        if (Objects.nonNull(clazz.getSuperclass())) {
+            loadColumns(clazz.getSuperclass(), columns);
+        }
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             if (!field.isAnnotationPresent(Column.class)) {
@@ -65,9 +71,6 @@ public class StorageModelCreator implements ModelManager, ModelCreator {
             ModelColumn modelColumn = new ModelColumn(
                 name, column.length(), column.des(), field.getType(), field.getGenericType(), column.isNull());
             columns.add(modelColumn);
-        }
-        if (Objects.nonNull(clazz.getSuperclass())) {
-            loadColumns(clazz.getSuperclass(), columns);
         }
     }
 }

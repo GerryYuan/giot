@@ -19,32 +19,48 @@
 package org.giot.storage.mysql.storage;
 
 import java.sql.SQLException;
+import org.giot.core.container.ContainerManager;
 import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.metadata.DeviceInstance;
 import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.storage.DBClient;
+import org.giot.core.storage.StorageModule;
+import org.giot.core.storage.model.ModelOperate;
 import org.giot.core.utils.StringUtils;
+import org.giot.storage.mysql.MySQLContainer;
+import org.giot.storage.mysql.model.MysqlContext;
 
 /**
  * @author yuanguohua on 2021/4/30 10:25
  */
 public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
 
+    private ContainerManager containerManager;
+
+    private ModelOperate modelOperate;
+
     private DBClient dbClient;
 
-    public MysqlDeviceStorageDAO(final DBClient dbClient) {
+    public MysqlDeviceStorageDAO(final ContainerManager containerManager, final DBClient dbClient) {
+        this.containerManager = containerManager;
         this.dbClient = dbClient;
+    }
+
+    private ModelOperate getModelOperate() {
+        if (this.modelOperate == null) {
+            this.modelOperate = containerManager.provider(StorageModule.NAME, MySQLContainer.NAME)
+                                                .getService(ModelOperate.class);
+        }
+        return this.modelOperate;
     }
 
     @Override
     public boolean createDevice(final String name, final String des, final DeviceType deviceType) throws SQLException {
-        DeviceInstance deviceInstance = new DeviceInstance();
-        deviceInstance.setName(name);
-        deviceInstance.setUuid(StringUtils.createUUID());
-        deviceInstance.setType(deviceType);
         long now = System.currentTimeMillis();
-        deviceInstance.setCreateTime(now);
-        deviceInstance.setUpdateTime(now);
+        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
+        dbClient.getDSLContext().insertInto(context.getTable())
+                .columns(context.getFields())
+                .values(name, des, deviceType, StringUtils.createUUID(), false, 0L, now, now).execute();
         return false;
     }
 }

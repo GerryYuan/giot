@@ -29,21 +29,20 @@ public interface IDeviceStorageDAO extends IStorageDAO {
 
     /**
      * get device is exists.
+     *
      * @param deviceId uuid
      * @return boolean update is successfully
-     * @throws SQLException
      */
     boolean isExists(String deviceId) throws SQLException;
 
     /**
      * create device
      *
-     * @param deviceId
+     * @param deviceId   uuid
      * @param name       device name
      * @param des        device description
      * @param deviceType device type {@link DeviceType}
      * @return boolean create is successfully
-     * @throws SQLException
      */
     boolean createDevice(String deviceId, String name, String des, DeviceType deviceType) throws SQLException;
 

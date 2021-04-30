@@ -48,7 +48,7 @@ public interface IDeviceStorageService extends IStorageDAO {
     /**
      * create device
      *
-     * @param deviceId uuid
+     * @param deviceId   uuid
      * @param name       device name
      * @param des        device description
      * @param deviceType device type {@link DeviceType}

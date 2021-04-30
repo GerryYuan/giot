@@ -19,6 +19,7 @@
 package org.giot.storage.mysql.storage;
 
 import java.sql.SQLException;
+import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.metadata.DeviceInstance;
@@ -29,10 +30,13 @@ import org.giot.core.storage.model.ModelOperate;
 import org.giot.core.utils.StringUtils;
 import org.giot.storage.mysql.MySQLContainer;
 import org.giot.storage.mysql.model.MysqlContext;
+import org.jooq.Insert;
+import org.jooq.conf.ParamType;
 
 /**
  * @author yuanguohua on 2021/4/30 10:25
  */
+@Slf4j
 public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
 
     private ContainerManager containerManager;
@@ -58,9 +62,13 @@ public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
     public boolean createDevice(final String name, final String des, final DeviceType deviceType) throws SQLException {
         long now = System.currentTimeMillis();
         MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
-        dbClient.getDSLContext().insertInto(context.getTable())
-                .columns(context.getFields())
-                .values(name, des, deviceType, StringUtils.createUUID(), false, 0L, now, now).execute();
-        return false;
+        Insert insert = dbClient.getDSLContext()
+                                .insertInto(context.getTable())
+                                .columns(context.getFields())
+                                .values(name, des, deviceType.name(), StringUtils.createUUID(), false, 0L, now, now);
+        if (log.isDebugEnabled()) {
+            log.info("execute create device sql -> {}", insert.getSQL(ParamType.INLINED));
+        }
+        return insert.execute() == 1;
     }
 }

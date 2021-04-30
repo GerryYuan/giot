@@ -39,4 +39,7 @@ public @interface Column {
     String des() default "";
 
     boolean isNull() default false;
+
+    boolean unique() default false;
+
 }

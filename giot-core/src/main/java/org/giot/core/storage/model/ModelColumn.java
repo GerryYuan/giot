@@ -19,8 +19,7 @@
 package org.giot.core.storage.model;
 
 import java.lang.reflect.Type;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -28,16 +27,15 @@ import lombok.ToString;
  * @author Created by gerry
  * @date 2021-03-01-10:18 PM
  */
-@AllArgsConstructor
 @ToString
 @Getter
-@EqualsAndHashCode
+@Builder
 public class ModelColumn {
-    private final String columnName;
-    private final int length;
-    private final String des;
-    private final Class<?> type;
-    private final Type genericType;
-    private final boolean isNull;
-
+    private String columnName;
+    private int length;
+    private String des;
+    private Class<?> type;
+    private Type genericType;
+    private boolean isNull;
+    private boolean unique;
 }

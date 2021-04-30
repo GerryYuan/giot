@@ -68,8 +68,13 @@ public class StorageModelCreator implements ModelManager, ModelCreator {
             }
             Column column = field.getAnnotation(Column.class);
             String name = EmptyUtils.isEmpty(column.name()) ? field.getName() : column.name();
-            ModelColumn modelColumn = new ModelColumn(
-                name, column.length(), column.des(), field.getType(), field.getGenericType(), column.isNull());
+            ModelColumn modelColumn = ModelColumn.builder()
+                       .columnName(name)
+                       .length(column.length())
+                       .des(column.des())
+                       .type(field.getType())
+                       .genericType(field.getGenericType())
+                       .isNull(column.isNull()).unique(column.unique()).build();
             columns.add(modelColumn);
         }
     }

@@ -43,7 +43,7 @@ public class DeviceInstance extends Metadata {
     @Column(name = "type", length = 10, des = "device type")
     private DeviceType type;
 
-    @Column(name = "uuid", length = 255, des = "device uuid")
+    @Column(name = "uuid", unique = true, length = 255, des = "device uuid")
     private String uuid;
 
     @Column(name = "online", length = 2, des = "device online status")

@@ -16,7 +16,7 @@
  *
  */
 
-package test.org.giot.starter;
+package test.giot.starter;
 
 import java.io.FileNotFoundException;
 import org.giot.core.exception.ContainerConfigException;

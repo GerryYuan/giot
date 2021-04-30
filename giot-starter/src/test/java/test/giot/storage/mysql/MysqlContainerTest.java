@@ -16,7 +16,7 @@
  *
  */
 
-package test.org.giot.storage.mysql;
+package test.giot.storage.mysql;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;

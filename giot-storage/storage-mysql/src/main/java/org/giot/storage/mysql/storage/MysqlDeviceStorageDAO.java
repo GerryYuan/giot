@@ -26,11 +26,12 @@ import org.giot.core.device.metadata.DeviceInstance;
 import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.storage.DBClient;
 import org.giot.core.storage.StorageModule;
+import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelOperate;
-import org.giot.core.utils.StringUtils;
 import org.giot.storage.mysql.MySQLContainer;
 import org.giot.storage.mysql.model.MysqlContext;
 import org.jooq.Insert;
+import org.jooq.Select;
 import org.jooq.Update;
 import org.jooq.conf.ParamType;
 import org.jooq.impl.DSL;
@@ -61,13 +62,28 @@ public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
     }
 
     @Override
-    public boolean createDevice(final String name, final String des, final DeviceType deviceType) throws SQLException {
+    public boolean isExists(final String deviceId) throws SQLException {
+        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
+        Select select = dbClient.getDSLContext()
+                                .select(DSL.field(Model.ID)).from(context.getTable())
+                                .where(context.getFiled("uuid").eq(deviceId));
+        if (log.isDebugEnabled()) {
+            log.info("execute create device sql -> {}", select.getSQL(ParamType.INLINED));
+        }
+        return select.fetch().isNotEmpty();
+    }
+
+    @Override
+    public boolean createDevice(final String deviceId,
+                                final String name,
+                                final String des,
+                                final DeviceType deviceType) throws SQLException {
         long now = System.currentTimeMillis();
         MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
         Insert insert = dbClient.getDSLContext()
                                 .insertInto(context.getTable())
                                 .columns(context.getFields())
-                                .values(name, des, deviceType.name(), StringUtils.createUUID(), false, 0L, now, now);
+                                .values(name, des, deviceType.name(), deviceId, false, 0L, now, now);
         if (log.isDebugEnabled()) {
             log.info("execute create device sql -> {}", insert.getSQL(ParamType.INLINED));
         }
@@ -82,7 +98,7 @@ public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
                                 .set(context.getFiled("online"), true)
                                 .set(context.getFiled("onlineTime"), System.currentTimeMillis())
                                 .set(context.getFiled("updateTime"), System.currentTimeMillis())
-                                .where(DSL.field("uuid").eq(deviceId));
+                                .where(context.getFiled("uuid").eq(deviceId));
 
         if (log.isDebugEnabled()) {
             log.info("execute online device sql -> {}", update.getSQL(ParamType.INLINED));

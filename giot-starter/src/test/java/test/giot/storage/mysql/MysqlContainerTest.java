@@ -54,13 +54,24 @@ public class MysqlContainerTest {
     public void createDevice() throws SQLException {
         IDeviceStorageService deviceStorageService = containerManager.provider(DeviceModule.NAME)
                                                                      .getService(IDeviceStorageService.class);
-        Assert.assertTrue(deviceStorageService.createDevice("test-1", "test device des", DeviceType.NORMAL));
+        String deviceId = "fc8ffa765bf7482285e3994e55ea7302";
+        boolean isExists = deviceStorageService.isExists(deviceId);
+        if (!isExists) {
+            Assert.assertTrue(
+                deviceStorageService.createDevice(deviceId, "test-1", "test device des", DeviceType.NORMAL));
+        }
     }
 
     @Test
     public void onlineDevice() throws SQLException {
         IDeviceStorageService deviceStorageService = containerManager.provider(DeviceModule.NAME)
                                                                      .getService(IDeviceStorageService.class);
-        Assert.assertTrue(deviceStorageService.onlineDevice("fc8ffa765bf7482285e3994e55ea7302"));
+        String deviceId = "cc8ffa765bf7482285e3994e55ea7302";
+        boolean isExists = deviceStorageService.isExists(deviceId);
+        if (!isExists) {
+            Assert.assertTrue(
+                deviceStorageService.createDevice(deviceId, "test-1", "test device des", DeviceType.NORMAL));
+        }
+        Assert.assertTrue(deviceStorageService.onlineDevice(deviceId));
     }
 }

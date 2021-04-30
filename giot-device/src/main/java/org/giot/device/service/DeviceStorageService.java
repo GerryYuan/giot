@@ -25,6 +25,7 @@ import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.storage.StorageModule;
+import org.giot.core.utils.StringUtils;
 
 /**
  * @author yuanguohua on 2021/4/30 10:30
@@ -51,8 +52,21 @@ public class DeviceStorageService implements IDeviceStorageService {
     }
 
     @Override
+    public boolean isExists(final String deviceId) throws SQLException {
+        return getDeviceStorageDAO().isExists(deviceId);
+    }
+
+    @Override
     public boolean createDevice(final String name, final String des, final DeviceType deviceType) throws SQLException {
-        return getDeviceStorageDAO().createDevice(name, des, deviceType);
+        return createDevice(StringUtils.createUUID(), name, des, deviceType);
+    }
+
+    @Override
+    public boolean createDevice(final String deviceId,
+                                final String name,
+                                final String des,
+                                final DeviceType deviceType) throws SQLException {
+        return getDeviceStorageDAO().createDevice(deviceId, name, des, deviceType);
     }
 
     @Override

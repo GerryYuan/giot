@@ -26,15 +26,26 @@ import org.giot.core.storage.IStorageDAO;
  * @author yuanguohua on 2021/4/30 10:32
  */
 public interface IDeviceStorageDAO extends IStorageDAO {
+
+    /**
+     * get device is exists.
+     * @param deviceId uuid
+     * @return boolean update is successfully
+     * @throws SQLException
+     */
+    boolean isExists(String deviceId) throws SQLException;
+
     /**
      * create device
      *
+     * @param deviceId
      * @param name       device name
      * @param des        device description
      * @param deviceType device type {@link DeviceType}
      * @return boolean create is successfully
+     * @throws SQLException
      */
-    boolean createDevice(String name, String des, DeviceType deviceType) throws SQLException;
+    boolean createDevice(String deviceId, String name, String des, DeviceType deviceType) throws SQLException;
 
     /**
      * online device

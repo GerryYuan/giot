@@ -31,8 +31,7 @@ public interface IDeviceStorageService extends IStorageDAO {
      * get device is exists.
      *
      * @param deviceId uuid
-     * @return boolean update is successfully
-     * @throws SQLException
+     * @return
      */
     boolean isExists(String deviceId) throws SQLException;
 
@@ -42,20 +41,18 @@ public interface IDeviceStorageService extends IStorageDAO {
      * @param name       device name
      * @param des        device description
      * @param deviceType device type {@link DeviceType}
-     * @return boolean create is successfully
-     * @throws SQLException
+     * @return
      */
     boolean createDevice(String name, String des, DeviceType deviceType) throws SQLException;
 
     /**
      * create device
      *
-     * @param deviceId
+     * @param deviceId uuid
      * @param name       device name
      * @param des        device description
      * @param deviceType device type {@link DeviceType}
-     * @return boolean create is successfully
-     * @throws SQLException
+     * @return
      */
     boolean createDevice(String deviceId, String name, String des, DeviceType deviceType) throws SQLException;
 
@@ -63,8 +60,7 @@ public interface IDeviceStorageService extends IStorageDAO {
      * online device
      *
      * @param deviceId uuid
-     * @return boolean update is successfully
-     * @throws SQLException
+     * @return
      */
     boolean onlineDevice(String deviceId) throws SQLException;
 

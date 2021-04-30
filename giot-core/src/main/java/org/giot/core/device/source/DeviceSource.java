@@ -19,6 +19,7 @@
 package org.giot.core.device.source;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.giot.core.device.DeviceHeader;
 import org.giot.core.network.Source;
@@ -28,6 +29,7 @@ import org.giot.core.network.Source;
  */
 @ToString
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class DeviceSource extends Source {
 
     private DeviceHeader header;

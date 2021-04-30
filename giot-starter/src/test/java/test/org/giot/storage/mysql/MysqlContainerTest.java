@@ -56,4 +56,11 @@ public class MysqlContainerTest {
                                                                      .getService(IDeviceStorageService.class);
         Assert.assertTrue(deviceStorageService.createDevice("test-1", "test device des", DeviceType.NORMAL));
     }
+
+    @Test
+    public void onlineDevice() throws SQLException {
+        IDeviceStorageService deviceStorageService = containerManager.provider(DeviceModule.NAME)
+                                                                     .getService(IDeviceStorageService.class);
+        Assert.assertTrue(deviceStorageService.onlineDevice("fc8ffa765bf7482285e3994e55ea7302"));
+    }
 }

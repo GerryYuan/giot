@@ -30,4 +30,6 @@ public interface MysqlContext {
     Table getTable();
 
     List<Field> getFields();
+
+    Field getFiled(String column);
 }

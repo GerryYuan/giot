@@ -31,7 +31,9 @@ import org.giot.core.utils.StringUtils;
 import org.giot.storage.mysql.MySQLContainer;
 import org.giot.storage.mysql.model.MysqlContext;
 import org.jooq.Insert;
+import org.jooq.Update;
 import org.jooq.conf.ParamType;
+import org.jooq.impl.DSL;
 
 /**
  * @author yuanguohua on 2021/4/30 10:25
@@ -70,5 +72,21 @@ public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
             log.info("execute create device sql -> {}", insert.getSQL(ParamType.INLINED));
         }
         return insert.execute() == 1;
+    }
+
+    @Override
+    public boolean onlineDevice(final String deviceId) throws SQLException {
+        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
+        Update update = dbClient.getDSLContext()
+                                .update(context.getTable())
+                                .set(context.getFiled("online"), true)
+                                .set(context.getFiled("onlineTime"), System.currentTimeMillis())
+                                .set(context.getFiled("updateTime"), System.currentTimeMillis())
+                                .where(DSL.field("uuid").eq(deviceId));
+
+        if (log.isDebugEnabled()) {
+            log.info("execute online device sql -> {}", update.getSQL(ParamType.INLINED));
+        }
+        return update.execute() == 1;
     }
 }

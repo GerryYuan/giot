@@ -19,6 +19,7 @@
 package org.giot.device.service;
 
 import java.sql.SQLException;
+import java.util.Objects;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.storage.IDeviceStorageDAO;
@@ -52,5 +53,11 @@ public class DeviceStorageService implements IDeviceStorageService {
     @Override
     public boolean createDevice(final String name, final String des, final DeviceType deviceType) throws SQLException {
         return getDeviceStorageDAO().createDevice(name, des, deviceType);
+    }
+
+    @Override
+    public boolean onlineDevice(final String deviceId) throws SQLException {
+        Objects.requireNonNull(deviceId);
+        return getDeviceStorageDAO().onlineDevice(deviceId);
     }
 }

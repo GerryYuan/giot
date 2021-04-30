@@ -50,4 +50,14 @@ public class MysqlTableContext implements TableContext, MysqlContext {
                          .map(s -> DSL.field(s.getColumnName()))
                          .collect(Collectors.toList());
     }
+
+    @Override
+    public Field getFiled(final String column) {
+        return this.model.getColumns()
+                         .stream()
+                         .filter(s -> s.getColumnName().equalsIgnoreCase(column))
+                         .map(s -> DSL.field(s.getColumnName()))
+                         .findFirst()
+                         .orElseThrow(NullPointerException::new);
+    }
 }

@@ -39,9 +39,9 @@ public class MqttInvokerService implements IInvokerService {
 
     @Override
     public void register() {
-        InvokerAdapter invokerAdapter = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+        InvokerAdapter invokerAdapter = containerManager.provider(NetworkModule.NAME, MqttContainer.NAME)
                                                         .getService(InvokerAdapter.class);
-        BusFractory busFractory = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+        BusFractory busFractory = containerManager.provider(NetworkModule.NAME, MqttContainer.NAME)
                                                   .getService(BusFractory.class);
         for (BusInvoker busInvoker : invokerAdapter.adapters()) {
             busFractory.openBus().register(busInvoker);

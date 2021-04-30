@@ -47,7 +47,7 @@ public class HttpProcessorAdapter implements ProcessorAdapter {
     @Override
     public SourceProcessor supports(final DeviceContext context) {
         if (processorManager == null) {
-            this.processorManager = containerManager.find(CoreModule.NAME).getService(ProcessorManager.class);
+            this.processorManager = containerManager.provider(CoreModule.NAME).getService(ProcessorManager.class);
         }
         for (SourceProcessor sourceProcessor : processorManager.processors()) {
             if (sourceProcessor instanceof HttpProcessor) {

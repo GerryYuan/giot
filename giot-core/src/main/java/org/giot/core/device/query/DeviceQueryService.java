@@ -16,34 +16,13 @@
  *
  */
 
-package org.giot.core.container;
+package org.giot.core.device.query;
 
-import org.giot.core.service.ServiceHandler;
+import org.giot.core.storage.IQueryDAO;
 
 /**
- * @author Created by gerry
- * @date 2021-02-27-11:38 PM
+ * @author yuanguohua
  */
-public interface ContainerHandler {
-
-    /**
-     * module has
-     */
-    boolean has(String moduleName);
-
-    /**
-     * module to container has
-     */
-    boolean has(String moduleName, String containerName);
-
-    /**
-     * find ServiceHandler by module
-     */
-    ServiceHandler find(String moduleName);
-
-    /**
-     * find ServiceHandler by module and container
-     */
-    ServiceHandler find(String moduleName, String containerName);
+public interface DeviceQueryService extends IQueryDAO {
 
 }

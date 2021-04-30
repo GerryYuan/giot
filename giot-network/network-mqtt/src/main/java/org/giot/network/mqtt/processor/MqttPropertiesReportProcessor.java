@@ -41,7 +41,7 @@ public class MqttPropertiesReportProcessor extends AbstractSourceProcessor<Devic
 
     @Override
     public void invoke(final DevicePropertiesMsg deviceMsg) {
-        BusFractory busFractory = getContainerManager().find(NetworkModule.NAME, MqttContainer.NAME)
+        BusFractory busFractory = getContainerManager().provider(NetworkModule.NAME, MqttContainer.NAME)
                                                        .getService(BusFractory.class);
         busFractory.openBus().post(deviceMsg);
     }

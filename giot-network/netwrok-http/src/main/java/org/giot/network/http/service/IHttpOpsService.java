@@ -18,7 +18,7 @@
 
 package org.giot.network.http.service;
 
-import org.giot.core.service.Service;
+import org.giot.core.container.Service;
 
 /**
  * @author Created by gerry

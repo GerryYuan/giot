@@ -59,7 +59,7 @@ public class MqttOpsService implements IMqttOpsService {
     public void start() {
         group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
-        MqttClientHandler handler = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+        MqttClientHandler handler = containerManager.provider(NetworkModule.NAME, MqttContainer.NAME)
                                                     .getService(MqttClientHandler.class);
         channel = b.group(group)
                    .channel(NioSocketChannel.class)

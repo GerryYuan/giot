@@ -20,12 +20,14 @@ package org.giot.storage.mysql;
 
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.storage.DBClient;
 import org.giot.core.storage.StorageModule;
 import org.giot.core.storage.model.ModelCreator;
 import org.giot.storage.mysql.config.MySQLConfig;
 import org.giot.storage.mysql.model.MySQLModelInstaller;
+import org.giot.storage.mysql.storage.MysqlDeviceStorageDAO;
 
 /**
  * @author yuanguohua on 2021/3/4 19:48
@@ -35,6 +37,10 @@ public class MySQLContainer extends AbstractContainer {
     public final static String NAME = "mysql";
 
     private MySQLConfig mySQLConfig;
+
+    public MySQLContainer() {
+        this.mySQLConfig = new MySQLConfig();
+    }
 
     @Override
     public String name() {
@@ -47,8 +53,7 @@ public class MySQLContainer extends AbstractContainer {
     }
 
     @Override
-    public ContainerConfig createConfig() {
-        this.mySQLConfig = new MySQLConfig();
+    public ContainerConfig createConfigIfAbsent() {
         return this.mySQLConfig;
     }
 
@@ -57,6 +62,7 @@ public class MySQLContainer extends AbstractContainer {
         MySQLClient mySQLClient = new MySQLClient(mySQLConfig.getProperties());
         super.register(DBClient.class, mySQLClient);
         super.register(ModelCreator.WhenCompleteListener.class, new MySQLModelInstaller(mySQLClient));
+        super.register(IDeviceStorageDAO.class, new MysqlDeviceStorageDAO(mySQLClient));
     }
 
     @Override

@@ -16,12 +16,21 @@
  *
  */
 
-package org.giot.core.service;
+package org.giot.core.container;
 
 /**
- * service for container, one service to many services
- * @author Created by gerry
- * @date 2021-03-01-9:53 PM
+ * container provide config handler {@link AbstractContainer#getConfig}
+ *
+ * @author yuanguohua on 2021/4/30 11:20
  */
-public interface Service {
+public interface ConfigHandler {
+
+    /**
+     * get container config
+     *
+     * @param <C> ContainerConfig
+     * @return ContainerConfig
+     */
+    <C extends ContainerConfig> C getConfig();
+
 }

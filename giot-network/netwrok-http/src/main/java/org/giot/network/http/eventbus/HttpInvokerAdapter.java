@@ -43,7 +43,7 @@ public class HttpInvokerAdapter implements InvokerAdapter {
     @Override
     public List<BusInvoker> adapters() {
         if (listenerManager == null) {
-            this.listenerManager = containerManager.find(CoreModule.NAME).getService(ListenerManager.class);
+            this.listenerManager = containerManager.provider(CoreModule.NAME).getService(ListenerManager.class);
         }
         return listenerManager.all().stream().filter(busInvoker -> supports(busInvoker)).collect(
             Collectors.toList());

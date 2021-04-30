@@ -16,18 +16,22 @@
  *
  */
 
-package org.giot.core.eventbus;
-
-import java.util.List;
-import org.giot.core.container.Service;
+package org.giot.core.container;
 
 /**
  * @author Created by gerry
- * @date 2021-04-17-21:48
+ * @date 2021-02-27-11:38 PM
  */
-public interface InvokerAdapter extends Service {
+public interface ContainerHolder extends ContainerServiceHolder, ContainerConfigHolder {
 
-    List<BusInvoker> adapters();
+    /**
+     * module has
+     */
+    boolean has(String moduleName);
 
-    boolean supports(BusInvoker busInvoker);
+    /**
+     * module to container has
+     */
+    boolean has(String moduleName, String containerName);
+
 }

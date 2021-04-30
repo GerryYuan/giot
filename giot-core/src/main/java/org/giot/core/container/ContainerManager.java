@@ -32,7 +32,6 @@ import org.giot.core.exception.ContainerStartException;
 import org.giot.core.module.ModuleConfiguration;
 import org.giot.core.module.ModuleDefinition;
 import org.giot.core.module.ModuleManager;
-import org.giot.core.service.ServiceHandler;
 import org.giot.core.utils.EmptyUtils;
 
 /**
@@ -42,7 +41,7 @@ import org.giot.core.utils.EmptyUtils;
  * @date 2021-02-27-10:55 PM
  */
 @Slf4j
-public class ContainerManager implements ContainerHandler {
+public class ContainerManager implements ContainerHolder {
 
     private ModuleManager moduleManager;
 
@@ -68,12 +67,12 @@ public class ContainerManager implements ContainerHandler {
     }
 
     @Override
-    public ServiceHandler find(final String moduleName) {
-        return find(moduleName, Container.DEFAULT);
+    public ServiceHandler provider(final String moduleName) {
+        return provider(moduleName, Container.DEFAULT);
     }
 
     @Override
-    public ServiceHandler find(final String moduleName, final String containerName) {
+    public ServiceHandler provider(final String moduleName, final String containerName) {
         Collection<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
         if (EmptyUtils.isEmpty(cs)) {
             throw new ContainerNotFoundException("Module [" + moduleName + "] not provider container.");
@@ -82,6 +81,28 @@ public class ContainerManager implements ContainerHandler {
                                      .filter(c -> c.name().equalsIgnoreCase(containerName))
                                      .findFirst()
                                      .orElse(null);
+        if (EmptyUtils.isEmpty(container)) {
+            throw new ContainerNotFoundException(
+                "Module [" + moduleName + "] has not [" + containerName + "] provider container.");
+        }
+        return container;
+    }
+
+    @Override
+    public ConfigHandler find(final String moduleName) {
+        return find(moduleName, Container.DEFAULT);
+    }
+
+    @Override
+    public ConfigHandler find(final String moduleName, final String containerName) {
+        Collection<AbstractContainer> cs = containers.get(moduleManager.find(moduleName));
+        if (EmptyUtils.isEmpty(cs)) {
+            throw new ContainerNotFoundException("Module [" + moduleName + "] not provider container.");
+        }
+        ConfigHandler container = cs.stream()
+                                    .filter(c -> c.name().equalsIgnoreCase(containerName))
+                                    .findFirst()
+                                    .orElse(null);
         if (EmptyUtils.isEmpty(container)) {
             throw new ContainerNotFoundException(
                 "Module [" + moduleName + "] has not [" + containerName + "] provider container.");
@@ -126,7 +147,7 @@ public class ContainerManager implements ContainerHandler {
         String containerName = container.name();
         //yml file content set to ContainerConfig
         try {
-            copyProperties(properties, container.createConfig(), containerName);
+            copyProperties(properties, container.createConfigIfAbsent(), containerName);
         } catch (IllegalAccessException e) {
             throw new ContainerConfigException(
                 container.name() + " component config transport to config bean failure.", e);

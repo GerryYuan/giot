@@ -18,7 +18,7 @@
 
 package org.giot.core.storage;
 
-import org.giot.core.service.Service;
+import org.giot.core.container.Service;
 
 /**
  * @author Created by gerry

@@ -44,7 +44,7 @@ public class PGSQLContainer extends AbstractContainer {
     }
 
     @Override
-    public ContainerConfig createConfig() {
+    public ContainerConfig createConfigIfAbsent() {
         return null;
     }
 

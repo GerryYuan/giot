@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.URLMappings;
-import org.giot.core.service.ServiceHandler;
+import org.giot.core.container.ServiceHandler;
 import org.giot.network.mqtt.MqttContainer;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.exception.MqttSubException;
@@ -87,7 +87,7 @@ public class MqttConnectService implements IMqttConnectService {
     @Override
     public void ack(final Channel channel, final MqttConnAckMessage msg) throws MqttSubException {
         if (msg.variableHeader().connectReturnCode().equals(MqttConnectReturnCode.CONNECTION_ACCEPTED)) {
-            ServiceHandler serviceHandler = containerManager.find(NetworkModule.NAME, MqttContainer.NAME);
+            ServiceHandler serviceHandler = containerManager.provider(NetworkModule.NAME, MqttContainer.NAME);
             IMqttSubService mqttSubService = serviceHandler.getService(IMqttSubService.class);
             List<String> topics = serviceHandler.getService(URLMappings.class).mappings();
             mqttSubService.sub(channel, topics);

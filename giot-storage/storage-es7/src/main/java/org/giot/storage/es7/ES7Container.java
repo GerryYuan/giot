@@ -43,7 +43,7 @@ public class ES7Container extends AbstractContainer {
     }
 
     @Override
-    public ContainerConfig createConfig() {
+    public ContainerConfig createConfigIfAbsent() {
         return null;
     }
 

@@ -42,7 +42,7 @@ public class ProcessorDefCreator implements ProcessorCreator {
                                                 .version(version)
                                                 .processor(clazz)
                                                 .build();
-        SourceProcessorInstaller installer = (SourceProcessorInstaller) containerManager.find(CoreModule.NAME)
+        SourceProcessorInstaller installer = (SourceProcessorInstaller) containerManager.provider(CoreModule.NAME)
                                                                                         .getService(
                                                                                             ProcessorManager.class);
         installer.listener(processorDef);

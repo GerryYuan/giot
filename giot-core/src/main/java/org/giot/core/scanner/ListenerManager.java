@@ -19,7 +19,7 @@
 package org.giot.core.scanner;
 
 import java.util.List;
-import org.giot.core.service.Service;
+import org.giot.core.container.Service;
 
 /**
  * @author yuanguohua on 2021/4/23 10:37

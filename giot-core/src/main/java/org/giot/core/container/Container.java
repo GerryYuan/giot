@@ -31,7 +31,7 @@ public interface Container {
     String DEFAULT = "default";
 
     /**
-     * start container before execute, eg: register service {@link org.giot.core.service.Service}
+     * start container before execute, eg: register service {@link Service}
      */
     void prepare();
 

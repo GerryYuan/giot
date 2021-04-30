@@ -60,7 +60,7 @@ public class MqttPropertiesMsgConverter implements PayloadConverter {
     @Override
     public boolean supports(final DeviceHeader header) {
         if (urlMappings == null) {
-            this.urlMappings = containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+            this.urlMappings = containerManager.provider(NetworkModule.NAME, MqttContainer.NAME)
                                                .getService(URLMappings.class);
         }
         String url = urlMappings.mapping(header.getVersion(), RouteUrl.REPORT_PROPERTIES.getRoute());

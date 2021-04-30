@@ -19,12 +19,15 @@
 package org.giot.device;
 
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.CoreContainerConfig;
+import org.giot.core.CoreModule;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceModule;
-import org.giot.core.device.IDeviceService;
-import org.giot.device.service.DeviceService;
+import org.giot.core.device.storage.IDeviceStorageService;
+import org.giot.device.service.DeviceStorageService;
 
 /**
  * @author Created by gerry
@@ -34,6 +37,10 @@ import org.giot.device.service.DeviceService;
 public class DeviceContainer extends AbstractContainer {
 
     private DeviceContainerConfig containerConfig;
+
+    public DeviceContainer() {
+        this.containerConfig = new DeviceContainerConfig();
+    }
 
     @Override
     public String name() {
@@ -46,14 +53,16 @@ public class DeviceContainer extends AbstractContainer {
     }
 
     @Override
-    public ContainerConfig createConfig() {
-        this.containerConfig = new DeviceContainerConfig();
+    public ContainerConfig createConfigIfAbsent() {
         return containerConfig;
     }
 
     @Override
     public void prepare() {
-        super.register(IDeviceService.class, new DeviceService());
+        CoreContainerConfig config = super.find(CoreModule.NAME).getConfig();
+        //register storage service
+        super.register(
+            IDeviceStorageService.class, new DeviceStorageService(getContainerManager(), config.getMetaDataStorage()));
     }
 
     @Override

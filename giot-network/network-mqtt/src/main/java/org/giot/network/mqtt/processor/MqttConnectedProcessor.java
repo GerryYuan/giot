@@ -41,7 +41,7 @@ public class MqttConnectedProcessor extends AbstractSourceProcessor<DeviceStatus
 
     @Override
     public void invoke(final DeviceStatus deviceStatus) {
-        BusFractory busFractory = getContainerManager().find(NetworkModule.NAME, MqttContainer.NAME)
+        BusFractory busFractory = getContainerManager().provider(NetworkModule.NAME, MqttContainer.NAME)
                                                        .getService(BusFractory.class);
         busFractory.openBus().post(deviceStatus);
     }

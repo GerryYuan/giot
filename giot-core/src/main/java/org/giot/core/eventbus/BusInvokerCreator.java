@@ -38,7 +38,7 @@ public class BusInvokerCreator implements InvokerCreator {
     @Override
     public void create(final Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException {
         if (invokerInstaller == null) {
-            this.invokerInstaller = (InvokerInstaller) containerManager.find(CoreModule.NAME)
+            this.invokerInstaller = (InvokerInstaller) containerManager.provider(CoreModule.NAME)
                                                                        .getService(ListenerManager.class);
         }
         invokerInstaller.listener(clazz);

@@ -18,7 +18,7 @@
 
 package org.giot.core.eventbus;
 
-import org.giot.core.service.Service;
+import org.giot.core.container.Service;
 
 /**
  * @author Created by gerry

@@ -39,9 +39,9 @@ public class HttpInvokerService implements IInvokerService {
 
     @Override
     public void register() {
-        InvokerAdapter invokerAdapter = containerManager.find(NetworkModule.NAME, HttpContainer.NAME)
+        InvokerAdapter invokerAdapter = containerManager.provider(NetworkModule.NAME, HttpContainer.NAME)
                                                         .getService(InvokerAdapter.class);
-        BusFractory busFractory = containerManager.find(NetworkModule.NAME, HttpContainer.NAME)
+        BusFractory busFractory = containerManager.provider(NetworkModule.NAME, HttpContainer.NAME)
                                                   .getService(BusFractory.class);
         for (BusInvoker busInvoker : invokerAdapter.adapters()) {
             busFractory.openBus().register(busInvoker);

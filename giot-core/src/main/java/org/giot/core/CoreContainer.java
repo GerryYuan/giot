@@ -43,6 +43,10 @@ public class CoreContainer extends AbstractContainer {
 
     private CoreContainerConfig coreContainerConfig;
 
+    public CoreContainer() {
+        this.coreContainerConfig = new CoreContainerConfig();
+    }
+
     @Override
     public String name() {
         return Container.DEFAULT;
@@ -54,8 +58,7 @@ public class CoreContainer extends AbstractContainer {
     }
 
     @Override
-    public ContainerConfig createConfig() {
-        this.coreContainerConfig = new CoreContainerConfig();
+    public ContainerConfig createConfigIfAbsent() {
         return this.coreContainerConfig;
     }
 
@@ -73,7 +76,7 @@ public class CoreContainer extends AbstractContainer {
     @Override
     public void start() throws ContainerStartException {
         try {
-            AnnotationScanner scanner = super.find(CoreModule.NAME).getService(AnnotationScanner.class);
+            AnnotationScanner scanner = super.provider(CoreModule.NAME).getService(AnnotationScanner.class);
             scanner.scanner();
         } catch (Exception e) {
             throw new ContainerStartException("Container [" + name() + "] start failure.", e);

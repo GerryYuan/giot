@@ -21,7 +21,7 @@ package org.giot.core.scanner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 import java.util.List;
-import org.giot.core.service.Service;
+import org.giot.core.container.Service;
 
 /**
  * @author yuanguohua on 2021/3/5 18:48

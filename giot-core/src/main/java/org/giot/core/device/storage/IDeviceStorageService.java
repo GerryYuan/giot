@@ -16,30 +16,24 @@
  *
  */
 
-package org.giot.core.service;
+package org.giot.core.device.storage;
 
-import org.giot.core.exception.ServiceNotFoundException;
+import java.sql.SQLException;
+import org.giot.core.device.enums.DeviceType;
+import org.giot.core.storage.IStorageDAO;
 
 /**
- * @author yuanguohua on 2021/3/2 20:13
+ * @author yuanguohua on 2021/4/30 10:20
  */
-public interface ServiceHandler {
+public interface IDeviceStorageService extends IStorageDAO {
 
     /**
-     * register container service
+     * create device
      *
-     * @param serviceType class
-     * @param service Service
-     * @throws ServiceNotFoundException exception
+     * @param name       device name
+     * @param des        device description
+     * @param deviceType device type {@link DeviceType}
+     * @return boolean create is successfully
      */
-    void register(Class<? extends Service> serviceType, Service service) throws ServiceNotFoundException;
-
-    /**
-     * get container service instance
-     *
-     * @param clazz source
-     * @param <T> target
-     * @return T return
-     */
-    <T extends Service> T getService(Class<T> clazz);
+    boolean createDevice(String name, String des, DeviceType deviceType) throws SQLException;
 }

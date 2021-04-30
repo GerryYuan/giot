@@ -40,7 +40,7 @@ public class HttpConnectedProcessor extends AbstractSourceProcessor<DeviceStatus
 
     @Override
     public void invoke(final DeviceStatus deviceStatus) {
-        BusFractory busFractory = getContainerManager().find(NetworkModule.NAME, HttpContainer.NAME)
+        BusFractory busFractory = getContainerManager().provider(NetworkModule.NAME, HttpContainer.NAME)
                                                        .getService(BusFractory.class);
         busFractory.openBus().post(deviceStatus);
     }

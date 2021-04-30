@@ -58,6 +58,10 @@ public class MqttContainer extends AbstractContainer {
 
     private IMqttOpsService mqttOpsService;
 
+    public MqttContainer() {
+        this.config = new MqttConfig();
+    }
+
     @Override
     public String name() {
         return NAME;
@@ -69,8 +73,7 @@ public class MqttContainer extends AbstractContainer {
     }
 
     @Override
-    public ContainerConfig createConfig() {
-        this.config = new MqttConfig();
+    public ContainerConfig createConfigIfAbsent() {
         return config;
     }
 
@@ -96,13 +99,13 @@ public class MqttContainer extends AbstractContainer {
 
     @Override
     public void start() throws ContainerStartException {
-        this.mqttOpsService = find(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
+        this.mqttOpsService = super.provider(NetworkModule.NAME, NAME).getService(IMqttOpsService.class);
         this.mqttOpsService.start();
     }
 
     @Override
     public void after() {
-        getContainerManager().find(NetworkModule.NAME, NAME).getService(IInvokerService.class).register();
+        getContainerManager().provider(NetworkModule.NAME, NAME).getService(IInvokerService.class).register();
     }
 
     @Override

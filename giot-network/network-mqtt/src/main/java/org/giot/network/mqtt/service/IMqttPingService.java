@@ -20,7 +20,7 @@ package org.giot.network.mqtt.service;
 
 import io.netty.channel.Channel;
 import io.netty.handler.codec.mqtt.MqttMessage;
-import org.giot.core.service.Service;
+import org.giot.core.container.Service;
 import org.giot.network.mqtt.exception.MqttStartException;
 
 /**

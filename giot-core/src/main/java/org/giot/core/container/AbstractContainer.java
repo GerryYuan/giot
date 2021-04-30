@@ -23,15 +23,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.Setter;
 import org.giot.core.exception.ServiceNotFoundException;
-import org.giot.core.service.Service;
-import org.giot.core.service.ServiceHandler;
 import org.giot.core.utils.EmptyUtils;
 
 /**
  * @author Created by gerry
  * @date 2021-02-27-11:22 PM
  */
-public abstract class AbstractContainer implements Container, ServiceHandler {
+public abstract class AbstractContainer implements Container, ServiceHandler, ConfigHandler {
 
     private final Map<Class<? extends Service>, Service> services = new ConcurrentHashMap<>();
 
@@ -43,13 +41,21 @@ public abstract class AbstractContainer implements Container, ServiceHandler {
 
     public abstract String module();
 
-    public abstract ContainerConfig createConfig();
+    public abstract ContainerConfig createConfigIfAbsent();
 
-    public ServiceHandler find(String moduleName) {
+    public ServiceHandler provider(String moduleName) {
+        return provider(moduleName, Container.DEFAULT);
+    }
+
+    public ServiceHandler provider(String moduleName, String containerName) {
+        return this.containerManager.provider(moduleName, containerName);
+    }
+
+    public ConfigHandler find(String moduleName) {
         return find(moduleName, Container.DEFAULT);
     }
 
-    public ServiceHandler find(String moduleName, String containerName) {
+    public ConfigHandler find(String moduleName, String containerName) {
         return this.containerManager.find(moduleName, containerName);
     }
 
@@ -67,6 +73,11 @@ public abstract class AbstractContainer implements Container, ServiceHandler {
         throw new ServiceNotFoundException(
             "Service " + clazz.getName() + " should not be provided, based on container.");
 
+    }
+
+    @Override
+    public <C extends ContainerConfig> C getConfig() {
+        return (C) createConfigIfAbsent();
     }
 
     @Override

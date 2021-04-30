@@ -16,18 +16,23 @@
  *
  */
 
-package org.giot.core.eventbus;
+package org.giot.core.device.storage;
 
-import java.util.List;
-import org.giot.core.container.Service;
+import java.sql.SQLException;
+import org.giot.core.device.enums.DeviceType;
+import org.giot.core.storage.IStorageDAO;
 
 /**
- * @author Created by gerry
- * @date 2021-04-17-21:48
+ * @author yuanguohua on 2021/4/30 10:32
  */
-public interface InvokerAdapter extends Service {
-
-    List<BusInvoker> adapters();
-
-    boolean supports(BusInvoker busInvoker);
+public interface IDeviceStorageDAO extends IStorageDAO {
+    /**
+     * create device
+     *
+     * @param name       device name
+     * @param des        device description
+     * @param deviceType device type {@link DeviceType}
+     * @return boolean create is successfully
+     */
+    boolean createDevice(String name, String des, DeviceType deviceType) throws SQLException;
 }

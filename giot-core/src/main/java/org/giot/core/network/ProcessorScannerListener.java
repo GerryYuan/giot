@@ -61,7 +61,7 @@ public class ProcessorScannerListener implements AnnotationScannerListener {
 
     @Override
     public void listener() throws Exception {
-        ProcessorCreator processorCreator = containerManager.find(CoreModule.NAME)
+        ProcessorCreator processorCreator = containerManager.provider(CoreModule.NAME)
                                                             .getService(ProcessorCreator.class);
         for (Class<? extends AbstractSourceProcessor> clazz : classes) {
             Processor processor = (Processor) clazz.getAnnotation(match());

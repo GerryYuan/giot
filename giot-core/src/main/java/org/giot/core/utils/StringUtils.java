@@ -16,12 +16,19 @@
  *
  */
 
-package org.giot.device.service;
+package org.giot.core.utils;
 
-import org.giot.core.device.IDeviceService;
+import java.util.UUID;
 
-/**
- * @author yuanguohua on 2021/3/4 16:26
- */
-public class DeviceService implements IDeviceService {
+public final class StringUtils {
+    
+    /**
+     * uuid generate no '—' char
+     *
+     */
+    public static String createUUID() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.replaceAll("\\-", "");
+    }
+    
 }

@@ -60,7 +60,7 @@ public class HttpConnectedConverter implements PayloadConverter {
     @Override
     public boolean supports(final DeviceHeader header) {
         if (urlMappings == null) {
-            this.urlMappings = containerManager.find(NetworkModule.NAME, HttpContainer.NAME)
+            this.urlMappings = containerManager.provider(NetworkModule.NAME, HttpContainer.NAME)
                                                .getService(URLMappings.class);
         }
         String url = urlMappings.mapping(header.getVersion(), RouteUrl.CONNECTED.getRoute());

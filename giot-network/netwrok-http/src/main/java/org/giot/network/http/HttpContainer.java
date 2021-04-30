@@ -49,6 +49,10 @@ public class HttpContainer extends AbstractContainer {
 
     private IHttpOpsService httpOpsService;
 
+    public HttpContainer() {
+        this.config = new HttpConfig();
+    }
+
     @Override
     public String name() {
         return NAME;
@@ -60,8 +64,7 @@ public class HttpContainer extends AbstractContainer {
     }
 
     @Override
-    public ContainerConfig createConfig() {
-        this.config = new HttpConfig();
+    public ContainerConfig createConfigIfAbsent() {
         return config;
     }
 
@@ -82,13 +85,13 @@ public class HttpContainer extends AbstractContainer {
 
     @Override
     public void start() throws ContainerStartException {
-        httpOpsService = find(NetworkModule.NAME, HttpContainer.NAME).getService(IHttpOpsService.class);
+        httpOpsService = super.provider(NetworkModule.NAME, HttpContainer.NAME).getService(IHttpOpsService.class);
         httpOpsService.start();
     }
 
     @Override
     public void after() {
-        getContainerManager().find(NetworkModule.NAME, HttpContainer.NAME).getService(IInvokerService.class).register();
+        getContainerManager().provider(NetworkModule.NAME, HttpContainer.NAME).getService(IInvokerService.class).register();
     }
 
     @Override

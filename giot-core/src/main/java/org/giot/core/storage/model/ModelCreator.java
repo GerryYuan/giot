@@ -19,7 +19,7 @@
 package org.giot.core.storage.model;
 
 import java.sql.SQLException;
-import org.giot.core.service.Service;
+import org.giot.core.container.Service;
 import org.giot.core.storage.StorageData;
 
 /**

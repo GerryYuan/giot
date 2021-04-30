@@ -61,7 +61,7 @@ public class InvokerScannerListener implements AnnotationScannerListener {
 
     @Override
     public void listener() throws Exception {
-        InvokerCreator invokerCreator = containerManager.find(CoreModule.NAME)
+        InvokerCreator invokerCreator = containerManager.provider(CoreModule.NAME)
                                                         .getService(InvokerCreator.class);
         for (Class<? extends BusInvoker> clazz : classes) {
             invokerCreator.create(clazz);

@@ -54,7 +54,7 @@ public class MqttPubService implements IMqttPubService {
     @Override
     public void pub(final Channel channel, final MqttPublishMessage msg) throws Exception {
         if (sourceDispatcher == null) {
-            this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, MqttContainer.NAME)
+            this.sourceDispatcher = this.containerManager.provider(NetworkModule.NAME, MqttContainer.NAME)
                                                          .getService(SourceDispatcher.class);
         }
         DeviceContext context = DeviceContext.builder()

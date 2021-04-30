@@ -77,7 +77,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<HttpObject> {
                 return;
             }
             if (sourceDispatcher == null) {
-                this.sourceDispatcher = this.containerManager.find(NetworkModule.NAME, HttpContainer.NAME)
+                this.sourceDispatcher = this.containerManager.provider(NetworkModule.NAME, HttpContainer.NAME)
                                                              .getService(SourceDispatcher.class);
             }
             DeviceContext context = DeviceContext.builder()

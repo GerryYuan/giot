@@ -24,7 +24,6 @@ import org.giot.core.CoreModule;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
-import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceModule;
 import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.device.service.DeviceStorageService;

@@ -28,14 +28,6 @@ import org.giot.core.storage.IStorageDAO;
 public interface IDeviceStorageService extends IStorageDAO {
 
     /**
-     * get device is exists.
-     *
-     * @param deviceId uuid
-     * @return
-     */
-    boolean isExists(String deviceId) throws SQLException;
-
-    /**
      * create device
      *
      * @param name       device name

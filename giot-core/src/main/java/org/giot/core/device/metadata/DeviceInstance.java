@@ -33,6 +33,14 @@ import org.giot.core.storage.annotation.Stream;
 @EqualsAndHashCode(callSuper = false)
 @Stream(name = "device_instance", des = "device instance", processor = MetadataStreamProcessor.class)
 public class DeviceInstance extends Metadata {
+    public static final String NAME = "name";
+    public static final String DES = "des";
+    public static final String TYPE = "type";
+    public static final String UUID = "uuid";
+    public static final String ONLINE = "online";
+    public static final String ONLINE_TIME = "onlineTime";
+    public static final String CREATE_TIME = "createTime";
+    public static final String UPDATE_TIME = "updateTime";
 
     @Column(name = "name", length = 255, des = "device name")
     private String name;

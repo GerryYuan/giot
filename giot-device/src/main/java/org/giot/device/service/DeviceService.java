@@ -22,6 +22,8 @@ import java.sql.SQLException;
 import java.util.Objects;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.enums.DeviceType;
+import org.giot.core.device.query.IDeviceQueryDAO;
+import org.giot.core.device.query.IDeviceQueryService;
 import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.storage.StorageModule;
@@ -30,7 +32,7 @@ import org.giot.core.utils.StringUtils;
 /**
  * @author yuanguohua on 2021/4/30 10:30
  */
-public class DeviceStorageService implements IDeviceStorageService {
+public class DeviceService implements IDeviceStorageService, IDeviceQueryService {
 
     private ContainerManager containerManager;
 
@@ -38,7 +40,9 @@ public class DeviceStorageService implements IDeviceStorageService {
 
     private IDeviceStorageDAO deviceStorageDAO;
 
-    public DeviceStorageService(final ContainerManager containerManager, final String metaDataStorage) {
+    private IDeviceQueryDAO deviceQueryDAO;
+
+    public DeviceService(final ContainerManager containerManager, final String metaDataStorage) {
         this.containerManager = containerManager;
         this.metaDataStorage = metaDataStorage;
     }
@@ -51,9 +55,17 @@ public class DeviceStorageService implements IDeviceStorageService {
         return deviceStorageDAO;
     }
 
+    private IDeviceQueryDAO getDeviceQueryDAO() {
+        if (deviceQueryDAO == null) {
+            this.deviceQueryDAO = containerManager.provider(StorageModule.NAME, metaDataStorage)
+                                                  .getService(IDeviceQueryDAO.class);
+        }
+        return deviceQueryDAO;
+    }
+
     @Override
     public boolean isExists(final String deviceId) throws SQLException {
-        return getDeviceStorageDAO().isExists(deviceId);
+        return getDeviceQueryDAO().isExists(deviceId);
     }
 
     @Override

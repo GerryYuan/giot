@@ -25,8 +25,9 @@ import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.device.DeviceModule;
+import org.giot.core.device.query.IDeviceQueryService;
 import org.giot.core.device.storage.IDeviceStorageService;
-import org.giot.device.service.DeviceStorageService;
+import org.giot.device.service.DeviceService;
 
 /**
  * @author Created by gerry
@@ -59,9 +60,11 @@ public class DeviceContainer extends AbstractContainer {
     @Override
     public void prepare() {
         CoreContainerConfig config = super.find(CoreModule.NAME).getConfig();
-        //register storage service
+        //register storage & query service
         super.register(
-            IDeviceStorageService.class, new DeviceStorageService(getContainerManager(), config.getMetaDataStorage()));
+            IDeviceStorageService.class, new DeviceService(getContainerManager(), config.getMetaDataStorage()));
+        super.register(
+            IDeviceQueryService.class, new DeviceService(getContainerManager(), config.getMetaDataStorage()));
     }
 
     @Override

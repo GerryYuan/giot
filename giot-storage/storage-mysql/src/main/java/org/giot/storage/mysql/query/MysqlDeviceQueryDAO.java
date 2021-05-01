@@ -16,39 +16,36 @@
  *
  */
 
-package org.giot.storage.mysql.storage;
+package org.giot.storage.mysql.query;
 
 import java.sql.SQLException;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
-import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.metadata.DeviceInstance;
-import org.giot.core.device.storage.IDeviceStorageDAO;
+import org.giot.core.device.query.IDeviceQueryDAO;
 import org.giot.core.storage.DBClient;
 import org.giot.core.storage.StorageModule;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelOperate;
 import org.giot.storage.mysql.MySQLContainer;
 import org.giot.storage.mysql.model.MysqlContext;
-import org.jooq.Insert;
 import org.jooq.Select;
-import org.jooq.Update;
 import org.jooq.conf.ParamType;
 import org.jooq.impl.DSL;
 
 /**
- * @author yuanguohua on 2021/4/30 10:25
+ * @author Created by gerry
+ * @date 2021-05-01-12:02
  */
 @Slf4j
-public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
-
+public class MysqlDeviceQueryDAO implements IDeviceQueryDAO {
     private ContainerManager containerManager;
 
     private ModelOperate modelOperate;
 
     private DBClient dbClient;
 
-    public MysqlDeviceStorageDAO(final ContainerManager containerManager, final DBClient dbClient) {
+    public MysqlDeviceQueryDAO(final ContainerManager containerManager, final DBClient dbClient) {
         this.containerManager = containerManager;
         this.dbClient = dbClient;
     }
@@ -62,35 +59,15 @@ public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
     }
 
     @Override
-    public boolean createDevice(final String deviceId,
-                                final String name,
-                                final String des,
-                                final DeviceType deviceType) throws SQLException {
-        long now = System.currentTimeMillis();
+    public boolean isExists(final String deviceId) throws SQLException {
         MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
-        Insert insert = dbClient.getDSLContext()
-                                .insertInto(context.getTable())
-                                .columns(context.getFields())
-                                .values(name, des, deviceType.name(), deviceId, false, 0L, now, now);
-        if (log.isDebugEnabled()) {
-            log.info("execute create device sql -> {}", insert.getSQL(ParamType.INLINED));
-        }
-        return insert.execute() == 1;
-    }
-
-    @Override
-    public boolean onlineDevice(final String deviceId) throws SQLException {
-        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
-        Update update = dbClient.getDSLContext()
-                                .update(context.getTable())
-                                .set(context.getFiled(DeviceInstance.ONLINE), true)
-                                .set(context.getFiled(DeviceInstance.ONLINE_TIME), System.currentTimeMillis())
-                                .set(context.getFiled(DeviceInstance.UPDATE_TIME), System.currentTimeMillis())
+        Select select = dbClient.getDSLContext()
+                                .select(DSL.field(Model.ID)).from(context.getTable())
                                 .where(context.getFiled(DeviceInstance.UUID).eq(deviceId));
-
         if (log.isDebugEnabled()) {
-            log.info("execute online device sql -> {}", update.getSQL(ParamType.INLINED));
+            log.info("execute create device sql -> {}", select.getSQL(ParamType.INLINED));
         }
-        return update.execute() == 1;
+        return select.fetch().isNotEmpty();
     }
+
 }

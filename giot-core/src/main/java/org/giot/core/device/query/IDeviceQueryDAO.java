@@ -18,11 +18,21 @@
 
 package org.giot.core.device.query;
 
+import java.sql.SQLException;
+import org.giot.core.device.enums.DeviceType;
 import org.giot.core.storage.IQueryDAO;
+import org.giot.core.storage.IStorageDAO;
 
 /**
- * @author yuanguohua
+ * @author yuanguohua on 2021/4/30 10:32
  */
-public interface DeviceQueryService extends IQueryDAO {
+public interface IDeviceQueryDAO extends IQueryDAO {
 
+    /**
+     * get device is exists.
+     *
+     * @param deviceId uuid
+     * @return boolean update is successfully
+     */
+    boolean isExists(String deviceId) throws SQLException;
 }

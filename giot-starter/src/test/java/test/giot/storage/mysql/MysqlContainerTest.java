@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceModule;
 import org.giot.core.device.enums.DeviceType;
+import org.giot.core.device.query.IDeviceQueryService;
 import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerStartException;
@@ -41,6 +42,10 @@ public class MysqlContainerTest {
 
     private ContainerManager containerManager;
 
+    private IDeviceStorageService deviceStorageService;
+
+    private IDeviceQueryService deviceQueryService;
+
     @Before
     public void start() throws FileNotFoundException, ContainerStartException, ContainerConfigException {
         ResourceLoader resourceLoader = new ModuleResourceLoader("application.yml");
@@ -48,14 +53,16 @@ public class MysqlContainerTest {
         ModuleManager moduleManager = new ModuleManager();
         moduleManager.start(moduleConfiguration);
         this.containerManager = moduleManager.getContainerManager();
+        this.deviceStorageService = containerManager.provider(DeviceModule.NAME)
+                                                    .getService(IDeviceStorageService.class);
+        this.deviceQueryService = containerManager.provider(DeviceModule.NAME)
+                                                  .getService(IDeviceQueryService.class);
     }
 
     @Test
     public void createDevice() throws SQLException {
-        IDeviceStorageService deviceStorageService = containerManager.provider(DeviceModule.NAME)
-                                                                     .getService(IDeviceStorageService.class);
         String deviceId = "fc8ffa765bf7482285e3994e55ea7302";
-        boolean isExists = deviceStorageService.isExists(deviceId);
+        boolean isExists = deviceQueryService.isExists(deviceId);
         if (!isExists) {
             Assert.assertTrue(
                 deviceStorageService.createDevice(deviceId, "test-1", "test device des", DeviceType.NORMAL));
@@ -67,7 +74,7 @@ public class MysqlContainerTest {
         IDeviceStorageService deviceStorageService = containerManager.provider(DeviceModule.NAME)
                                                                      .getService(IDeviceStorageService.class);
         String deviceId = "cc8ffa765bf7482285e3994e55ea7302";
-        boolean isExists = deviceStorageService.isExists(deviceId);
+        boolean isExists = deviceQueryService.isExists(deviceId);
         if (!isExists) {
             Assert.assertTrue(
                 deviceStorageService.createDevice(deviceId, "test-1", "test device des", DeviceType.NORMAL));

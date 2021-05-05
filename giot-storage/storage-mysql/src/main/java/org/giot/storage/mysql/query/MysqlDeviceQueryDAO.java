@@ -19,17 +19,27 @@
 package org.giot.storage.mysql.query;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.metadata.DeviceInstance;
 import org.giot.core.device.query.IDeviceQueryDAO;
+import org.giot.core.device.query.PageResult;
+import org.giot.core.device.query.res.Devices;
 import org.giot.core.storage.DBClient;
 import org.giot.core.storage.StorageModule;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelOperate;
+import org.giot.core.utils.BeanUtils;
 import org.giot.storage.mysql.MySQLContainer;
 import org.giot.storage.mysql.model.MysqlContext;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.Select;
+import org.jooq.SelectForUpdateStep;
+import org.jooq.SelectJoinStep;
+import org.jooq.SelectSelectStep;
 import org.jooq.conf.ParamType;
 import org.jooq.impl.DSL;
 
@@ -68,6 +78,18 @@ public class MysqlDeviceQueryDAO implements IDeviceQueryDAO {
             log.info("execute create device sql -> {}", select.getSQL(ParamType.INLINED));
         }
         return select.fetch().isNotEmpty();
+    }
+
+    @Override
+    public PageResult<Devices> queryDevices(final int from, final int limit) throws SQLException {
+        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
+        List<Devices> result = dbClient.getDSLContext()
+                                       .select(context.getFields())
+                                       .from(context.getTable())
+                                       .limit(limit)
+                                       .offset(from).fetchInto(Devices.class);
+        int count = dbClient.getDSLContext().fetchCount(context.getTable());
+        return PageResult.build(result, count);
     }
 
 }

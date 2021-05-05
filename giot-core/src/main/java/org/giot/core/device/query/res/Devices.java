@@ -16,30 +16,22 @@
  *
  */
 
-package org.giot.core.device.query;
+package org.giot.core.device.query.res;
 
-import java.sql.SQLException;
-import org.giot.core.device.query.res.Devices;
-import org.giot.core.storage.IQueryDAO;
+import lombok.Data;
 
 /**
- * @author yuanguohua
+ * @author Created by gerry
+ * @date 2021-05-05-11:03
  */
-public interface IDeviceQueryService extends IQueryDAO {
+@Data
+public class Devices {
+    private String uuid;
 
-    /**
-     * get device is exists.
-     *
-     * @param deviceId uuid
-     * @return boolean update is successfully
-     */
-    boolean isExists(String deviceId) throws SQLException;
+    private String name;
 
-    /**
-     * search devices by page
-     *
-     * @param pagination page param
-     * @return
-     */
-    PageResult<Devices> queryDevices(Pagination pagination) throws SQLException;
+    private String des;
+
+    private boolean online;
+
 }

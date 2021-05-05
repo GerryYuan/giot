@@ -20,6 +20,7 @@ package org.giot.core.device.query;
 
 import java.sql.SQLException;
 import org.giot.core.device.enums.DeviceType;
+import org.giot.core.device.query.res.Devices;
 import org.giot.core.storage.IQueryDAO;
 import org.giot.core.storage.IStorageDAO;
 
@@ -35,4 +36,13 @@ public interface IDeviceQueryDAO extends IQueryDAO {
      * @return boolean update is successfully
      */
     boolean isExists(String deviceId) throws SQLException;
+
+    /**
+     * search devices
+     *
+     * @param from  start
+     * @param limit size
+     * @return
+     */
+    PageResult<Devices> queryDevices(int from, int limit) throws SQLException;
 }

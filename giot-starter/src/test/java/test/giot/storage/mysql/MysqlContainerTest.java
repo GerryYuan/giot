@@ -24,6 +24,9 @@ import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceModule;
 import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.query.IDeviceQueryService;
+import org.giot.core.device.query.PageResult;
+import org.giot.core.device.query.Pagination;
+import org.giot.core.device.query.res.Devices;
 import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerStartException;
@@ -80,5 +83,12 @@ public class MysqlContainerTest {
                 deviceStorageService.createDevice(deviceId, "test-1", "test device des", DeviceType.NORMAL));
         }
         Assert.assertTrue(deviceStorageService.onlineDevice(deviceId));
+    }
+
+    @Test
+    public void queryDevices() throws SQLException {
+        Pagination pagination = new Pagination(0, 10, false);
+        PageResult<Devices> result = deviceQueryService.queryDevices(pagination);
+        Assert.assertNotNull(result);
     }
 }

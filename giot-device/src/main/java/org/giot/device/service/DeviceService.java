@@ -24,6 +24,9 @@ import org.giot.core.container.ContainerManager;
 import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.query.IDeviceQueryDAO;
 import org.giot.core.device.query.IDeviceQueryService;
+import org.giot.core.device.query.PageResult;
+import org.giot.core.device.query.Pagination;
+import org.giot.core.device.query.res.Devices;
 import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.storage.StorageModule;
@@ -66,6 +69,12 @@ public class DeviceService implements IDeviceStorageService, IDeviceQueryService
     @Override
     public boolean isExists(final String deviceId) throws SQLException {
         return getDeviceQueryDAO().isExists(deviceId);
+    }
+
+    @Override
+    public PageResult<Devices> queryDevices(final Pagination pagination) throws SQLException {
+        Pagination.Page page = Pagination.toPage(pagination);
+        return getDeviceQueryDAO().queryDevices(page.getFrom(), page.getLimit());
     }
 
     @Override

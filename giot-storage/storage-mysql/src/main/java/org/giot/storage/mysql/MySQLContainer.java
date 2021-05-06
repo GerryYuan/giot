@@ -29,9 +29,9 @@ import org.giot.core.storage.model.ModelCreator;
 import org.giot.core.storage.model.ModelOperate;
 import org.giot.storage.mysql.config.MySQLConfig;
 import org.giot.storage.mysql.model.MySQLModelInstaller;
-import org.giot.storage.mysql.model.MysqlModelOperate;
-import org.giot.storage.mysql.query.MysqlDeviceQueryDAO;
-import org.giot.storage.mysql.storage.MysqlDeviceStorageDAO;
+import org.giot.storage.mysql.model.MySQLModelOperate;
+import org.giot.storage.mysql.query.MySQLDeviceQueryDAO;
+import org.giot.storage.mysql.storage.MySQLDeviceStorageDAO;
 
 /**
  * @author yuanguohua on 2021/3/4 19:48
@@ -66,9 +66,9 @@ public class MySQLContainer extends AbstractContainer {
         MySQLClient mySQLClient = new MySQLClient(mySQLConfig.getProperties());
         super.register(DBClient.class, mySQLClient);
         super.register(ModelCreator.WhenCompleteListener.class, new MySQLModelInstaller(mySQLClient));
-        super.register(ModelOperate.class, new MysqlModelOperate(getContainerManager()));
-        super.register(IDeviceStorageDAO.class, new MysqlDeviceStorageDAO(getContainerManager(), mySQLClient));
-        super.register(IDeviceQueryDAO.class, new MysqlDeviceQueryDAO(getContainerManager(), mySQLClient));
+        super.register(ModelOperate.class, new MySQLModelOperate(getContainerManager()));
+        super.register(IDeviceStorageDAO.class, new MySQLDeviceStorageDAO(getContainerManager(), mySQLClient));
+        super.register(IDeviceQueryDAO.class, new MySQLDeviceQueryDAO(getContainerManager(), mySQLClient));
     }
 
     @Override

@@ -20,7 +20,6 @@ package org.giot.storage.mysql.query;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.metadata.DeviceInstance;
@@ -31,15 +30,9 @@ import org.giot.core.storage.DBClient;
 import org.giot.core.storage.StorageModule;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelOperate;
-import org.giot.core.utils.BeanUtils;
 import org.giot.storage.mysql.MySQLContainer;
-import org.giot.storage.mysql.model.MysqlContext;
-import org.jooq.Record;
-import org.jooq.Result;
+import org.giot.storage.mysql.model.MySQLContext;
 import org.jooq.Select;
-import org.jooq.SelectForUpdateStep;
-import org.jooq.SelectJoinStep;
-import org.jooq.SelectSelectStep;
 import org.jooq.conf.ParamType;
 import org.jooq.impl.DSL;
 
@@ -48,14 +41,14 @@ import org.jooq.impl.DSL;
  * @date 2021-05-01-12:02
  */
 @Slf4j
-public class MysqlDeviceQueryDAO implements IDeviceQueryDAO {
+public class MySQLDeviceQueryDAO implements IDeviceQueryDAO {
     private ContainerManager containerManager;
 
     private ModelOperate modelOperate;
 
     private DBClient dbClient;
 
-    public MysqlDeviceQueryDAO(final ContainerManager containerManager, final DBClient dbClient) {
+    public MySQLDeviceQueryDAO(final ContainerManager containerManager, final DBClient dbClient) {
         this.containerManager = containerManager;
         this.dbClient = dbClient;
     }
@@ -70,7 +63,7 @@ public class MysqlDeviceQueryDAO implements IDeviceQueryDAO {
 
     @Override
     public boolean isExists(final String deviceId) throws SQLException {
-        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
+        MySQLContext context = getModelOperate().getTable(DeviceInstance.class);
         Select select = dbClient.getDSLContext()
                                 .select(DSL.field(Model.ID)).from(context.getTable())
                                 .where(context.getFiled(DeviceInstance.UUID).eq(deviceId));
@@ -82,7 +75,7 @@ public class MysqlDeviceQueryDAO implements IDeviceQueryDAO {
 
     @Override
     public PageResult<Devices> queryDevices(final int from, final int limit) throws SQLException {
-        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
+        MySQLContext context = getModelOperate().getTable(DeviceInstance.class);
         List<Devices> result = dbClient.getDSLContext()
                                        .select(context.getFields())
                                        .from(context.getTable())

@@ -29,11 +29,11 @@ import org.jooq.impl.DSL;
 /**
  * @author yuanguohua on 2021/4/30 14:52
  */
-public class MysqlTableContext implements TableContext, MysqlContext {
+public class MySQLTableContext implements TableContext, MySQLContext {
 
     private Model model;
 
-    public MysqlTableContext(final Model model) {
+    public MySQLTableContext(final Model model) {
         this.model = model;
     }
 

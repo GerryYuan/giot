@@ -25,7 +25,7 @@ import org.jooq.Table;
 /**
  * @author yuanguohua on 2021/4/30 14:57
  */
-public interface MysqlContext {
+public interface MySQLContext {
 
     Table getTable();
 

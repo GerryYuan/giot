@@ -30,13 +30,13 @@ import org.giot.core.storage.model.TableContext;
 /**
  * @author yuanguohua on 2021/4/30 14:29
  */
-public class MysqlModelOperate implements ModelOperate {
+public class MySQLModelOperate implements ModelOperate {
 
     private ContainerManager containerManager;
 
     private ModelManager modelManager;
 
-    public MysqlModelOperate(final ContainerManager containerManager) {
+    public MySQLModelOperate(final ContainerManager containerManager) {
         this.containerManager = containerManager;
     }
 
@@ -51,6 +51,6 @@ public class MysqlModelOperate implements ModelOperate {
     @Override
     public <T extends StorageData, R extends TableContext> R getTable(final Class<T> clazz) {
         Model model = getModelManager().getModel(clazz);
-        return (R) new MysqlTableContext(model);
+        return (R) new MySQLTableContext(model);
     }
 }

@@ -26,21 +26,18 @@ import org.giot.core.device.metadata.DeviceInstance;
 import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.storage.DBClient;
 import org.giot.core.storage.StorageModule;
-import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelOperate;
 import org.giot.storage.mysql.MySQLContainer;
-import org.giot.storage.mysql.model.MysqlContext;
+import org.giot.storage.mysql.model.MySQLContext;
 import org.jooq.Insert;
-import org.jooq.Select;
 import org.jooq.Update;
 import org.jooq.conf.ParamType;
-import org.jooq.impl.DSL;
 
 /**
  * @author yuanguohua on 2021/4/30 10:25
  */
 @Slf4j
-public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
+public class MySQLDeviceStorageDAO implements IDeviceStorageDAO {
 
     private ContainerManager containerManager;
 
@@ -48,7 +45,7 @@ public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
 
     private DBClient dbClient;
 
-    public MysqlDeviceStorageDAO(final ContainerManager containerManager, final DBClient dbClient) {
+    public MySQLDeviceStorageDAO(final ContainerManager containerManager, final DBClient dbClient) {
         this.containerManager = containerManager;
         this.dbClient = dbClient;
     }
@@ -67,7 +64,7 @@ public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
                                 final String des,
                                 final DeviceType deviceType) throws SQLException {
         long now = System.currentTimeMillis();
-        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
+        MySQLContext context = getModelOperate().getTable(DeviceInstance.class);
         Insert insert = dbClient.getDSLContext()
                                 .insertInto(context.getTable())
                                 .columns(context.getFields())
@@ -80,7 +77,7 @@ public class MysqlDeviceStorageDAO implements IDeviceStorageDAO {
 
     @Override
     public boolean onlineDevice(final String deviceId) throws SQLException {
-        MysqlContext context = getModelOperate().getTable(DeviceInstance.class);
+        MySQLContext context = getModelOperate().getTable(DeviceInstance.class);
         Update update = dbClient.getDSLContext()
                                 .update(context.getTable())
                                 .set(context.getFiled(DeviceInstance.ONLINE), true)

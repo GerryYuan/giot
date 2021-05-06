@@ -10,9 +10,4 @@ This document helps people compile and build projects in your Maven and set up y
     ```
    
 1. Run `./mvn clean package -DskipTests`
-1. All packages are in `/dist` (.tar.gz for Linux or MacOS).
-
-### Build docker images
-We can build docker images of `backend` and `ui` with `Makefile` located in root folder.
-
-Refer to [Build docker image](../../../docker) for more details.
+1. Packages are in `/dist` (.tar.gz for Linux or MacOS).

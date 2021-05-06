@@ -4,7 +4,8 @@ GIoT
 
 [![GitHub stars](https://img.shields.io/github/stars/GerryYuan/giot.svg?label=Stars&logo=github)](https://github.com/GerryYuan/giot)
 [![Maven Central](https://img.shields.io/badge/License-Apache%202.0-blue.svg?label=license)](https://github.com/GerryYuan/giot/blob/master/LICENSE) 
-![IoT Cloud Edge Collaboration Architecture Diagram](https://user-images.githubusercontent.com/11907624/117277581-9862c480-ae92-11eb-8fe9-15e56efae9da.png)
+![IoT Cloud Edge Collaboration Architecture Diagram](https://user-images.githubusercontent.com/11907624/117307186-ed163780-aeb2-11eb-932a-afdba3795abc.png)
+
 
 
 # Documentation

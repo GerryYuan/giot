@@ -7,8 +7,8 @@ GIoT
 ![IoT云边协同架构图](https://user-images.githubusercontent.com/11907624/111753822-41009900-88d2-11eb-9018-3d37dd2a9493.png)
 
 # Documentation
-## Quick Start
-`Module` -> `giot-starter`
+# Quick Start
+Quick starter `Module` -> `giot-starter` by source code.
 ```java
 public class GiotStarter {
 
@@ -23,6 +23,8 @@ public class GiotStarter {
     }
 }
 ```
+# How to build
+Follow this [document](docs/guides/How-to-build.md)
 # Downloads
 # Live Demo
 # License

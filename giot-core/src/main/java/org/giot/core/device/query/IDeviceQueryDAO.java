@@ -19,10 +19,8 @@
 package org.giot.core.device.query;
 
 import java.sql.SQLException;
-import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.query.res.Devices;
 import org.giot.core.storage.IQueryDAO;
-import org.giot.core.storage.IStorageDAO;
 
 /**
  * @author yuanguohua on 2021/4/30 10:32

@@ -18,7 +18,6 @@
 
 package org.giot.core.device.query;
 
-import lombok.Data;
 import lombok.Getter;
 
 /**

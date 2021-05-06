@@ -38,5 +38,4 @@ List the required modules here
 1. **core**. All provider container & services basic.
 1. **network**. Provide network receive data & dispatch, eventbus invoker.
 1. **storage**. Make the device data or metadata process result persistence.
-
-## application.yml
+1. **device**. Provide device's api.

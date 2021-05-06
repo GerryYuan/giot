@@ -39,7 +39,7 @@ public class PageResult<T> {
     }
 
     public static <T> PageResult<T> build(List<T> data, int total) {
-        return new PageResult<>(total, data, false);
+        return new PageResult<>(total, data, true);
     }
 
     public static <T> PageResult<T> build(List<T> data, int total, boolean hasNext) {
@@ -51,7 +51,7 @@ public class PageResult<T> {
     }
 
     public static <T> PageResult<T> build(List<T> data) {
-        return new PageResult<>(0, data, false);
+        return new PageResult<>(0, data, true);
     }
 
 }

@@ -79,8 +79,7 @@ public class MySQLDeviceQueryDAO implements IDeviceQueryDAO {
         List<Devices> result = dbClient.getDSLContext()
                                        .select(context.getFields())
                                        .from(context.getTable())
-                                       .limit(limit)
-                                       .offset(from).fetchInto(Devices.class);
+                                       .limit(from, limit).fetchInto(Devices.class);
         int count = dbClient.getDSLContext().fetchCount(context.getTable());
         return PageResult.build(result, count);
     }

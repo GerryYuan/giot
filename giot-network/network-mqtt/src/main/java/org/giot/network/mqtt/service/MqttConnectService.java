@@ -91,7 +91,7 @@ public class MqttConnectService implements IMqttConnectService {
             IMqttSubService mqttSubService = serviceHandler.getService(IMqttSubService.class);
             List<String> topics = serviceHandler.getService(URLMappings.class).mappings();
             mqttSubService.sub(channel, topics);
-            log.info("Mqtt broker [{}:{}] connect success & sub topic {}.", config.getHost(), config.getPort(), topics);
+            log.info("Mqtt broker [{}:{}] connected & sub topic {}.", config.getHost(), config.getPort(), topics);
         } else {
             channel.close();
             throw new MqttSubException("mqtt connect ack error: " + msg.variableHeader().connectReturnCode());

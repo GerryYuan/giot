@@ -93,6 +93,12 @@ public class DeviceService implements IDeviceStorageService, IDeviceQueryService
     @Override
     public boolean onlineDevice(final String deviceId) throws SQLException {
         Objects.requireNonNull(deviceId);
-        return getDeviceStorageDAO().onlineDevice(deviceId);
+        return getDeviceStorageDAO().modifyDeviceStatus(deviceId, true);
+    }
+
+    @Override
+    public boolean offlineDevice(final String deviceId) throws SQLException {
+        Objects.requireNonNull(deviceId);
+        return getDeviceStorageDAO().modifyDeviceStatus(deviceId, false);
     }
 }

@@ -56,4 +56,12 @@ public interface IDeviceStorageService extends IStorageDAO {
      */
     boolean onlineDevice(String deviceId) throws SQLException;
 
+    /**
+     * offline device
+     *
+     * @param deviceId uuid
+     * @return
+     */
+    boolean offlineDevice(String deviceId) throws SQLException;
+
 }

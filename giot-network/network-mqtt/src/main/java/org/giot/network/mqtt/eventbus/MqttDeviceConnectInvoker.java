@@ -44,13 +44,17 @@ public class MqttDeviceConnectInvoker implements MqttBusInvoker {
     }
 
     @Subscribe
-    public void connected(DeviceStatus deviceStatus) {
+    public void deviceConnect(DeviceStatus deviceStatus) {
         CoreContainerConfig containerConfig = containerManager.find(CoreModule.NAME).getConfig();
         IDeviceStorageService storageService = containerManager.provider(
             StorageModule.NAME, containerConfig.getMetaDataStorage()).getService(
             IDeviceStorageService.class);
         try {
-            storageService.onlineDevice(deviceStatus.getDeviceId());
+            if (deviceStatus.isConnected()) {
+                storageService.onlineDevice(deviceStatus.getDeviceId());
+            } else {
+                storageService.offlineDevice(deviceStatus.getDeviceId());
+            }
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }

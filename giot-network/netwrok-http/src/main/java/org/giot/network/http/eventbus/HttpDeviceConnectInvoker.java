@@ -19,10 +19,15 @@
 package org.giot.network.http.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import java.sql.SQLException;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.CoreContainerConfig;
+import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.source.DeviceStatus;
+import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.eventbus.annotation.Invoker;
+import org.giot.core.storage.StorageModule;
 
 /**
  * @author Created by gerry
@@ -39,7 +44,19 @@ public class HttpDeviceConnectInvoker implements HttpBusInvoker {
     }
 
     @Subscribe
-    public void connected(DeviceStatus deviceStatus) {
-        log.info("class[HttpDeviceConnectInvoker], " + deviceStatus);
+    public void deviceConnect(DeviceStatus deviceStatus) {
+        CoreContainerConfig containerConfig = containerManager.find(CoreModule.NAME).getConfig();
+        IDeviceStorageService storageService = containerManager.provider(
+            StorageModule.NAME, containerConfig.getMetaDataStorage()).getService(
+            IDeviceStorageService.class);
+        try {
+            if (deviceStatus.isConnected()) {
+                storageService.onlineDevice(deviceStatus.getDeviceId());
+            } else {
+                storageService.offlineDevice(deviceStatus.getDeviceId());
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

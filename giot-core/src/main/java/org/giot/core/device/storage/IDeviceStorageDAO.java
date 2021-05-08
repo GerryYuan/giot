@@ -39,10 +39,12 @@ public interface IDeviceStorageDAO extends IStorageDAO {
     boolean createDevice(String deviceId, String name, String des, DeviceType deviceType) throws SQLException;
 
     /**
-     * online device
+     * modify device status
      *
-     * @param deviceId uuid
-     * @return boolean update is successfully
+     * @param deviceId    uuid
+     * @param isConnected device status
+     * @return
+     * @throws SQLException
      */
-    boolean onlineDevice(String deviceId) throws SQLException;
+    boolean modifyDeviceStatus(String deviceId, boolean isConnected) throws SQLException;
 }

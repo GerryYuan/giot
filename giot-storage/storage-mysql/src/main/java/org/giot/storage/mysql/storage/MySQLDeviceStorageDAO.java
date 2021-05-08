@@ -76,17 +76,17 @@ public class MySQLDeviceStorageDAO implements IDeviceStorageDAO {
     }
 
     @Override
-    public boolean onlineDevice(final String deviceId) throws SQLException {
+    public boolean modifyDeviceStatus(final String deviceId, final boolean isConnected) throws SQLException {
         MySQLContext context = getModelOperate().getTable(DeviceInstance.class);
         Update update = dbClient.getDSLContext()
                                 .update(context.getTable())
-                                .set(context.getFiled(DeviceInstance.ONLINE), true)
+                                .set(context.getFiled(DeviceInstance.ONLINE), isConnected)
                                 .set(context.getFiled(DeviceInstance.ONLINE_TIME), System.currentTimeMillis())
                                 .set(context.getFiled(DeviceInstance.UPDATE_TIME), System.currentTimeMillis())
                                 .where(context.getFiled(DeviceInstance.UUID).eq(deviceId));
 
         if (log.isDebugEnabled()) {
-            log.info("execute online device sql -> {}", update.getSQL(ParamType.INLINED));
+            log.info("execute update device status sql -> {}", update.getSQL(ParamType.INLINED));
         }
         return update.execute() == 1;
     }

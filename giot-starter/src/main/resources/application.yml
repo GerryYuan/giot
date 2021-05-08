@@ -33,9 +33,11 @@ network:
     userName: admin
     password: public
     clientId: test-clientId
+    processThreads: 10 # default value is {@link RouteUrl#values#length} * {@link Runtime#getRuntime#availableProcessors}
   http:
     port: 18080
     workThreads: 10
+    processThreads: 10 # default value is {@link RouteUrl#values#length} * {@link Runtime#getRuntime#availableProcessors}
 storage:
   which: postgresql,elasticsearch7,mysql
   postgresql:

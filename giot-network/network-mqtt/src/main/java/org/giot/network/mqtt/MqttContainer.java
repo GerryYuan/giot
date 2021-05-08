@@ -30,7 +30,7 @@ import org.giot.core.network.URLMappings;
 import org.giot.network.mqtt.config.MqttConfig;
 import org.giot.network.mqtt.dispatcher.MqttDispatcher;
 import org.giot.network.mqtt.dispatcher.MqttProcessorAdapter;
-import org.giot.network.mqtt.eventbus.MqttBusFractory;
+import org.giot.network.mqtt.eventbus.MqttAsyncBusFractory;
 import org.giot.network.mqtt.eventbus.MqttInvokerAdapter;
 import org.giot.network.mqtt.service.IMqttConnectService;
 import org.giot.network.mqtt.service.IMqttOpsService;
@@ -92,7 +92,7 @@ public class MqttContainer extends AbstractContainer {
                 getContainerManager(),
                 new MqttProcessorAdapter(getContainerManager(), urlMappings)
             ));
-        super.register(BusFractory.class, new MqttBusFractory());
+        super.register(BusFractory.class, new MqttAsyncBusFractory(config.getProcessThreads()));
         super.register(InvokerAdapter.class, new MqttInvokerAdapter(getContainerManager()));
         super.register(IInvokerService.class, new MqttInvokerService(getContainerManager()));
     }

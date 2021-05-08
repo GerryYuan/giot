@@ -23,6 +23,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.network.RouteUrl;
 
 /**
  * @author Created by gerry
@@ -58,5 +59,7 @@ public class MqttConfig extends ContainerConfig {
     private String password;
 
     private String clientId;
+
+    private int processThreads = RouteUrl.values().length * Runtime.getRuntime().availableProcessors();
 
 }

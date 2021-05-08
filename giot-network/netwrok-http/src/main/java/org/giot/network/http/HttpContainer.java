@@ -30,7 +30,7 @@ import org.giot.core.network.URLMappings;
 import org.giot.network.http.config.HttpConfig;
 import org.giot.network.http.dispatcher.HttpDispatcher;
 import org.giot.network.http.dispatcher.HttpProcessorAdapter;
-import org.giot.network.http.eventbus.HttpBusFractory;
+import org.giot.network.http.eventbus.HttpAsyncBusFractory;
 import org.giot.network.http.eventbus.HttpInvokerAdapter;
 import org.giot.network.http.service.HttpInvokerService;
 import org.giot.network.http.service.HttpOpsService;
@@ -78,7 +78,7 @@ public class HttpContainer extends AbstractContainer {
                 getContainerManager(),
                 new HttpProcessorAdapter(getContainerManager(), urlMappings)
             ));
-        super.register(BusFractory.class, new HttpBusFractory());
+        super.register(BusFractory.class, new HttpAsyncBusFractory(config.getProcessThreads()));
         super.register(InvokerAdapter.class, new HttpInvokerAdapter(getContainerManager()));
         super.register(IInvokerService.class, new HttpInvokerService(getContainerManager()));
     }
@@ -91,7 +91,9 @@ public class HttpContainer extends AbstractContainer {
 
     @Override
     public void after() {
-        getContainerManager().provider(NetworkModule.NAME, HttpContainer.NAME).getService(IInvokerService.class).register();
+        getContainerManager().provider(NetworkModule.NAME, HttpContainer.NAME)
+                             .getService(IInvokerService.class)
+                             .register();
     }
 
     @Override

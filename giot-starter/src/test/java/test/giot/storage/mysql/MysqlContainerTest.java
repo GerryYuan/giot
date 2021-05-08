@@ -86,6 +86,19 @@ public class MysqlContainerTest {
     }
 
     @Test
+    public void offlineDevice() throws SQLException {
+        IDeviceStorageService deviceStorageService = containerManager.provider(DeviceModule.NAME)
+                                                                     .getService(IDeviceStorageService.class);
+        String deviceId = "cc8ffa765bf7482285e3994e55ea7302";
+        boolean isExists = deviceQueryService.isExists(deviceId);
+        if (!isExists) {
+            Assert.assertTrue(
+                deviceStorageService.createDevice(deviceId, "test-1", "test device des", DeviceType.NORMAL));
+        }
+        Assert.assertTrue(deviceStorageService.offlineDevice(deviceId));
+    }
+
+    @Test
     public void queryDevices() throws SQLException {
         Pagination pagination = new Pagination(0, 10, false);
         PageResult<Devices> result = deviceQueryService.queryDevices(pagination);

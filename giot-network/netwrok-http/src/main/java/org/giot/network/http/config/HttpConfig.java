@@ -22,6 +22,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.giot.core.container.ContainerConfig;
+import org.giot.core.network.RouteUrl;
 
 /**
  * @author Created by gerry
@@ -37,4 +38,7 @@ public class HttpConfig extends ContainerConfig {
     private int workThreads = Runtime.getRuntime().availableProcessors();
 
     private int maxContentLength = 1024 * 1024;
+
+    private int processThreads = RouteUrl.values().length * workThreads;
+
 }

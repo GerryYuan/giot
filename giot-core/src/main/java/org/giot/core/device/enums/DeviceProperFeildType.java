@@ -16,17 +16,13 @@
  *
  */
 
-package org.giot.core.utils;
+package org.giot.core.device.enums;
 
-import java.util.UUID;
+/**
+ * @author yuanguohua on 2021/5/8 18:19
+ */
+public enum DeviceProperFeildType {
 
-public final class StringUtils {
-
-    /**
-     * uuid generate no '—' char
-     */
-    public static String createUUID() {
-        return UUID.randomUUID().toString().replaceAll("\\-", "");
-    }
-
+    string,
+    ;
 }

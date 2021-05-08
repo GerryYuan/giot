@@ -19,5 +19,8 @@
 package org.giot.core.storage;
 
 public abstract class Metadata implements StorageData {
-
+    @Override
+    public Long id() {
+        return null;
+    }
 }

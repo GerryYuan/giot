@@ -16,17 +16,23 @@
  *
  */
 
-package org.giot.core.utils;
+package org.giot.core.device.storage;
 
-import java.util.UUID;
+import java.sql.SQLException;
+import java.util.List;
+import org.giot.core.device.metadata.DevicePropertyDef;
+import org.giot.core.storage.IStorageDAO;
 
-public final class StringUtils {
+/**
+ * @author yuanguohua on 2021/5/8 15:33
+ */
+public interface IDevicePropertyDefStorageDAO extends IStorageDAO {
 
     /**
-     * uuid generate no '—' char
+     * create device property def
+     *
+     * @param devicePropertyDefs objects
+     * @return true or false
      */
-    public static String createUUID() {
-        return UUID.randomUUID().toString().replaceAll("\\-", "");
-    }
-
+    boolean createDevPropDefs(List<DevicePropertyDef> devicePropertyDefs) throws SQLException, IllegalAccessException;
 }

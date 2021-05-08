@@ -20,14 +20,19 @@ package test.giot.storage.mysql;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.DeviceModule;
+import org.giot.core.device.enums.DeviceProperFeildType;
 import org.giot.core.device.enums.DeviceType;
 import org.giot.core.device.query.IDeviceQueryService;
 import org.giot.core.device.query.PageResult;
 import org.giot.core.device.query.Pagination;
 import org.giot.core.device.query.res.Devices;
+import org.giot.core.device.storage.IDevicePropertyDefStorageService;
 import org.giot.core.device.storage.IDeviceStorageService;
+import org.giot.core.device.storage.req.DevicePropDefContext;
 import org.giot.core.exception.ContainerConfigException;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.loader.ModuleResourceLoader;
@@ -47,6 +52,8 @@ public class MysqlContainerTest {
 
     private IDeviceStorageService deviceStorageService;
 
+    private IDevicePropertyDefStorageService devicePropertyDefStorageService;
+
     private IDeviceQueryService deviceQueryService;
 
     @Before
@@ -60,6 +67,8 @@ public class MysqlContainerTest {
                                                     .getService(IDeviceStorageService.class);
         this.deviceQueryService = containerManager.provider(DeviceModule.NAME)
                                                   .getService(IDeviceQueryService.class);
+        this.devicePropertyDefStorageService = containerManager.provider(DeviceModule.NAME)
+                                                               .getService(IDevicePropertyDefStorageService.class);
     }
 
     @Test
@@ -103,5 +112,28 @@ public class MysqlContainerTest {
         Pagination pagination = new Pagination(0, 10, false);
         PageResult<Devices> result = deviceQueryService.queryDevices(pagination);
         Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void createDevPropDef() throws SQLException, IllegalAccessException {
+        DevicePropDefContext devicePropDefContext = new DevicePropDefContext();
+        devicePropDefContext.setName("电风扇S型号物模型");
+        List<DevicePropDefContext.PropDef> propDefs = new ArrayList<>(2);
+        DevicePropDefContext.PropDef propDef = new DevicePropDefContext.PropDef();
+        propDef.setId("field1");
+        propDef.setDes("用于表示电风扇转数的字段");
+        propDef.setName("字段1");
+        DevicePropDefContext.VauleType vauleType = new DevicePropDefContext.VauleType();
+        vauleType.setType(DeviceProperFeildType.string);
+        vauleType.setUnit("/转");
+        vauleType.setLength(255);
+        propDef.setValueType(vauleType);
+        DevicePropDefContext.Expands expands = new DevicePropDefContext.Expands();
+        expands.setReadOnly(true);
+        expands.setReport(true);
+        propDef.setExpands(expands);
+        propDefs.add(propDef);
+        devicePropDefContext.setPropDefs(propDefs);
+        Assert.assertTrue(devicePropertyDefStorageService.createDevPropDef(devicePropDefContext));
     }
 }

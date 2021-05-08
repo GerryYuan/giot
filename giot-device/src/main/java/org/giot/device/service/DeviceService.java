@@ -30,6 +30,7 @@ import org.giot.core.device.query.res.Devices;
 import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.storage.StorageModule;
+import org.giot.core.utils.GlobalIdUtils;
 import org.giot.core.utils.StringUtils;
 
 /**
@@ -79,7 +80,7 @@ public class DeviceService implements IDeviceStorageService, IDeviceQueryService
 
     @Override
     public boolean createDevice(final String name, final String des, final DeviceType deviceType) throws SQLException {
-        return createDevice(StringUtils.createUUID(), name, des, deviceType);
+        return createDevice(GlobalIdUtils.generate(), name, des, deviceType);
     }
 
     @Override

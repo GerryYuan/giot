@@ -21,6 +21,7 @@ package org.giot.storage.mysql;
 import org.giot.core.container.AbstractContainer;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.device.query.IDeviceQueryDAO;
+import org.giot.core.device.storage.IDevicePropertyDefStorageDAO;
 import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.exception.ContainerStartException;
 import org.giot.core.storage.DBClient;
@@ -31,6 +32,7 @@ import org.giot.storage.mysql.config.MySQLConfig;
 import org.giot.storage.mysql.model.MySQLModelInstaller;
 import org.giot.storage.mysql.model.MySQLModelOperate;
 import org.giot.storage.mysql.query.MySQLDeviceQueryDAO;
+import org.giot.storage.mysql.storage.MySQLDevPropDefStorageDAO;
 import org.giot.storage.mysql.storage.MySQLDeviceStorageDAO;
 
 /**
@@ -68,6 +70,7 @@ public class MySQLContainer extends AbstractContainer {
         super.register(ModelCreator.WhenCompleteListener.class, new MySQLModelInstaller(mySQLClient));
         super.register(ModelOperate.class, new MySQLModelOperate(getContainerManager()));
         super.register(IDeviceStorageDAO.class, new MySQLDeviceStorageDAO(getContainerManager(), mySQLClient));
+        super.register(IDevicePropertyDefStorageDAO.class, new MySQLDevPropDefStorageDAO(getContainerManager(), mySQLClient));
         super.register(IDeviceQueryDAO.class, new MySQLDeviceQueryDAO(getContainerManager(), mySQLClient));
     }
 

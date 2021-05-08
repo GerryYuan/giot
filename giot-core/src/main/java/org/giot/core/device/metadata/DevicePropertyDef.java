@@ -20,6 +20,7 @@ package org.giot.core.device.metadata;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.giot.core.device.enums.DeviceProperFeildType;
 import org.giot.core.storage.Metadata;
 import org.giot.core.storage.MetadataStreamProcessor;
 import org.giot.core.storage.annotation.Column;
@@ -36,25 +37,28 @@ public class DevicePropertyDef extends Metadata {
     @Column(name = "name", length = 255, des = "device property def name")
     private String name;
 
-    @Column(name = "fieldKey", length = 255, des = "device property key")
-    private String fieldKey;
+    @Column(name = "fieldId", length = 255, des = "device property value")
+    private String fieldId;
 
-    @Column(name = "fieldValue", length = 255, des = "device property value")
-    private String fieldValue;
+    @Column(name = "fieldName", length = 255, des = "device property key")
+    private String fieldName;
 
-    @Column(name = "fieldType", length = 255, des = "device property type")
-    private String fieldType;
+    @Column(name = "fieldType", length = 20, des = "device property type")
+    private DeviceProperFeildType fieldType;
 
-    @Column(name = "fieldUnit", length = 255, des = "device property unit")
+    @Column(name = "fieldLength", length = 20, des = "device property length")
+    private long fieldLength;
+
+    @Column(name = "fieldUnit", isNull = true, length = 255, des = "device property unit")
     private String fieldUnit;
-
-    @Column(name = "fieldLength", length = 255, des = "device property length")
-    private String fieldLength;
 
     @Column(name = "fieldIsRead", length = 2, des = "device property is read")
     private boolean fieldIsRead;
 
-    @Column(name = "fieldDes", length = 255, des = "device property des")
+    @Column(name = "fieldIsWrite", length = 2, des = "device property is write")
+    private boolean fieldIsWrite;
+
+    @Column(name = "fieldDes", isNull = true, length = 255, des = "device property des")
     private String fieldDes;
 
     @Column(name = "createTime", length = 20, des = "create time")
@@ -63,8 +67,4 @@ public class DevicePropertyDef extends Metadata {
     @Column(name = "updateTime", length = 20, des = "update time")
     private long updateTime;
 
-    @Override
-    public Long id() {
-        return null;
-    }
 }

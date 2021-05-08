@@ -26,7 +26,9 @@ import org.giot.core.container.Container;
 import org.giot.core.container.ContainerConfig;
 import org.giot.core.device.DeviceModule;
 import org.giot.core.device.query.IDeviceQueryService;
+import org.giot.core.device.storage.IDevicePropertyDefStorageService;
 import org.giot.core.device.storage.IDeviceStorageService;
+import org.giot.device.service.DevicePropDefService;
 import org.giot.device.service.DeviceService;
 
 /**
@@ -65,6 +67,10 @@ public class DeviceContainer extends AbstractContainer {
             IDeviceStorageService.class, new DeviceService(getContainerManager(), config.getMetaDataStorage()));
         super.register(
             IDeviceQueryService.class, new DeviceService(getContainerManager(), config.getMetaDataStorage()));
+        super.register(
+            IDevicePropertyDefStorageService.class,
+            new DevicePropDefService(getContainerManager(), config.getMetaDataStorage())
+        );
     }
 
     @Override

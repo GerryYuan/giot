@@ -18,15 +18,12 @@
 
 package org.giot.core.utils;
 
-import java.util.UUID;
+/**
+ * @author yuanguohua on 2021/5/8 18:40
+ */
+public interface TypeConvert {
 
-public final class StringUtils {
+    boolean support(Object value);
 
-    /**
-     * uuid generate no '—' char
-     */
-    public static String createUUID() {
-        return UUID.randomUUID().toString().replaceAll("\\-", "");
-    }
-
+    <T> T convert(Object value);
 }

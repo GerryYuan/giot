@@ -16,31 +16,52 @@
  *
  */
 
-package org.giot.core.device.metadata;
+package org.giot.core.device.storage.req;
 
+import java.util.List;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.giot.core.device.enums.Transport;
-import org.giot.core.storage.Metadata;
-import org.giot.core.storage.MetadataStreamProcessor;
-import org.giot.core.storage.annotation.Column;
-import org.giot.core.storage.annotation.Stream;
+import org.giot.core.device.enums.DeviceProperFeildType;
 
 /**
- * @author yuanguohua on 2021/3/5 16:26
+ * @author yuanguohua on 2021/5/8 17:32
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Stream(name = "device_instance_configuration", des = "device instance configuration", processor = MetadataStreamProcessor.class)
-public class DevicetInstanceConfiguration extends Metadata {
+public class DevicePropDefContext {
 
-    @Column(name = "name", length = 255, des = "name")
     private String name;
 
-    @Column(name = "transport", length = 3, des = "transport")
-    private Transport transport;
+    private List<PropDef> propDefs;
 
-    @Column(name = "des", length = 255, des = "des")
-    private String des;
+    @Data
+    public static class PropDef {
+        private String id;
+
+        private String name;
+
+        private String des;
+
+        private VauleType valueType;
+
+        private Expands expands;
+    }
+
+    @Data
+    public static class VauleType {
+
+        private DeviceProperFeildType type;
+
+        private String unit;
+
+        private long length;
+    }
+
+    @Data
+    public static class Expands {
+
+        private boolean readOnly = true;
+
+        private boolean report = true;
+
+    }
 
 }

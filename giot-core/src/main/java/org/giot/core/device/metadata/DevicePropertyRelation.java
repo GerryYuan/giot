@@ -45,8 +45,4 @@ public class DevicePropertyRelation extends Metadata {
     @Column(name = "updateTime", length = 20, des = "update time")
     private long updateTime;
 
-    @Override
-    public Long id() {
-        return null;
-    }
 }

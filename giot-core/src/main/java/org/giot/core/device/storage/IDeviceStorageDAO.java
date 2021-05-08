@@ -43,8 +43,8 @@ public interface IDeviceStorageDAO extends IStorageDAO {
      *
      * @param deviceId    uuid
      * @param isConnected device status
-     * @return
-     * @throws SQLException
+     * @return true or false
+     * @throws SQLException execute sql exception
      */
     boolean modifyDeviceStatus(String deviceId, boolean isConnected) throws SQLException;
 }

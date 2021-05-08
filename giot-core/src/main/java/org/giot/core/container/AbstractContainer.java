@@ -71,7 +71,7 @@ public abstract class AbstractContainer implements Container, ServiceHandler, Co
             return (T) service;
         }
         throw new ServiceNotFoundException(
-            "Service " + clazz.getName() + " should not be provided, based on container.");
+            "Service " + clazz.getName() + " should not be provided, based on container " + name() + ".");
 
     }
 

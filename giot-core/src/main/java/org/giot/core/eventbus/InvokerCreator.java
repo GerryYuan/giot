@@ -18,6 +18,7 @@
 
 package org.giot.core.eventbus;
 
+import java.lang.reflect.InvocationTargetException;
 import org.giot.core.container.Service;
 
 /**
@@ -25,11 +26,11 @@ import org.giot.core.container.Service;
  */
 public interface InvokerCreator extends Service {
 
-    void create(Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException;
+    void create(Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException;
 
     interface WhenCompleteListener {
 
-        void listener(Class<? extends BusInvoker> clazz) throws InstantiationException, IllegalAccessException;
+        void listener(Class<? extends BusInvoker> clazz) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException;
 
     }
 }

@@ -20,7 +20,8 @@ package org.giot.network.mqtt.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
-import org.giot.core.device.source.DeviceStatus;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.device.source.DevicePropertiesMsg;
 import org.giot.core.eventbus.annotation.Invoker;
 
 /**
@@ -29,10 +30,16 @@ import org.giot.core.eventbus.annotation.Invoker;
  */
 @Slf4j
 @Invoker
-public class MqttConnectedInvoker implements MqttBusInvoker {
+public class MqttDeviceReportPropertyInvoker implements MqttBusInvoker {
+
+    private ContainerManager containerManager;
+
+    public MqttDeviceReportPropertyInvoker(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
 
     @Subscribe
-    public void connected(DeviceStatus deviceStatus) {
-        log.info("class[MqttConnectedInvoker], " + deviceStatus);
+    public void reportProperty(DevicePropertiesMsg msg) {
+        log.info("class[MqttDeviceReportPropertyInvoker], " + msg);
     }
 }

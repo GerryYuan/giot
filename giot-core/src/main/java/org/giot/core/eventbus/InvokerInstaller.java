@@ -18,16 +18,18 @@
 
 package org.giot.core.eventbus;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * @author yuanguohua on 2021/4/16 17:28
  */
 public abstract class InvokerInstaller implements InvokerCreator.WhenCompleteListener {
 
     @Override
-    public void listener(final Class<? extends BusInvoker> clazz) throws InstantiationException, IllegalAccessException {
+    public void listener(final Class<? extends BusInvoker> clazz) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         createInvoker(clazz);
     }
 
-    public abstract void createInvoker(Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException;
+    public abstract void createInvoker(Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException;
 
 }

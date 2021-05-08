@@ -42,8 +42,8 @@ public class HttpDispatcher extends AbstractDispatcher {
     public HttpDispatcher(final ContainerManager containerManager, final ProcessorAdapter processorAdapter) {
         Serializer serializer = new GsonSerializer();
         this.converters = Lists.newArrayList(
-            new HttpPropertiesMsgConverter(containerManager, serializer),
-            new HttpConnectedConverter(containerManager, serializer)
+            new HttpDevicePropertiesMsgConverter(containerManager, serializer),
+            new HttpDeviceConnectConverter(containerManager, serializer)
         );
         this.processorAdapter = processorAdapter;
     }

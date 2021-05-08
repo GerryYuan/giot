@@ -37,7 +37,7 @@ import org.giot.network.http.HttpContainer;
  *
  * @author yuanguohua on 2021/3/26 11:08
  */
-public class HttpPropertiesMsgConverter implements PayloadConverter {
+public class HttpDevicePropertiesMsgConverter implements PayloadConverter {
 
     private Serializer serializer;
 
@@ -45,7 +45,7 @@ public class HttpPropertiesMsgConverter implements PayloadConverter {
 
     private ContainerManager containerManager;
 
-    public HttpPropertiesMsgConverter(final ContainerManager containerManager, final Serializer serializer) {
+    public HttpDevicePropertiesMsgConverter(final ContainerManager containerManager, final Serializer serializer) {
         this.containerManager = containerManager;
         this.serializer = serializer;
     }

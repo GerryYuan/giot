@@ -18,6 +18,7 @@
 
 package org.giot.core.eventbus;
 
+import java.lang.reflect.InvocationTargetException;
 import org.giot.core.CoreModule;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.scanner.ListenerManager;
@@ -36,7 +37,7 @@ public class BusInvokerCreator implements InvokerCreator {
     }
 
     @Override
-    public void create(final Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException {
+    public void create(final Class<? extends BusInvoker> clazz) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         if (invokerInstaller == null) {
             this.invokerInstaller = (InvokerInstaller) containerManager.provider(CoreModule.NAME)
                                                                        .getService(ListenerManager.class);

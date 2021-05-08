@@ -37,7 +37,7 @@ import org.giot.network.mqtt.MqttContainer;
  *
  * @author yuanguohua on 2021/3/26 11:08
  */
-public class MqttPropertiesMsgConverter implements PayloadConverter {
+public class MqttDevicePropertiesMsgConverter implements PayloadConverter {
 
     private Serializer serializer;
 
@@ -45,7 +45,7 @@ public class MqttPropertiesMsgConverter implements PayloadConverter {
 
     private ContainerManager containerManager;
 
-    public MqttPropertiesMsgConverter(final ContainerManager containerManager, final Serializer serializer) {
+    public MqttDevicePropertiesMsgConverter(final ContainerManager containerManager, final Serializer serializer) {
         this.containerManager = containerManager;
         this.serializer = serializer;
     }

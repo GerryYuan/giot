@@ -70,8 +70,8 @@ public class SteamScannerListener implements AnnotationScannerListener {
             Class<StreamProcessor> classProcessor = (Class<StreamProcessor>) stream.processor();
             processorMap.computeIfAbsent(classProcessor, key -> {
                 try {
-                    Constructor<?> constructor = classProcessor.getConstructor(CoreContainerConfig.class);
-                    return (StreamProcessor) constructor.newInstance(coreContainerConfig);
+                    Constructor<StreamProcessor> constructor = classProcessor.getConstructor(CoreContainerConfig.class);
+                    return constructor.newInstance(coreContainerConfig);
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }

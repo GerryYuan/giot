@@ -43,8 +43,8 @@ public class MqttDispatcher extends AbstractDispatcher {
         this.processorAdapter = processorAdapter;
         Serializer serializer = new GsonSerializer();
         this.converters = Lists.newArrayList(
-            new MqttPropertiesMsgConverter(containerManager, serializer),
-            new MqttConnectedConverter(containerManager, serializer)
+            new MqttDevicePropertiesMsgConverter(containerManager, serializer),
+            new MqttDeviceConnectConverter(containerManager, serializer)
         );
     }
 

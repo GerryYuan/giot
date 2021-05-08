@@ -37,7 +37,7 @@ import org.giot.network.http.HttpContainer;
  *
  * @author yuanguohua on 2021/3/26 11:08
  */
-public class HttpConnectedConverter implements PayloadConverter {
+public class HttpDeviceConnectConverter implements PayloadConverter {
 
     private Serializer serializer;
 
@@ -45,7 +45,7 @@ public class HttpConnectedConverter implements PayloadConverter {
 
     private ContainerManager containerManager;
 
-    public HttpConnectedConverter(final ContainerManager containerManager, final Serializer serializer) {
+    public HttpDeviceConnectConverter(final ContainerManager containerManager, final Serializer serializer) {
         this.containerManager = containerManager;
         this.serializer = serializer;
     }

@@ -20,7 +20,8 @@ package org.giot.network.http.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
-import org.giot.core.device.source.DevicePropertiesMsg;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.device.source.DeviceStatus;
 import org.giot.core.eventbus.annotation.Invoker;
 
 /**
@@ -29,10 +30,16 @@ import org.giot.core.eventbus.annotation.Invoker;
  */
 @Slf4j
 @Invoker
-public class HttpReportPropertyInvoker implements HttpBusInvoker {
+public class HttpDeviceConnectInvoker implements HttpBusInvoker {
+
+    private ContainerManager containerManager;
+
+    public HttpDeviceConnectInvoker(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
 
     @Subscribe
-    public void reportProperty(DevicePropertiesMsg msg) {
-        log.info("class[HttpReportPropertyInvoker], " + msg);
+    public void connected(DeviceStatus deviceStatus) {
+        log.info("class[HttpDeviceConnectInvoker], " + deviceStatus);
     }
 }

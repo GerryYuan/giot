@@ -16,7 +16,7 @@
  *
  */
 
-package org.giot.network.http.dispatcher;
+package org.giot.network.mqtt.processor;
 
 import org.giot.core.container.ContainerManager;
 import org.giot.core.device.source.DeviceStatus;
@@ -26,21 +26,22 @@ import org.giot.core.network.MsgVersion;
 import org.giot.core.network.NetworkModule;
 import org.giot.core.network.RouteUrl;
 import org.giot.core.network.annotation.Processor;
-import org.giot.network.http.HttpContainer;
+import org.giot.network.mqtt.MqttContainer;
+import org.giot.network.mqtt.dispatcher.MqttProcessor;
 
 /**
  * @author yuanguohua on 2021/3/22 15:46
  */
 @Processor(route = RouteUrl.CONNECTED, version = MsgVersion.v1)
-public class HttpConnectedProcessor extends AbstractSourceProcessor<DeviceStatus> implements HttpProcessor<DeviceStatus> {
+public class MqttDeviceConnectProcessor extends AbstractSourceProcessor<DeviceStatus> implements MqttProcessor<DeviceStatus> {
 
-    public HttpConnectedProcessor(final ContainerManager containerManager) {
+    public MqttDeviceConnectProcessor(final ContainerManager containerManager) {
         super(containerManager);
     }
 
     @Override
     public void invoke(final DeviceStatus deviceStatus) {
-        BusFractory busFractory = getContainerManager().provider(NetworkModule.NAME, HttpContainer.NAME)
+        BusFractory busFractory = getContainerManager().provider(NetworkModule.NAME, MqttContainer.NAME)
                                                        .getService(BusFractory.class);
         busFractory.openBus().post(deviceStatus);
     }

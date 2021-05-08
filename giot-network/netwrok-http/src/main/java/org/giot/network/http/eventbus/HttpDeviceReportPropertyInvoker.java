@@ -16,14 +16,30 @@
  *
  */
 
-package org.giot.network.http.exception;
+package org.giot.network.http.eventbus;
 
-public class HttpMethodNotSupportException extends Exception {
-    public HttpMethodNotSupportException(String message) {
-        super(message);
+import com.google.common.eventbus.Subscribe;
+import lombok.extern.slf4j.Slf4j;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.device.source.DevicePropertiesMsg;
+import org.giot.core.eventbus.annotation.Invoker;
+
+/**
+ * @author Created by gerry
+ * @date 2021-04-17-22:26
+ */
+@Slf4j
+@Invoker
+public class HttpDeviceReportPropertyInvoker implements HttpBusInvoker {
+
+    private ContainerManager containerManager;
+
+    public HttpDeviceReportPropertyInvoker(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
     }
 
-    public HttpMethodNotSupportException(String message, Throwable cause) {
-        super(message, cause);
+    @Subscribe
+    public void reportProperty(DevicePropertiesMsg msg) {
+        log.info("class[HttpDeviceReportPropertyInvoker], " + msg);
     }
 }

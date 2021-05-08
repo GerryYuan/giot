@@ -19,9 +19,15 @@
 package org.giot.network.mqtt.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import java.sql.SQLException;
 import lombok.extern.slf4j.Slf4j;
-import org.giot.core.device.source.DevicePropertiesMsg;
+import org.giot.core.CoreContainerConfig;
+import org.giot.core.CoreModule;
+import org.giot.core.container.ContainerManager;
+import org.giot.core.device.source.DeviceStatus;
+import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.eventbus.annotation.Invoker;
+import org.giot.core.storage.StorageModule;
 
 /**
  * @author Created by gerry
@@ -29,10 +35,24 @@ import org.giot.core.eventbus.annotation.Invoker;
  */
 @Slf4j
 @Invoker
-public class MqttReportPropertyInvoker implements MqttBusInvoker {
+public class MqttDeviceConnectInvoker implements MqttBusInvoker {
+
+    private ContainerManager containerManager;
+
+    public MqttDeviceConnectInvoker(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
+    }
 
     @Subscribe
-    public void reportProperty(DevicePropertiesMsg msg) {
-        log.info("class[MqttReportPropertyInvoker], " + msg);
+    public void connected(DeviceStatus deviceStatus) {
+        CoreContainerConfig containerConfig = containerManager.find(CoreModule.NAME).getConfig();
+        IDeviceStorageService storageService = containerManager.provider(
+            StorageModule.NAME, containerConfig.getMetaDataStorage()).getService(
+            IDeviceStorageService.class);
+        try {
+            storageService.onlineDevice(deviceStatus.getDeviceId());
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 }

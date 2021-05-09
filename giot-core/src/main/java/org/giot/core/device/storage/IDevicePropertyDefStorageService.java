@@ -19,7 +19,6 @@
 package org.giot.core.device.storage;
 
 import java.sql.SQLException;
-import org.giot.core.device.metadata.DevicePropertyDef;
 import org.giot.core.device.storage.req.DevicePropDefContext;
 import org.giot.core.storage.IStorageDAO;
 

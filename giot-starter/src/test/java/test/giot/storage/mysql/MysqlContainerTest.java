@@ -117,15 +117,15 @@ public class MysqlContainerTest {
     @Test
     public void createDevPropDef() throws SQLException, IllegalAccessException {
         DevicePropDefContext devicePropDefContext = new DevicePropDefContext();
-        devicePropDefContext.setName("电风扇S型号物模型");
+        devicePropDefContext.setName("things model name");
         List<DevicePropDefContext.PropDef> propDefs = new ArrayList<>(2);
         DevicePropDefContext.PropDef propDef = new DevicePropDefContext.PropDef();
         propDef.setId("field1");
-        propDef.setDes("用于表示电风扇转数的字段");
-        propDef.setName("字段1");
+        propDef.setDes("field1 des");
+        propDef.setName("field name");
         DevicePropDefContext.VauleType vauleType = new DevicePropDefContext.VauleType();
         vauleType.setType(DeviceProperFeildType.string);
-        vauleType.setUnit("/转");
+        vauleType.setUnit("/turn");
         vauleType.setLength(255);
         propDef.setValueType(vauleType);
         DevicePropDefContext.Expands expands = new DevicePropDefContext.Expands();

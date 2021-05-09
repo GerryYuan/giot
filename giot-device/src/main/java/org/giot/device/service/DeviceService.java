@@ -31,7 +31,6 @@ import org.giot.core.device.storage.IDeviceStorageDAO;
 import org.giot.core.device.storage.IDeviceStorageService;
 import org.giot.core.storage.StorageModule;
 import org.giot.core.utils.GlobalIdUtils;
-import org.giot.core.utils.StringUtils;
 
 /**
  * @author yuanguohua on 2021/4/30 10:30

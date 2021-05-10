@@ -18,20 +18,27 @@
 
 package org.giot.core.device.metadata;
 
+import com.google.common.collect.Lists;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.giot.core.storage.IndexBuilder;
 import org.giot.core.storage.Metadata;
 import org.giot.core.storage.MetadataStreamProcessor;
 import org.giot.core.storage.annotation.Column;
 import org.giot.core.storage.annotation.Stream;
+import org.giot.core.storage.model.IndexDef;
 
 /**
  * @author yuanguohua on 2021/5/8 14:56
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Stream(name = "device_property_relation", des = "device property relation", processor = MetadataStreamProcessor.class)
+@Stream(name = "device_property_relation", indexBuilder = DevicePropertyRelation.Builder.class, des = "device property relation", processor = MetadataStreamProcessor.class)
 public class DevicePropertyRelation extends Metadata {
+
+    public static final String DEVICE_PROP_DEF_ID = "devicePropDefId";
+    public static final String DEVICE_ID = "deviceId";
 
     @Column(name = "deviceId", length = 255, des = "device id")
     private String deviceId;
@@ -45,4 +52,16 @@ public class DevicePropertyRelation extends Metadata {
     @Column(name = "updateTime", length = 20, des = "update time")
     private long updateTime;
 
+    public static class Builder implements IndexBuilder {
+
+        @Override
+        public List<IndexDef> builder() {
+            return Lists.newArrayList(IndexDef.builder()
+                                              .indexType(Stream.IndexType.unique)
+                                              .fieldNames(new String[] {
+                                                  DEVICE_ID,
+                                                  DEVICE_PROP_DEF_ID
+                                              }).build());
+        }
+    }
 }

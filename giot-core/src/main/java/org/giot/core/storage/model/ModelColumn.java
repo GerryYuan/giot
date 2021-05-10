@@ -31,6 +31,7 @@ import lombok.ToString;
 @Getter
 @Builder
 public class ModelColumn {
+    private String fieldName;
     private String columnName;
     private int length;
     private String des;

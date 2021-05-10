@@ -19,6 +19,7 @@
 package org.giot.core.storage.model;
 
 import java.sql.SQLException;
+import java.util.List;
 import org.giot.core.container.Service;
 import org.giot.core.storage.StorageData;
 
@@ -32,8 +33,14 @@ public interface ModelCreator extends Service {
 
     /**
      * add model
+     *
+     * @param name      table name
+     * @param des       table desctiption
+     * @param clazz     pojo class
+     * @param indexDefs indexs
+     * @return
      */
-    Model addModel(String name, String des, Class<? extends StorageData> clazz);
+    Model addModel(String name, String des, Class<? extends StorageData> clazz, List<IndexDef> indexDefs);
 
     interface WhenCompleteListener extends Service {
         /**

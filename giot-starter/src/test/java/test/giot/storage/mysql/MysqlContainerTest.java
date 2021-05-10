@@ -133,6 +133,22 @@ public class MysqlContainerTest {
         expands.setReport(true);
         propDef.setExpands(expands);
         propDefs.add(propDef);
+
+        DevicePropDefContext.PropDef propDef1 = new DevicePropDefContext.PropDef();
+        propDef1.setId("field2");
+        propDef1.setDes("field2 des");
+        propDef1.setName("field2 name");
+        DevicePropDefContext.VauleType vauleType1 = new DevicePropDefContext.VauleType();
+        vauleType1.setType(DeviceProperFeildType.string);
+        vauleType1.setUnit("/turn");
+        vauleType1.setLength(255);
+        propDef1.setValueType(vauleType1);
+        DevicePropDefContext.Expands expands1 = new DevicePropDefContext.Expands();
+        expands1.setReadOnly(true);
+        expands1.setReport(true);
+        propDef1.setExpands(expands1);
+        propDefs.add(propDef1);
+
         devicePropDefContext.setPropDefs(propDefs);
         Assert.assertTrue(devicePropertyDefStorageService.createDevPropDef(devicePropDefContext));
     }

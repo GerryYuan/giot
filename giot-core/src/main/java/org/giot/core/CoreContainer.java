@@ -69,8 +69,7 @@ public class CoreContainer extends AbstractContainer {
         super.register(ProcessorManager.class, new SourceProcessorInstaller(getContainerManager()));
         super.register(InvokerCreator.class, new BusInvokerCreator(getContainerManager()));
         super.register(ListenerManager.class, new BusInvokerInstaller(getContainerManager()));
-        super.register(
-            AnnotationScanner.class, new DefaultAnnotationScanner(getContainerManager(), coreContainerConfig));
+        super.register(AnnotationScanner.class, new DefaultAnnotationScanner(getContainerManager()));
     }
 
     @Override

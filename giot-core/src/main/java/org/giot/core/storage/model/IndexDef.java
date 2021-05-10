@@ -16,19 +16,22 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.storage.model;
 
-import java.sql.SQLException;
+import lombok.Builder;
+import lombok.Getter;
+import org.giot.core.storage.annotation.Stream;
 
 /**
- * data processor
+ * index def
  *
- * @author yuanguohua on 2021/3/5 16:44
+ * @author yuanguohua on 2021/5/10 14:10
  */
-public interface StreamProcessor {
+@Getter
+@Builder
+public class IndexDef {
 
-    <T extends StorageData> void create(String name,
-                                        String des,
-                                        Class<T> clazz,
-                                        IndexBuilder indexBuilder) throws SQLException;
+    private Stream.IndexType indexType;
+
+    private String[] fieldNames;
 }

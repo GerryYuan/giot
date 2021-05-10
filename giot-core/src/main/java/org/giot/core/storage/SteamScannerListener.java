@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.giot.core.CoreContainerConfig;
 import org.giot.core.container.ContainerManager;
 import org.giot.core.scanner.AnnotationScannerListener;
 import org.giot.core.storage.annotation.Stream;
@@ -41,12 +40,8 @@ public class SteamScannerListener implements AnnotationScannerListener {
 
     private ContainerManager containerManager;
 
-    private CoreContainerConfig coreContainerConfig;
-
-    public SteamScannerListener(final ContainerManager containerManager,
-                                final CoreContainerConfig coreContainerConfig) {
+    public SteamScannerListener(final ContainerManager containerManager) {
         this.containerManager = containerManager;
-        this.coreContainerConfig = coreContainerConfig;
     }
 
     @Override
@@ -64,18 +59,27 @@ public class SteamScannerListener implements AnnotationScannerListener {
 
     @Override
     public void listener() throws Exception {
-        Map<Class<StreamProcessor>, StreamProcessor> processorMap = new ConcurrentHashMap<>(5);
+        Map<Class<? extends StreamProcessor>, StreamProcessor> processorMap = new ConcurrentHashMap<>(3);
+        Map<Class<? extends IndexBuilder>, IndexBuilder> indexBuilderMap = new ConcurrentHashMap<>(10);
         for (Class<? extends StorageData> clazz : classes) {
             Stream stream = (Stream) clazz.getAnnotation(match());
-            Class<StreamProcessor> classProcessor = (Class<StreamProcessor>) stream.processor();
+            Class<? extends StreamProcessor> classProcessor = stream.processor();
+            Class<? extends IndexBuilder> classIndexBuilder = stream.indexBuilder();
+            IndexBuilder indexBuilder = indexBuilderMap.computeIfAbsent(classIndexBuilder, key -> {
+                try {
+                    return classIndexBuilder.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+            });
             processorMap.computeIfAbsent(classProcessor, key -> {
                 try {
-                    Constructor<StreamProcessor> constructor = classProcessor.getConstructor(CoreContainerConfig.class);
-                    return constructor.newInstance(coreContainerConfig);
+                    Constructor<? extends StreamProcessor> constructor = classProcessor.getConstructor(ContainerManager.class);
+                    return constructor.newInstance(containerManager);
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
-            }).create(containerManager, stream.name(), stream.des(), clazz);
+            }).create(stream.name(), stream.des(), clazz, indexBuilder);
         }
     }
 

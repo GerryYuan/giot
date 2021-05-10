@@ -18,15 +18,18 @@
 
 package org.giot.storage.mysql.model;
 
+import com.google.common.base.Joiner;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.giot.core.storage.DBClient;
+import org.giot.core.storage.model.IndexDef;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelColumn;
 import org.giot.core.storage.model.ModelInstaller;
 import org.jooq.Constraint;
+import org.jooq.CreateIndexIncludeStep;
 import org.jooq.CreateTableColumnStep;
 import org.jooq.DSLContext;
 import org.jooq.Field;
@@ -64,9 +67,30 @@ public class MySQLModelInstaller extends ModelInstaller {
         }
         table.constraints(DSL.primaryKey(Model.ID)).constraints(uniques(model.getColumns()));
         if (log.isDebugEnabled()) {
-            log.info("execute sql is -> '{}'", table.getSQL());
+            log.info("create table {}, sql: {} ", model.getName(), table.getSQL());
         }
         table.execute();
+        createIndexes(model.getName(), model.getIndexDefs());
+    }
+
+    private void createIndexes(String table, List<IndexDef> indexDefs) throws SQLException {
+        DSLContext dsl = dbClient.getDSLContext();
+        for (IndexDef indexDef : indexDefs) {
+            String indexName = table.toUpperCase() + "_" + Joiner.on("_").join(indexDef.getFieldNames()) + "_IDX";
+            CreateIndexIncludeStep indexIncludeStep;
+            switch (indexDef.getIndexType()) {
+                case unique:
+                    indexIncludeStep = dsl.createUniqueIndexIfNotExists(indexName).on(table, indexDef.getFieldNames());
+                    break;
+                default:
+                    indexIncludeStep = dsl.createIndexIfNotExists(indexName).on(table, indexDef.getFieldNames());
+                    break;
+            }
+            if (log.isDebugEnabled()) {
+                log.info("create index for table {}, sql: {} ", table, indexIncludeStep.getSQL());
+            }
+            indexIncludeStep.execute();
+        }
     }
 
     private List<Constraint> uniques(List<ModelColumn> columns) {

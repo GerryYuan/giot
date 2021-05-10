@@ -19,16 +19,16 @@
 package org.giot.core.storage;
 
 import lombok.Getter;
-import org.giot.core.CoreContainerConfig;
+import org.giot.core.container.ContainerManager;
 
 /**
  * @author yuanguohua on 2021/3/9 18:38
  */
 public abstract class AbstractStreamProcessor implements StreamProcessor {
     @Getter
-    private CoreContainerConfig coreContainerConfig;
+    private ContainerManager containerManager;
 
-    public AbstractStreamProcessor(final CoreContainerConfig coreContainerConfig) {
-        this.coreContainerConfig = coreContainerConfig;
+    public AbstractStreamProcessor(final ContainerManager containerManager) {
+        this.containerManager = containerManager;
     }
 }

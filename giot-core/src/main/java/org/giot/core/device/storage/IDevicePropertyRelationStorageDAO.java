@@ -16,19 +16,23 @@
  *
  */
 
-package org.giot.core.storage;
+package org.giot.core.device.storage;
 
 import java.sql.SQLException;
+import org.giot.core.storage.IStorageDAO;
 
 /**
- * data processor
- *
- * @author yuanguohua on 2021/3/5 16:44
+ * @author yuanguohua on 2021/5/8 15:33
  */
-public interface StreamProcessor {
+public interface IDevicePropertyRelationStorageDAO extends IStorageDAO {
 
-    <T extends StorageData> void create(String name,
-                                        String des,
-                                        Class<T> clazz,
-                                        IndexBuilder indexBuilder) throws SQLException;
+    /**
+     * create device property relation
+     *
+     * @param deviceId        uuid
+     * @param devicePropDefId device property def id
+     * @return true or false
+     * @throws SQLException sql exception
+     */
+    boolean createDevPropRelation(String deviceId, long devicePropDefId) throws SQLException;
 }

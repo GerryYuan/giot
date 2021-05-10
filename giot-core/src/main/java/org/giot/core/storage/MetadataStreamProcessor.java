@@ -30,22 +30,23 @@ import org.giot.core.storage.model.ModelCreator;
  */
 public class MetadataStreamProcessor extends AbstractStreamProcessor {
 
-    public MetadataStreamProcessor(final CoreContainerConfig coreContainerConfig) {
-        super(coreContainerConfig);
+    public MetadataStreamProcessor(final ContainerManager containerManager) {
+        super(containerManager);
     }
 
     @Override
-    public <T extends StorageData> void create(final ContainerManager containerManager,
-                                               final String name,
+    public <T extends StorageData> void create(final String name,
                                                final String des,
-                                               final Class<T> clazz) throws SQLException {
-        ModelCreator creator = containerManager.provider(CoreModule.NAME).getService(ModelCreator.class);
-        Model model = creator.addModel(name, des, clazz);
+                                               final Class<T> clazz,
+                                               final IndexBuilder indexBuilder) throws SQLException {
+        ModelCreator creator = getContainerManager().provider(CoreModule.NAME).getService(ModelCreator.class);
+        Model model = creator.addModel(name, des, clazz, indexBuilder.builder());
         //processor model
-        ModelCreator.WhenCompleteListener listener = containerManager.provider(
-            StorageModule.NAME, getCoreContainerConfig().getMetaDataStorage())
-                                                                     .getService(
-                                                                         ModelCreator.WhenCompleteListener.class);
+        CoreContainerConfig containerConfig = getContainerManager().find(CoreModule.NAME).getConfig();
+        ModelCreator.WhenCompleteListener listener = getContainerManager().provider(
+            StorageModule.NAME, containerConfig.getMetaDataStorage())
+                                                                          .getService(
+                                                                              ModelCreator.WhenCompleteListener.class);
         listener.listener(model);
     }
 }

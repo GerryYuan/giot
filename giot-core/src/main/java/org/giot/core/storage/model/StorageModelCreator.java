@@ -38,11 +38,13 @@ public class StorageModelCreator implements ModelManager, ModelCreator {
     private Map<Class<? extends StorageData>, Model> modelMap = new ConcurrentHashMap<>();
 
     @Override
-    public Model addModel(final String name, final String des,
-                          final Class<? extends StorageData> clazz) {
+    public Model addModel(final String name,
+                          final String des,
+                          final Class<? extends StorageData> clazz,
+                          final List<IndexDef> indexDefs) {
         List<ModelColumn> columns = new LinkedList<>();
         loadColumns(clazz, columns);
-        Model model = new Model(name, des, columns);
+        Model model = new Model(name, des, columns, indexDefs);
         modelMap.put(clazz, model);
         return model;
     }
@@ -69,12 +71,13 @@ public class StorageModelCreator implements ModelManager, ModelCreator {
             Column column = field.getAnnotation(Column.class);
             String name = EmptyUtils.isEmpty(column.name()) ? field.getName() : column.name();
             ModelColumn modelColumn = ModelColumn.builder()
-                       .columnName(name)
-                       .length(column.length())
-                       .des(column.des())
-                       .type(field.getType())
-                       .genericType(field.getGenericType())
-                       .isNull(column.isNull()).unique(column.unique()).build();
+                                                 .fieldName(field.getName())
+                                                 .columnName(name)
+                                                 .length(column.length())
+                                                 .des(column.des())
+                                                 .type(field.getType())
+                                                 .genericType(field.getGenericType())
+                                                 .isNull(column.isNull()).unique(column.unique()).build();
             columns.add(modelColumn);
         }
     }

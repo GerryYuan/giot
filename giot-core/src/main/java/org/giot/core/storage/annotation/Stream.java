@@ -22,10 +22,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.giot.core.storage.IndexBuilder;
+import org.giot.core.storage.NoneIndexBuilder;
 import org.giot.core.storage.StreamProcessor;
 
 /**
- * Stream, provider storage data def, eg: create device msgs
+ * Stream, provider storage data def, eg: create device messages
  * <p>
  * See {@link StreamProcessor}
  * </p>
@@ -55,4 +57,19 @@ public @interface Stream {
      * @return
      */
     String des();
+
+    /**
+     * index builder class
+     *
+     * @return
+     */
+    Class<? extends IndexBuilder> indexBuilder() default NoneIndexBuilder.class;
+
+    /**
+     * index type
+     */
+    enum IndexType {
+        unique,
+        ;
+    }
 }

@@ -18,17 +18,17 @@
 
 package org.giot.core.storage;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import org.giot.core.storage.model.IndexDef;
 
 /**
- * data processor
- *
- * @author yuanguohua on 2021/3/5 16:44
+ * @author yuanguohua on 2021/5/10 14:13
  */
-public interface StreamProcessor {
+public class NoneIndexBuilder implements IndexBuilder {
 
-    <T extends StorageData> void create(String name,
-                                        String des,
-                                        Class<T> clazz,
-                                        IndexBuilder indexBuilder) throws SQLException;
+    @Override
+    public List<IndexDef> builder() {
+        return new ArrayList<>();
+    }
 }

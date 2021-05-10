@@ -35,10 +35,15 @@ public class Model {
     private final String name;
     private final String des;
     private final List<ModelColumn> columns;
+    private final List<IndexDef> indexDefs;
 
-    public Model(final String name, final String des, final List<ModelColumn> columns) {
+    public Model(final String name,
+                 final String des,
+                 final List<ModelColumn> columns,
+                 final List<IndexDef> indexDefs) {
         this.name = name;
         this.des = des;
         this.columns = columns;
+        this.indexDefs = indexDefs;
     }
 }

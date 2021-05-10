@@ -80,10 +80,10 @@ public class MySQLModelInstaller extends ModelInstaller {
             CreateIndexIncludeStep indexIncludeStep;
             switch (indexDef.getIndexType()) {
                 case unique:
-                    indexIncludeStep = dsl.createUniqueIndexIfNotExists(indexName).on(table, indexDef.getFieldNames());
+                    indexIncludeStep = dsl.createUniqueIndex(indexName).on(table, indexDef.getFieldNames());
                     break;
                 default:
-                    indexIncludeStep = dsl.createIndexIfNotExists(indexName).on(table, indexDef.getFieldNames());
+                    indexIncludeStep = dsl.createIndex(indexName).on(table, indexDef.getFieldNames());
                     break;
             }
             if (log.isDebugEnabled()) {

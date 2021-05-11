@@ -19,6 +19,7 @@
 package org.giot.storage.mysql.model;
 
 import com.google.common.base.Joiner;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,10 +71,10 @@ public class MySQLModelInstaller extends ModelInstaller {
             log.info("create table {}, sql: {} ", model.getName(), table.getSQL());
         }
         table.execute();
-        createIndexes(model.getName(), model.getIndexDefs());
     }
 
-    private void createIndexes(String table, List<IndexDef> indexDefs) throws SQLException {
+    @Override
+    public void createIndexes(String table, List<IndexDef> indexDefs) throws SQLException {
         DSLContext dsl = dbClient.getDSLContext();
         for (IndexDef indexDef : indexDefs) {
             String indexName = table.toUpperCase() + "_" + Joiner.on("_").join(indexDef.getFieldNames()) + "_IDX";
@@ -91,6 +92,15 @@ public class MySQLModelInstaller extends ModelInstaller {
             }
             indexIncludeStep.execute();
         }
+    }
+
+    @Override
+    public boolean isExists(final String table) throws SQLException {
+        ResultSet rset = dbClient.getConnection().getMetaData().getTables(null, null, table, null);
+        if (rset.next()) {
+            return true;
+        }
+        return false;
     }
 
     private List<Constraint> uniques(List<ModelColumn> columns) {

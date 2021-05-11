@@ -18,6 +18,7 @@
 
 package org.giot.core.storage;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import org.jooq.DSLContext;
 
@@ -30,4 +31,11 @@ public interface DBClient extends StorageClient {
      * get jooq DSL client
      */
     DSLContext getDSLContext() throws SQLException;
+
+    /**
+     * get datasource connect
+     *
+     * @return
+     */
+    Connection getConnection() throws SQLException;
 }

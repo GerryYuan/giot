@@ -19,17 +19,28 @@
 package org.giot.core.storage.model;
 
 import java.sql.SQLException;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Created by gerry
  * @date 2021-03-07-9:49 PM
  */
+@Slf4j
 public abstract class ModelInstaller implements ModelCreator.WhenCompleteListener {
 
     @Override
     public void listener(final Model model) throws SQLException {
-        createTable(model);
+        if (!isExists(model.getName())) {
+            log.info("table: {} does not exist", model.getName());
+            createTable(model);
+            createIndexes(model.getName(), model.getIndexDefs());
+        }
     }
 
     public abstract void createTable(Model model) throws SQLException;
+
+    public abstract void createIndexes(String table, List<IndexDef> indexDefs) throws SQLException;
+
+    public abstract boolean isExists(String table) throws SQLException;
 }

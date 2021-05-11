@@ -18,7 +18,10 @@
 
 package org.giot.storage.pgsql.model;
 
+import java.sql.SQLException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.storage.model.IndexDef;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelInstaller;
 
@@ -28,8 +31,20 @@ import org.giot.core.storage.model.ModelInstaller;
  */
 @Slf4j
 public class PGSQLModelInstaller extends ModelInstaller {
+
     @Override
-    public void createTable(final Model model) {
+    public void createTable(final Model model) throws SQLException {
         log.info("pgsql model " + model + " installing....");
     }
+
+    @Override
+    public void createIndexes(final String table, final List<IndexDef> indexDefs) throws SQLException {
+
+    }
+
+    @Override
+    public boolean isExists(final String table) throws SQLException {
+        return false;
+    }
+
 }

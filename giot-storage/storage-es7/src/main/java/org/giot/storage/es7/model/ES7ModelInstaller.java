@@ -18,7 +18,10 @@
 
 package org.giot.storage.es7.model;
 
+import java.sql.SQLException;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.giot.core.storage.model.IndexDef;
 import org.giot.core.storage.model.Model;
 import org.giot.core.storage.model.ModelInstaller;
 import org.giot.storage.es7.ES7Client;
@@ -37,7 +40,18 @@ public class ES7ModelInstaller extends ModelInstaller {
     }
 
     @Override
-    public void createTable(final Model model) {
+    public void createTable(final Model model) throws SQLException {
         log.info("es7 model " + model + " installing....");
     }
+
+    @Override
+    public void createIndexes(final String table, final List<IndexDef> indexDefs) throws SQLException {
+
+    }
+
+    @Override
+    public boolean isExists(final String table) throws SQLException {
+        return false;
+    }
+
 }

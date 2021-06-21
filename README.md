@@ -1,3 +1,5 @@
+# 换了新工作，太忙，没时间维护了，项目更新暂时搁置，未来找合适的机会重新开启
+
 GIoT
 ==========
 **GIoT** is an open source **IoT** platform that supports device management, object model, device management, rule engine, multiple storage, multiple sinks, multiple protocols (http, mqtt, tcp, custom protocols), etc. And so on, provide plug-in development.

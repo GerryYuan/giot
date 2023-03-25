@@ -1,4 +1,5 @@
 # 2021.5月换了新工作，太忙了，项目更新暂时搁置，未来找合适的机会重新开启
+# 新项目地址：https://github.com/WatchInsight/watchinsight
 
 GIoT
 ==========
